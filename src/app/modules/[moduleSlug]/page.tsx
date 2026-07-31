@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getModuleBySlug, getScreensForModule } from "@/lib/data";
+import { getModuleBySlug, listScreensByModule } from "@/lib/data";
 import { ScreenCard } from "@/components/ScreenCard";
 
 export default async function ModulePage({
@@ -9,10 +9,10 @@ export default async function ModulePage({
   params: Promise<{ moduleSlug: string }>;
 }) {
   const { moduleSlug } = await params;
-  const figmaModule = getModuleBySlug(moduleSlug);
+  const figmaModule = await getModuleBySlug(moduleSlug);
   if (!figmaModule) notFound();
 
-  const screens = getScreensForModule(figmaModule.id);
+  const screens = await listScreensByModule(figmaModule.id);
 
   return (
     <main className="min-h-screen bg-zinc-50 p-6">
@@ -25,7 +25,9 @@ export default async function ModulePage({
             ← All modules
           </Link>
         </div>
-        <h1 className="text-3xl font-semibold text-zinc-900">{figmaModule.name}</h1>
+        <h1 className="text-3xl font-semibold text-zinc-900">
+          {figmaModule.name}
+        </h1>
         <p className="mt-1 text-zinc-600">
           {screens.length} screen{screens.length === 1 ? "" : "s"} indexed
         </p>

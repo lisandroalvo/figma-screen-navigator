@@ -1,7 +1,11 @@
 import Link from "next/link";
-import { modules, products } from "@/lib/data";
+import { listModulesWithCounts, listProducts } from "@/lib/data";
 
-export default function ModulesPage() {
+export default async function ModulesPage() {
+  const [modules, products] = await Promise.all([
+    listModulesWithCounts(),
+    listProducts(),
+  ]);
   const product = products[0];
 
   return (
@@ -22,7 +26,9 @@ export default function ModulesPage() {
                   {module.name}
                 </h2>
                 <p className="text-sm text-zinc-500">
-                  Figma file: {module.figmaFileName ?? module.figmaFileKey}
+                  {module.screensCount} screen
+                  {module.screensCount === 1 ? "" : "s"} · Figma file: {" "}
+                  {module.figmaFileName ?? module.figmaFileKey}
                 </p>
               </Link>
             </li>

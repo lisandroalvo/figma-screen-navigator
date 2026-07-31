@@ -1,5 +1,5 @@
 import type { Screen } from "@/types";
-import { modules, figmaPages, breakpoints, screens, products } from "@/lib/data";
+import { modules, figmaPages, breakpoints, screens, products } from "@/lib/data/mock";
 
 export interface SearchFilters {
   productId?: string;

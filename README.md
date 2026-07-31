@@ -31,40 +31,23 @@ The slash-separated segments in a wireframe name are **not** guaranteed to repre
 - **Styling:** Tailwind CSS
 - **Database:** Supabase Postgres
 - **ORM/migrations:** Drizzle ORM
-- **Authentication:** Supabase Auth
+- **Authentication:** Supabase Auth (deferred)
 - **Figma integration:**
-  - Figma REST API for production synchronization and indexing
-  - Figma MCP for development-time inspection only
+  - Figma REST API for production synchronization and indexing (deferred)
+  - Figma MCP for development-time inspection only (deferred)
 - **Testing:** Vitest
-- **CI/CD:** GitHub + Vercel
+- **CI/CD:** GitHub + Vercel (deferred)
 
-## Current phase
+## Data-source mode
 
-**Phase 2 — Local domain and prototype**
+The application runs in one of two explicit modes, controlled by `DATA_SOURCE` in `.env.local`:
 
-This phase validates the data model and search behavior using local TypeScript types, a Drizzle schema definition, representative mock data, and a working UI. No external services are connected yet.
+- `DATA_SOURCE=database` — production mode; reads from the Supabase project. Missing database configuration causes a clear error.
+- `DATA_SOURCE=mock` — local and test mode; returns the static representative dataset.
 
-### What is implemented
+Mock mode is intentional only. It will not silently replace a failed production database connection.
 
-- Domain types (`Product`, `Module`, `FigmaPage`, `Breakpoint`, `Screen`, `ScreenRelationship`, `SyncJob`, `ProposedChange`, `AuditLog`)
-- Drizzle PostgreSQL schema for all planned tables
-- 20+ representative mock screens across three modules
-- Local search engine with tokenization, normalization, scoring, and filters
-- Prototype UI: search, filters, module browser, module detail, screen detail
-- Routes: `/`, `/modules`, `/modules/[moduleSlug]`, `/screens/[screenId]`
-- Vitest unit tests for search
-
-### What is deferred
-
-- Supabase project connection
-- Authentication and role-based access control
-- Database migrations and real persistence
-- Figma REST API integration
-- Synchronization workflow and admin review
-- GitHub repository creation
-- Vercel project connection and deployment
-
-## Domain model
+## Database architecture
 
 | Entity | Role |
 |---|---|
@@ -74,39 +57,81 @@ This phase validates the data model and search behavior using local TypeScript t
 | `Breakpoint` | Responsive parent frame (viewport) |
 | `Screen` | Individual searchable wireframe with optional semantic metadata |
 | `ScreenRelationship` | Links responsive variants, state variants, next/previous, and related screens |
-| `SyncJob` | Record of a Figma scan operation |
-| `ProposedChange` | Staged change awaiting admin approval |
-| `AuditLog` | Record of administrative actions |
+| `SyncJob` | Record of a Figma scan operation (deferred) |
+| `ProposedChange` | Staged change awaiting admin approval (deferred) |
+| `AuditLog` | Record of administrative actions (deferred) |
 
-## Local mock data
+## Supabase setup
 
-The file `src/lib/data/mock.ts` contains:
+A dedicated Supabase project named **figma-screen-navigator** is used for persistence. Drizzle migrations are tracked in `drizzle/migrations/`.
 
-- 1 product: NBF
-- 3 modules: Pension Calculation, Pensioner Profile, Contract Maintenance
-- 10 Figma pages
-- 12 breakpoints (XL and MD where applicable)
-- 20+ screens covering scenario matrices, component behaviors, states, and responsive variants
+### Local environment
 
-## Search behavior
+Create `.env.local` with the values from your Supabase project (do not commit it):
 
-`src/lib/search.ts` implements a local, deterministic search:
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<public-anon-key>
+SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
+DATABASE_URL=<pooled-connection-string>
+DATABASE_DIRECT_URL=<direct-connection-string>
+DATA_SOURCE=database
+
+# Deferred
+FIGMA_ACCESS_TOKEN=
+FIGMA_WEBHOOK_SECRET=
+ADMIN_EMAILS=
+```
+
+- `DATABASE_URL` is the pooled connection used by the application runtime.
+- `DATABASE_DIRECT_URL` is the direct connection used by Drizzle migrations.
+- Only `NEXT_PUBLIC_*` values are exposed to the browser.
+- `.env.example` contains names and descriptions only.
+
+### Migration workflow
+
+```bash
+# Generate a new migration from drizzle/schema.ts
+npm run db:generate
+
+# Apply pending migrations to the Supabase project
+npm run db:migrate
+```
+
+Always inspect generated migration SQL before applying it. Do not use `drizzle-kit push` as the only source of truth.
+
+### Seeding
+
+```bash
+# Seed representative development data. Safe to re-run.
+npm run db:seed
+```
+
+The seed is idempotent; re-running it does not create duplicates.
+
+## Repository and search
+
+Database access is provided through a server-only repository layer in `src/lib/repositories/`:
+
+- `products`: `listProducts`, `getProductBySlug`
+- `modules`: `listModules`, `getModuleBySlug`, `listModulesWithCounts`
+- `figma-pages`: `listPages`, `listPagesByModule`, `getPageById`
+- `breakpoints`: `listBreakpoints`, `getBreakpointById`
+- `screens`: `listScreens`, `getScreenById`, `listScreensByModule`, `listRelatedScreens`, `listResponsiveVariants`, `searchScreens`
+
+The public data API in `src/lib/data/index.ts` switches between database and mock mode based on `DATA_SOURCE`.
+
+### Search behavior
+
+The PostgreSQL-backed search in `src/lib/repositories/screens.ts` is deterministic:
 
 - Splits queries on `/`, `-`, `–`, whitespace, and punctuation
-- Searches product, module, page, breakpoint, original name, display name, semantic fields, keywords, and description
-- Ranks full display-name matches above partial metadata matches
-- Ranks module and page matches above keyword-only matches
-- Supports multiple terms in any order
-- Supports filters: product, module, page, breakpoint, status, behavior, state, scenario
+- Searches display name, original name, semantic fields, module, page, breakpoint, keywords, and description
+- Uses `ILIKE` partial matching and a weighted `CASE` expression for ranking
+- Ranks full display-name matches highest, then module/page, then semantic metadata, then keywords/description
+- Supports multiple terms, case-insensitive matching, and all UI filters
 
-## Routes
-
-| Route | Purpose |
-|---|---|
-| `/` | Search and filter all screens |
-| `/modules` | Browse modules |
-| `/modules/[moduleSlug]` | View all screens for a module |
-| `/screens/[screenId]` | View a single screen's details |
+There is no AI, vector, or external search service.
 
 ## Local installation
 
@@ -118,35 +143,22 @@ npm install
 ## Development commands
 
 ```bash
-npm run dev        # Start the development server
-npm run lint       # Run ESLint
-npx tsc --noEmit   # Run TypeScript validation
-npm test           # Run Vitest
-npm run build      # Build for production
+npm run dev          # Start the Next.js development server
+npm run lint         # Run ESLint
+npx tsc --noEmit     # Run TypeScript validation
+npm test             # Run Vitest
+npm run build        # Build for production
+npm run db:generate  # Generate Drizzle migration
+npm run db:migrate   # Apply Drizzle migrations
+npm run db:seed      # Seed development data
+npm run db:smoke     # Quick database integration verification
 ```
 
-## Environment-variable requirements
+## Mock data
 
-All values are added by you in `.env.local`; secrets are never committed.
+`src/lib/data/mock.ts` contains the original 19-screen representative dataset. It remains available as an explicit test fixture and as `DATA_SOURCE=mock` fallback. It is no longer the default production data source.
 
-| Variable | Visibility | Phase | Status |
-|---|---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | public (browser) | required later | deferred |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | public (browser) | required later | deferred |
-| `SUPABASE_SERVICE_ROLE_KEY` | server-only | required later | deferred |
-| `DATABASE_URL` | server-only | required later | deferred |
-| `FIGMA_ACCESS_TOKEN` | server-only | required later | deferred |
-| `FIGMA_WEBHOOK_SECRET` | server-only | optional later | deferred |
-| `ADMIN_EMAILS` | server-only | optional later | deferred |
-
-## Security notes
-
-- Figma tokens and Supabase service-role keys are **server-side only**.
-- The Figma REST API runs on the server; it is never called from the browser.
-- Figma MCP is used only for development-time inspection and is not the production data layer.
-- Supabase Row Level Security (RLS) will enforce the QA viewer / design administrator role model once authentication is connected.
-
-## Git and deployment workflow
+## Deployment workflow
 
 The intended flow is:
 
@@ -156,12 +168,11 @@ local feature branch → GitHub PR → Vercel preview → review/approval → me
 
 No direct pushes to `main`, no history rewrites, no production deploys, and no external service creation will happen without explicit approval.
 
-## Replacing mock data with database-backed data
+## Deferred work
 
-When Supabase is connected, the plan is:
-
-1. Run `drizzle-kit generate` to create migrations from `drizzle/schema.ts`.
-2. Apply migrations to the Supabase project.
-3. Replace `src/lib/data/mock.ts` with Drizzle queries through `src/lib/db/index.ts`.
-4. Update `src/lib/search.ts` to query the database and use the `search_vector` column for full-text search.
-5. Add the `pg_trgm` and `tsvector` migration documented in `drizzle/schema.ts`.
+- Supabase Authentication and role-based access control
+- Figma REST API integration and synchronization
+- Sync-job/proposed-change review workflow
+- Audit logging in the UI
+- GitHub repository and Vercel project setup
+- Production deployment
