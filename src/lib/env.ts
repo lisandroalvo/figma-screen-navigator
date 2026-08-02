@@ -14,6 +14,7 @@ const baseServerSchema = z.object({
   DATA_SOURCE: z.enum(["database", "mock"]).default("database"),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
   FIGMA_ACCESS_TOKEN: optionalNonEmptyString,
+  FIGMA_PENSION_CALCULATION_FILE_KEY: optionalNonEmptyString,
   FIGMA_WEBHOOK_SECRET: optionalNonEmptyString,
   ADMIN_EMAILS: optionalNonEmptyString,
 });

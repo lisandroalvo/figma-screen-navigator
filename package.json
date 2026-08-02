@@ -11,7 +11,8 @@
     "db:generate": "npx drizzle-kit generate",
     "db:migrate": "npx drizzle-kit migrate",
     "db:seed": "npx tsx src/lib/db/seed.ts",
-    "db:smoke": "npx tsx -r tsconfig-paths/register src/lib/db/smoke.ts"
+    "db:smoke": "npx tsx -r tsconfig-paths/register src/lib/db/smoke.ts",
+    "figma:smoke": "npx tsx -r tsconfig-paths/register src/lib/figma/smoke.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
