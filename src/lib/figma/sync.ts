@@ -11,6 +11,10 @@ import { getFile } from "./client";
 import { parseFigmaFile, type FigmaScreenCandidate } from "./parser";
 
 export interface SyncCounts {
+  high: number;
+  medium: number;
+  low: number;
+  rejected: number;
   new: number;
   update: number;
   rename: number;
@@ -53,6 +57,10 @@ function candidateAfter(
     normalizedName: candidate.normalizedName,
     metadata: candidate.metadata,
     ambiguityFlags: candidate.ambiguityFlags,
+    confidence: candidate.confidence,
+    confidenceScore: candidate.confidenceScore,
+    detectionReasons: candidate.detectionReasons,
+    rejectionReasons: candidate.rejectionReasons,
     width: candidate.width,
     height: candidate.height,
     figmaUrl: buildFigmaUrl(fileKey, candidate.id),
@@ -120,6 +128,10 @@ export async function scanPilotModule(): Promise<SyncResult> {
   );
 
   const counts: SyncCounts = {
+    high: parsed.counts.high,
+    medium: parsed.counts.medium,
+    low: parsed.counts.low,
+    rejected: parsed.counts.rejected,
     new: 0,
     update: 0,
     rename: 0,
@@ -161,12 +173,26 @@ export async function scanPilotModule(): Promise<SyncResult> {
     }
     seenIds.add(candidate.id);
 
-    if (candidate.ambiguityFlags.length > 0) {
-      counts.ambiguous++;
+    // Low and rejected confidence candidates are not proposed automatically.
+    if (candidate.confidence === "low" || candidate.confidence === "rejected") {
+      continue;
     }
 
-    const existing = existingByNodeId.get(candidate.id);
     const after = candidateAfter(fileKey, candidate);
+    const existing = existingByNodeId.get(candidate.id);
+
+    if (candidate.confidence === "medium") {
+      counts.ambiguous++;
+      proposedValues.push({
+        syncJobId: syncJob.id,
+        screenId: existing?.id,
+        action: "ambiguous",
+        status: "pending",
+        before: existing ? screenBefore(existing) : null,
+        after,
+      });
+      continue;
+    }
 
     if (!existing) {
       counts.new++;

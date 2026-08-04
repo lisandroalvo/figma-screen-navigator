@@ -1,0 +1,63 @@
+{
+  "calibratedAt": "2026-07-24T02:06:00Z",
+  "fileName": "Pension Calculation",
+  "fileKeyMasked": "h0EjBt...pI23FY",
+  "originalCandidates": 600,
+  "calibratedCandidates": 66,
+  "reductionPercentage": 89,
+  "confidence": {
+    "high": 0,
+    "medium": 37,
+    "low": 29,
+    "rejected": 39108
+  },
+  "ignoredNodes": 1,
+  "breakpoints": 10,
+  "pages": {
+    "included": 5,
+    "total": 6
+  },
+  "calibrationSyncJobId": "18090b51-18b2-4f24-bbc4-b7ba404a883a",
+  "proposedChanges": {
+    "ambiguous": 37,
+    "missing": 9
+  },
+  "mainPatternsReduced": [
+    "repeated side-bar frames (186 instances)",
+    "repeated org-profile / bottom-navigation frames",
+    "repeated modal overlays treated as nested behavior variants",
+    "generic Frame-XXXX containers",
+    "component internals (chips, widgets, cards, rows, tabs)",
+    "deeply nested layout frames without application shell"
+  ],
+  "indexingStrategies": {
+    "list estimates calculations": "direct_children",
+    "floor detail": "direct_children",
+    "accrual detail": "direct_children",
+    "calculation detail": "direct_children",
+    "estimate detail": "direct_children"
+  },
+  "confidenceRules": [
+    "under recognized breakpoint",
+    "width close to breakpoint (>= 0.8)",
+    "width above minimum ratio",
+    "descriptive non-generic name",
+    "contains recognizable application shell",
+    "contains behavior-variant children",
+    "leaf wireframe or container of only behavior variants",
+    "behavior overlays smaller than 0.8 breakpoint width are rejected"
+  ],
+  "ambiguityFlags": [
+    "possible_component_internal",
+    "possible_layout_container",
+    "low_width_ratio",
+    "unusual_dimensions",
+    "generic_name",
+    "unclassified_segment",
+    "duplicate_state",
+    "duplicate_behavior",
+    "uncertain_parent_boundary",
+    "responsive_parent_uncertain",
+    "standalone_behavior_uncertain"
+  ]
+}

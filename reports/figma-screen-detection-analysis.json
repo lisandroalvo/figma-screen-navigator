@@ -1,0 +1,702 @@
+{
+  "fileName": "Pension Calculation",
+  "fileKey": "h0EjBt...pI23FY",
+  "totalCandidates": 600,
+  "pages": 6,
+  "includedPages": 5,
+  "breakpoints": 10,
+  "ignored": 4071,
+  "byPage": {
+    "🟠 List Estimates/Calculations": 172,
+    "🟠 Floor Detail": 9,
+    "🟠 Accrual Detail": 68,
+    "🟠 Calculation Detail ": 190,
+    "🟠 Estimate Detail ": 161
+  },
+  "byBreakpoint": {
+    "(none)": 252,
+    "md": 102,
+    "lg": 97,
+    "sm": 86,
+    "xl": 63
+  },
+  "byDepth": {
+    "(none)": 600
+  },
+  "nestedCount": 0,
+  "genericCount": 0,
+  "containsShellCount": 0,
+  "duplicateNormalizedCount": 581,
+  "top50Names": [
+    {
+      "name": "side bar",
+      "count": 186
+    },
+    {
+      "name": "org profile bottom navigation",
+      "count": 67
+    },
+    {
+      "name": "modal alert hire status",
+      "count": 63
+    },
+    {
+      "name": "stages section",
+      "count": 60
+    },
+    {
+      "name": "card 50 payment option desktop lg",
+      "count": 56
+    },
+    {
+      "name": "adjustment tab conteiner",
+      "count": 38
+    },
+    {
+      "name": "card 50 payment option",
+      "count": 20
+    },
+    {
+      "name": "calculation section",
+      "count": 19
+    },
+    {
+      "name": "pesion sheet",
+      "count": 15
+    },
+    {
+      "name": "modal",
+      "count": 14
+    },
+    {
+      "name": "modal create calculation lg desktop",
+      "count": 13
+    },
+    {
+      "name": "calculation estimate section",
+      "count": 12
+    },
+    {
+      "name": "modal confirm review",
+      "count": 9
+    },
+    {
+      "name": "modal cretea estimate",
+      "count": 9
+    },
+    {
+      "name": "calculation floor section",
+      "count": 8
+    },
+    {
+      "name": "modal pension calculairon",
+      "count": 5
+    },
+    {
+      "name": "popup report location",
+      "count": 3
+    },
+    {
+      "name": "modal confirm verification",
+      "count": 2
+    },
+    {
+      "name": "modal confirm authorization lg desktop",
+      "count": 1
+    }
+  ],
+  "top50ParentNames": [
+    {
+      "name": "Participant Menu Items",
+      "count": 186
+    },
+    {
+      "name": "Frame 8947590",
+      "count": 73
+    },
+    {
+      "name": "Frame 8948434",
+      "count": 61
+    },
+    {
+      "name": "List Calculations / Credits Changed",
+      "count": 53
+    },
+    {
+      "name": "Tab- Pension",
+      "count": 38
+    },
+    {
+      "name": "Frame 8948435",
+      "count": 36
+    },
+    {
+      "name": "Frame 8948438",
+      "count": 24
+    },
+    {
+      "name": "Frame 8949226",
+      "count": 15
+    },
+    {
+      "name": "Frame 8949261",
+      "count": 12
+    },
+    {
+      "name": "Create Calculation Modal / Default",
+      "count": 8
+    },
+    {
+      "name": "List Worksheets",
+      "count": 8
+    },
+    {
+      "name": "Create Estimate (Disability Pension)",
+      "count": 8
+    },
+    {
+      "name": "List Worksheets / Merge Service Credits",
+      "count": 6
+    },
+    {
+      "name": "List Calculations / Re-run Floors Modal / Loading",
+      "count": 6
+    },
+    {
+      "name": "List Worksheets / Default / Modal Normal Retirement Date",
+      "count": 4
+    },
+    {
+      "name": "List Worksheets / Default / Modal Normal Retirement Date /  Empty State",
+      "count": 4
+    },
+    {
+      "name": "List Worksheets / Default / Modal Normal Retirement Date /  Error State.",
+      "count": 4
+    },
+    {
+      "name": "List Calculation / Re run Floors",
+      "count": 4
+    },
+    {
+      "name": "Confirm Verification",
+      "count": 4
+    },
+    {
+      "name": "Create Calculation",
+      "count": 4
+    },
+    {
+      "name": "Create Estimate (Disability Pension) / Date of Disability ",
+      "count": 4
+    },
+    {
+      "name": "Frame 8948472",
+      "count": 3
+    },
+    {
+      "name": "CONTENT",
+      "count": 3
+    },
+    {
+      "name": "List Worksheets / Past Service Credit",
+      "count": 2
+    },
+    {
+      "name": "List Calculations / Re-run Floors Modal / Successfully Completed Toast",
+      "count": 2
+    },
+    {
+      "name": "List Calculations",
+      "count": 2
+    },
+    {
+      "name": "List Calculations / Re-run Floors Modal",
+      "count": 2
+    },
+    {
+      "name": "List Calculation / Past Service Credits",
+      "count": 2
+    },
+    {
+      "name": "Default",
+      "count": 2
+    },
+    {
+      "name": "Create Calculation / Selected",
+      "count": 2
+    },
+    {
+      "name": "🟠 Calculation Detail ",
+      "count": 2
+    },
+    {
+      "name": "Create Estimate",
+      "count": 2
+    },
+    {
+      "name": "Re run Floor Modal",
+      "count": 1
+    },
+    {
+      "name": "Create Calculation Modal / Only 60mo C&L Available",
+      "count": 1
+    },
+    {
+      "name": "List Worksheets / Full View",
+      "count": 1
+    },
+    {
+      "name": "List Calculation / Merge Service Credits",
+      "count": 1
+    },
+    {
+      "name": "List Calculation / Vesting Future",
+      "count": 1
+    },
+    {
+      "name": "Confirm Verification / Date Input",
+      "count": 1
+    },
+    {
+      "name": "Confirm Verification / Date Input/ Ready to Apply",
+      "count": 1
+    },
+    {
+      "name": "Confirm Authorization",
+      "count": 1
+    },
+    {
+      "name": "Review Modal",
+      "count": 1
+    },
+    {
+      "name": "Calculation has been Reviewed ",
+      "count": 1
+    },
+    {
+      "name": "Confirm Verification - Reject - Send Confirmation Email",
+      "count": 1
+    },
+    {
+      "name": "Pension Estimate / Calculation Detail/ Tooltip ",
+      "count": 1
+    },
+    {
+      "name": "Pension Estimate / Calculation Detail/ Default 3",
+      "count": 1
+    },
+    {
+      "name": "Pension Estimate / Calculation Detail/ Tooltip 1",
+      "count": 1
+    }
+  ],
+  "top50Dimensions": [
+    {
+      "name": "80x759",
+      "count": 186
+    },
+    {
+      "name": "530x428",
+      "count": 63
+    },
+    {
+      "name": "1175x49",
+      "count": 29
+    },
+    {
+      "name": "1176x88",
+      "count": 29
+    },
+    {
+      "name": "1175x48",
+      "count": 26
+    },
+    {
+      "name": "314x240",
+      "count": 24
+    },
+    {
+      "name": "919x454",
+      "count": 20
+    },
+    {
+      "name": "245x300",
+      "count": 19
+    },
+    {
+      "name": "904x384",
+      "count": 17
+    },
+    {
+      "name": "639x351",
+      "count": 16
+    },
+    {
+      "name": "920x88",
+      "count": 15
+    },
+    {
+      "name": "712x326",
+      "count": 15
+    },
+    {
+      "name": "639x326",
+      "count": 15
+    },
+    {
+      "name": "1176x48",
+      "count": 12
+    },
+    {
+      "name": "639x186",
+      "count": 12
+    },
+    {
+      "name": "423x509",
+      "count": 10
+    },
+    {
+      "name": "904x326",
+      "count": 10
+    },
+    {
+      "name": "664x150",
+      "count": 9
+    },
+    {
+      "name": "364x542",
+      "count": 6
+    },
+    {
+      "name": "427x254",
+      "count": 6
+    },
+    {
+      "name": "274x312",
+      "count": 6
+    },
+    {
+      "name": "536x100",
+      "count": 6
+    },
+    {
+      "name": "664x100",
+      "count": 6
+    },
+    {
+      "name": "322x200",
+      "count": 4
+    },
+    {
+      "name": "423x455",
+      "count": 4
+    },
+    {
+      "name": "364x630",
+      "count": 3
+    },
+    {
+      "name": "904x358",
+      "count": 3
+    },
+    {
+      "name": "430x254",
+      "count": 3
+    },
+    {
+      "name": "274x230",
+      "count": 3
+    },
+    {
+      "name": "663x360",
+      "count": 3
+    },
+    {
+      "name": "663x365",
+      "count": 3
+    },
+    {
+      "name": "415x203",
+      "count": 3
+    },
+    {
+      "name": "536x150",
+      "count": 3
+    },
+    {
+      "name": "505x558",
+      "count": 2
+    },
+    {
+      "name": "304x512",
+      "count": 2
+    },
+    {
+      "name": "639x252",
+      "count": 2
+    },
+    {
+      "name": "322x252",
+      "count": 1
+    },
+    {
+      "name": "414x254",
+      "count": 1
+    },
+    {
+      "name": "356x174",
+      "count": 1
+    },
+    {
+      "name": "353x455",
+      "count": 1
+    },
+    {
+      "name": "500x186",
+      "count": 1
+    }
+  ],
+  "sampleCandidates": [
+    {
+      "id": "37515:34686",
+      "name": "Modal / Alert Hire status.",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 530,
+      "height": 428,
+      "childFrameCount": 4,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    },
+    {
+      "id": "37515:34915",
+      "name": "Side-Bar ",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 80,
+      "height": 759,
+      "childFrameCount": 0,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "Participant Menu Items",
+      "fullDepth": 7
+    },
+    {
+      "id": "37515:34934",
+      "name": "Org Profile / Bottom Navigation.",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 1175,
+      "height": 49,
+      "childFrameCount": 2,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    },
+    {
+      "id": "37515:35379",
+      "name": "Modal / Create Calculation  / LG / Desktop ",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 364,
+      "height": 542,
+      "childFrameCount": 5,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    },
+    {
+      "id": "37515:35501",
+      "name": "Modal / Alert Hire status.",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 530,
+      "height": 428,
+      "childFrameCount": 4,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    },
+    {
+      "id": "37515:35730",
+      "name": "Side-Bar ",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 80,
+      "height": 759,
+      "childFrameCount": 0,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "Participant Menu Items",
+      "fullDepth": 7
+    },
+    {
+      "id": "37515:35749",
+      "name": "Org Profile / Bottom Navigation.",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 1175,
+      "height": 49,
+      "childFrameCount": 2,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    },
+    {
+      "id": "37515:36283",
+      "name": "Modal / Create Calculation  / LG / Desktop ",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 364,
+      "height": 542,
+      "childFrameCount": 5,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    },
+    {
+      "id": "37515:36526",
+      "name": "Modal / Alert Hire status.",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 530,
+      "height": 428,
+      "childFrameCount": 4,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    },
+    {
+      "id": "37515:36755",
+      "name": "Side-Bar ",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 80,
+      "height": 759,
+      "childFrameCount": 0,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "Participant Menu Items",
+      "fullDepth": 7
+    },
+    {
+      "id": "37515:36774",
+      "name": "Org Profile / Bottom Navigation.",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 1175,
+      "height": 49,
+      "childFrameCount": 2,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    },
+    {
+      "id": "37515:37429",
+      "name": "Modal / Create Calculation  / LG / Desktop ",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 364,
+      "height": 542,
+      "childFrameCount": 5,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    },
+    {
+      "id": "37515:37551",
+      "name": "Modal / Alert Hire status.",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 530,
+      "height": 428,
+      "childFrameCount": 4,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    },
+    {
+      "id": "37515:37780",
+      "name": "Side-Bar ",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 80,
+      "height": 759,
+      "childFrameCount": 0,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "Participant Menu Items",
+      "fullDepth": 7
+    },
+    {
+      "id": "37515:37799",
+      "name": "Org Profile / Bottom Navigation.",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 1175,
+      "height": 49,
+      "childFrameCount": 2,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    },
+    {
+      "id": "37515:38333",
+      "name": "Modal / Create Calculation  / LG / Desktop ",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 364,
+      "height": 542,
+      "childFrameCount": 5,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    },
+    {
+      "id": "37515:39371",
+      "name": "Modal / Alert Hire status.",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 530,
+      "height": 428,
+      "childFrameCount": 4,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    },
+    {
+      "id": "37515:39600",
+      "name": "Side-Bar ",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 80,
+      "height": 759,
+      "childFrameCount": 0,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "Participant Menu Items",
+      "fullDepth": 7
+    },
+    {
+      "id": "37515:39619",
+      "name": "Org Profile / Bottom Navigation.",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 1175,
+      "height": 49,
+      "childFrameCount": 2,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    },
+    {
+      "id": "37515:40157",
+      "name": "Modal / Create Calculation  / LG / Desktop ",
+      "pageName": "🟠 List Estimates/Calculations",
+      "width": 364,
+      "height": 630,
+      "childFrameCount": 5,
+      "containsShell": false,
+      "generic": false,
+      "immediateParent": "List Calculations / Credits Changed",
+      "fullDepth": 6
+    }
+  ]
+}

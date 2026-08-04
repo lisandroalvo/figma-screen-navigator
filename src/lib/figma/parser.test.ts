@@ -86,7 +86,7 @@ describe("parseFigmaFile", () => {
     expect(parsed.screens).toHaveLength(1);
   });
 
-  it("ignores tiny and generic frames", () => {
+  it("rejects tiny and generic frames", () => {
     const file = makeFile("Pension", [
       {
         name: "🟠 Estimate Detail",
@@ -99,7 +99,7 @@ describe("parseFigmaFile", () => {
       },
     ]);
     const parsed = parseFigmaFile("abc", file);
-    expect(parsed.screens).toHaveLength(0);
-    expect(parsed.ignored.length).toBeGreaterThan(0);
+    expect(parsed.screens.filter((s) => s.confidence === "high" || s.confidence === "medium")).toHaveLength(0);
+    expect(parsed.counts.rejected).toBeGreaterThan(0);
   });
 });

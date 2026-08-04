@@ -1,4 +1,7 @@
 import type { FigmaFileResponse, FigmaNode } from "./client";
+import { pilotConfig } from "./config";
+
+export type Confidence = "high" | "medium" | "low" | "rejected";
 
 export interface FigmaScreenCandidate {
   id: string;
@@ -14,6 +17,8 @@ export interface FigmaScreenCandidate {
   breakpointName?: string;
   breakpointCode?: string;
   parentPath: { id: string; name: string; type: string }[];
+  fullParentPath: { id: string; name: string; type: string }[];
+  immediateParent?: { id: string; name: string; type: string };
   width: number;
   height: number;
   visible: boolean;
@@ -28,8 +33,16 @@ export interface FigmaScreenCandidate {
     state?: string;
   };
   ambiguityFlags: string[];
-  ignored: boolean;
-  ignoreReason?: string;
+  confidence: Confidence;
+  confidenceScore: number;
+  detectionReasons: string[];
+  rejectionReasons: string[];
+  childFrameCount: number;
+  widthRatio?: number;
+  containsShell: boolean;
+  generic: boolean;
+  depth: number;
+  nestedIn?: string;
 }
 
 export interface FigmaParseResult {
@@ -54,6 +67,14 @@ export interface FigmaParseResult {
   }[];
   screens: FigmaScreenCandidate[];
   ignored: { id: string; name: string; reason: string }[];
+  rejected: FigmaScreenCandidate[];
+  counts: {
+    high: number;
+    medium: number;
+    low: number;
+    rejected: number;
+    ignored: number;
+  };
 }
 
 const IGNORED_PAGE_PATTERNS = [
@@ -64,42 +85,6 @@ const IGNORED_PAGE_PATTERNS = [
   /^archive\b/i,
   /^deprecated\b/i,
   /^scratch\b/i,
-];
-
-const IGNORED_NAME_PATTERNS = [
-  /\bcopy\b/i,
-  /\btest\b/i,
-  /\bold\b/i,
-  /\barchive\b/i,
-  /\barchived\b/i,
-  /\bdeprecated\b/i,
-  /\bfinal new\b/i,
-  /\bv2\b/i,
-  /\bbackup\b/i,
-  /\btemp\b/i,
-  /\bscratch\b/i,
-  /\bframe\s+\d+/i,
-  /\brectangle\s+\d+/i,
-  /\bgroup\s+\d+/i,
-  /\bellipse\s+\d+/i,
-  /\bnote\b/i,
-  /\bimage\b/i,
-  /^arrow/i,
-  /^vector/i,
-  /^text\s/i,
-  /^stage[-\s]/i,
-  /^link\s+stages/i,
-  /\b(header|chips|widget|rows|property)\b/i,
-  /\b(button)\b/i,
-  /\bpension calculation[-\s]table\b/i,
-  /\btable[-\s](?:header|rows)\b/i,
-];
-
-const BREAKPOINT_PATTERNS = [
-  { code: "xl", pattern: /\b(?:xl|extra[-\s]?large)\b(?![\s\w]*responsive)/i },
-  { code: "lg", pattern: /\b(?:lg|large)\b(?![\s\w]*responsive)/i },
-  { code: "md", pattern: /\b(?:md|medium|tablet)\b(?![\s\w]*responsive)/i },
-  { code: "sm", pattern: /\b(?:sm|small|mobile)\b(?![\s\w]*responsive)/i },
 ];
 
 const BEHAVIORS = [
@@ -134,7 +119,7 @@ function normalizeText(input: string): string {
   return input
     .toLowerCase()
     .replace(/[\u{1F300}-\u{1FAFF}]/gu, " ")
-    .replace(/[\/\\|–—\-_.;:,'"!?()[\]{}<>&%@#$^*+=~`]/g, " ")
+    .replace(/[\/\\|–—\-_.;:,'"!?()[\]{}<>@#$^*+=~`]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -146,31 +131,32 @@ function tokenizeName(name: string): string[] {
     .filter((s) => s.length > 0);
 }
 
-function isIgnoredName(name: string): { ignored: boolean; reason?: string } {
-  for (const pattern of IGNORED_NAME_PATTERNS) {
-    if (pattern.test(name)) {
-      return {
-        ignored: true,
-        reason: `matched ignore pattern: ${pattern.source}`,
-      };
-    }
-  }
-  return { ignored: false };
-}
-
-const BREAKPOINT_DIMENSION = /\b\d+\s*px|\b(1280|1024|768|640|540|414|390|375|360)\b/i;
-
 function isBreakpoint(node: FigmaNode): { is: boolean; code?: string } {
   if (node.type !== "FRAME" && node.type !== "SECTION") return { is: false };
-  if (!hasBreakpointDimensions(node)) return { is: false };
-  if (!BREAKPOINT_DIMENSION.test(node.name)) return { is: false };
-  const normalized = node.name.toLowerCase();
-  for (const bp of BREAKPOINT_PATTERNS) {
-    if (bp.pattern.test(node.name) || bp.pattern.test(normalized)) {
+  const hasDims =
+    (node.absoluteBoundingBox?.width ?? 0) > 0 &&
+    (node.absoluteBoundingBox?.height ?? 0) > 0;
+  if (!hasDims) return { is: false };
+
+  const dimension = /\b\d+\s*px|\b(1280|1024|768|640|540|414|390|375|360)\b/i;
+  if (!dimension.test(node.name)) return { is: false };
+
+  const patterns = [
+    { code: "xl", pattern: /\b(?:xl|extra[-\s]?large)\b/i },
+    { code: "lg", pattern: /\b(?:lg|large)\b/i },
+    { code: "md", pattern: /\b(?:md|medium|tablet)\b/i },
+    { code: "sm", pattern: /\b(?:sm|small|mobile)\b/i },
+  ];
+  for (const bp of patterns) {
+    if (bp.pattern.test(node.name) || bp.pattern.test(node.name.toLowerCase())) {
       return { is: true, code: bp.code };
     }
   }
   return { is: false };
+}
+
+function isComponentParent(name: string, patterns: RegExp[]): boolean {
+  return patterns.some((p) => p.test(name));
 }
 
 function matchBehaviorOrState(
@@ -253,22 +239,189 @@ export function parseMetadata(name: string): {
   return { metadata, ambiguityFlags };
 }
 
-function hasDimensions(
+function getPageConfig(pageName: string) {
+  const key = normalizeText(pageName);
+  return pilotConfig.pageConfigs[key] ?? pilotConfig.defaultPageConfig;
+}
+
+function resolveConfidence(
   node: FigmaNode,
-  minArea: number,
-): { width: number; height: number } | null {
+  config: ReturnType<typeof getPageConfig>,
+  currentBreakpoint: { width?: number; height?: number } | undefined,
+  depth: number,
+  parentName: string,
+): {
+  confidence: Confidence;
+  score: number;
+  detectionReasons: string[];
+  rejectionReasons: string[];
+  ambiguityFlags: string[];
+  containsShell: boolean;
+  generic: boolean;
+  widthRatio?: number;
+} {
+  const reasons: string[] = [];
+  const rejections: string[] = [];
+  const ambiguity: string[] = [];
+
   const w = node.absoluteBoundingBox?.width ?? 0;
   const h = node.absoluteBoundingBox?.height ?? 0;
-  if (w > 0 && h > 0 && w * h >= minArea) return { width: w, height: h };
-  return null;
-}
+  const bpWidth = currentBreakpoint?.width;
+  const bpHeight = currentBreakpoint?.height;
+  const widthRatio = bpWidth && bpWidth > 0 ? w / bpWidth : undefined;
+  const heightRatio = bpHeight && bpHeight > 0 ? h / bpHeight : undefined;
 
-function hasBreakpointDimensions(node: FigmaNode) {
-  return hasDimensions(node, 80_000);
-}
+  const children = node.children ?? [];
+  const containsShell = children.some((c) =>
+    pilotConfig.shellChildPatterns.some((p) => p.test(c.name)),
+  );
 
-function hasScreenDimensions(node: FigmaNode) {
-  return hasDimensions(node, 50_000);
+  const generic =
+    /\b(frame|group|rectangle|ellipse|component|instance)\s*\d*\b/i.test(
+      node.name,
+    ) || /^\d+$/.test(node.name.trim());
+
+  if (generic) {
+    rejections.push("generic name");
+    ambiguity.push("generic_name");
+  }
+  if (pilotConfig.ignoreNamePatterns.some((p) => p.test(node.name))) {
+    rejections.push("ignored name pattern");
+  }
+  if (isComponentParent(parentName, pilotConfig.componentParentPatterns)) {
+    rejections.push("parent indicates component internal");
+    ambiguity.push("possible_component_internal");
+  }
+  if (w < config.minWidth || h < config.minHeight) {
+    rejections.push("dimensions below configured minimum");
+    ambiguity.push("unusual_dimensions");
+  }
+  if (widthRatio !== undefined && widthRatio < config.minWidthRatio) {
+    rejections.push("width ratio below configured minimum");
+    ambiguity.push("low_width_ratio");
+  }
+
+  // Behavior-named frames that are much smaller than the breakpoint are
+  // usually overlays inside a complete wireframe. The complete wireframe
+  // (parent or ancestor) should remain the searchable screen.
+  const hasBehaviorInName = pilotConfig.behaviorKeywords.some((b) =>
+    new RegExp(`\\b${b}\\b`, "i").test(node.name),
+  );
+  if (
+    hasBehaviorInName &&
+    widthRatio !== undefined &&
+    widthRatio < 0.8
+  ) {
+    rejections.push("behavior overlay, not a complete wireframe");
+    ambiguity.push("standalone_behavior_uncertain");
+  }
+  if (depth > config.maxDepth) {
+    rejections.push("exceeded max indexing depth");
+    ambiguity.push("uncertain_parent_boundary");
+  }
+  if (node.type !== "FRAME") {
+    rejections.push(`node type is ${node.type}`);
+  }
+
+  if (rejections.length > 0) {
+    return {
+      confidence: "rejected",
+      score: 0,
+      detectionReasons: reasons,
+      rejectionReasons: rejections,
+      ambiguityFlags: ambiguity,
+      containsShell,
+      generic,
+      widthRatio,
+    };
+  }
+
+  let score = 50;
+
+  if (currentBreakpoint) {
+    reasons.push("under recognized breakpoint");
+    score += 20;
+  } else if (depth <= 2) {
+    reasons.push("direct child of page");
+    score += 10;
+  } else {
+    ambiguity.push("responsive_parent_uncertain");
+  }
+
+  if (widthRatio !== undefined) {
+    if (widthRatio >= 0.8) {
+      reasons.push("width close to breakpoint");
+      score += 25;
+    } else if (widthRatio >= config.minWidthRatio) {
+      reasons.push("width above minimum ratio");
+      score += 10;
+      ambiguity.push("low_width_ratio");
+    }
+  }
+
+  if (heightRatio !== undefined && heightRatio >= 0.5) {
+    reasons.push("height close to breakpoint");
+    score += 10;
+  }
+
+  const behaviorChildren = children.filter((c) =>
+    pilotConfig.behaviorKeywords.some((b) =>
+      new RegExp(`\\b${b}\\b`, "i").test(c.name),
+    ),
+  );
+
+  if (containsShell) {
+    reasons.push("contains recognizable application shell");
+    score += 20;
+  } else if (behaviorChildren.length > 0) {
+    reasons.push("contains behavior variants");
+    score += 10;
+  } else {
+    ambiguity.push("possible_layout_container");
+  }
+
+  if (!generic) {
+    reasons.push("descriptive non-generic name");
+    score += 15;
+  }
+
+  const structuralChildren = children.filter(
+    (c) => c.type === "FRAME" || c.type === "SECTION",
+  );
+  if (structuralChildren.length === 0) {
+    reasons.push("leaf wireframe");
+    score += 10;
+  } else if (behaviorChildren.length === structuralChildren.length) {
+    reasons.push("contains only behavior-variant children");
+    score += 10;
+  } else {
+    ambiguity.push("possible_layout_container");
+  }
+
+  const { ambiguityFlags } = parseMetadata(node.name);
+  ambiguity.push(...ambiguityFlags);
+
+  let confidence: Confidence = "medium";
+  if (
+    score >= 80 &&
+    reasons.includes("under recognized breakpoint") &&
+    (containsShell || (widthRatio && widthRatio >= 0.8))
+  ) {
+    confidence = "high";
+  } else if (score < 60 || ambiguity.length > 1) {
+    confidence = "low";
+  }
+
+  return {
+    confidence,
+    score,
+    detectionReasons: reasons,
+    rejectionReasons: rejections,
+    ambiguityFlags: ambiguity,
+    containsShell,
+    generic,
+    widthRatio,
+  };
 }
 
 export function parseFigmaFile(
@@ -282,6 +435,8 @@ export function parseFigmaFile(
     breakpoints: [],
     screens: [],
     ignored: [],
+    rejected: [],
+    counts: { high: 0, medium: 0, low: 0, rejected: 0, ignored: 0 },
   };
 
   for (const page of file.document.children ?? []) {
@@ -295,11 +450,8 @@ export function parseFigmaFile(
         included: false,
         reason: isIgnoredPage ? "ignored page" : "not a canvas",
       });
-      result.ignored.push({
-        id: page.id,
-        name: page.name,
-        reason: "ignored page",
-      });
+      result.ignored.push({ id: page.id, name: page.name, reason: "ignored page" });
+      result.counts.ignored++;
       continue;
     }
 
@@ -311,110 +463,198 @@ export function parseFigmaFile(
       included: true,
     });
 
+    const pageConfig = getPageConfig(page.name);
     const basePath = [
       { id: fileKey, name: file.name, type: "module" },
       { id: page.id, name: page.name, type: "page" },
     ];
 
-    const pageScreens = collectScreens(page, basePath, undefined, page.id, result);
-    result.screens.push(...pageScreens);
+    const pageScreens = collect(
+      page,
+      basePath,
+      undefined,
+      page.id,
+      pageConfig,
+      0,
+      result,
+      "",
+    );
+
+    for (const s of pageScreens) {
+      result.screens.push(s);
+    }
+  }
+
+  for (const s of result.screens) {
+    if (s.confidence === "high") result.counts.high++;
+    if (s.confidence === "medium") result.counts.medium++;
+    if (s.confidence === "low") result.counts.low++;
+  }
+
+  for (let i = 0; i < result.rejected.length; i++) {
+    result.counts.rejected++;
   }
 
   return result;
 }
 
-function collectScreens(
+function collect(
   node: FigmaNode,
   parentPath: { id: string; name: string; type: string }[],
-  currentBreakpoint:
-    | { id: string; name: string; code: string }
-    | undefined,
+  currentBreakpoint: { id: string; name: string; code: string; width?: number; height?: number } | undefined,
   pageId: string,
+  config: ReturnType<typeof getPageConfig>,
+  depth: number,
   result: FigmaParseResult,
+  parentName: string,
 ): FigmaScreenCandidate[] {
   if (node.visible === false) return [];
 
+  const entry = { id: node.id, name: node.name, type: node.type };
+  const fullPath = [...parentPath, entry];
+
   const bp = isBreakpoint(node);
   if (bp.is) {
-    const dims = hasBreakpointDimensions(node);
     result.breakpoints.push({
       id: node.id,
       name: node.name,
       code: bp.code ?? "unknown",
-      width: dims?.width,
-      height: dims?.height,
+      width: node.absoluteBoundingBox?.width,
+      height: node.absoluteBoundingBox?.height,
       pageId,
       pageName: parentPath.find((p) => p.type === "page")?.name ?? "",
     });
 
-    const nextPath = [
-      ...parentPath,
-      { id: node.id, name: node.name, type: "breakpoint" },
-    ];
+    const bpInfo = {
+      id: node.id,
+      name: node.name,
+      code: bp.code ?? "unknown",
+      width: node.absoluteBoundingBox?.width,
+      height: node.absoluteBoundingBox?.height,
+    };
 
     const found: FigmaScreenCandidate[] = [];
     for (const child of node.children ?? []) {
-      found.push(
-        ...collectScreens(
-          child,
-          nextPath,
-          { id: node.id, name: node.name, code: bp.code ?? "unknown" },
-          pageId,
-          result,
-        ),
-      );
+      found.push(...collect(child, fullPath, bpInfo, pageId, config, depth + 1, result, node.name));
     }
     return found;
   }
 
-  const dims = hasScreenDimensions(node);
-  const ignore = isIgnoredName(node.name);
-
+  // Build child candidates first. Only child candidates that are not rejected
+  // are passed back up the tree; rejected leaves are recorded separately so
+  // that they do not block parents from being treated as wireframes.
   const childCandidates: FigmaScreenCandidate[] = [];
   for (const child of node.children ?? []) {
-    childCandidates.push(...collectScreens(child, parentPath, currentBreakpoint, pageId, result));
+    const childRes = collect(
+      child,
+      fullPath,
+      currentBreakpoint,
+      pageId,
+      config,
+      depth + 1,
+      result,
+      node.name,
+    );
+    for (const c of childRes) {
+      if (c.confidence !== "rejected") {
+        childCandidates.push(c);
+      }
+    }
   }
 
-  const isScreenNode = node.type === "FRAME" && dims !== null;
+  if (node.type === "FRAME") {
+    const candidate = buildCandidate(
+      node,
+      fullPath,
+      currentBreakpoint,
+      pageId,
+      config,
+      depth,
+      parentName,
+    );
 
-  if (isScreenNode) {
-    if (ignore.ignored) {
-      result.ignored.push({
-        id: node.id,
-        name: node.name,
-        reason: ignore.reason ?? "ignored",
-      });
+    if (candidate.confidence === "rejected") {
+      result.rejected.push(candidate);
       return childCandidates;
     }
 
-    // This node is a leaf-like wireframe only if none of its descendants
-    // are also valid screen candidates. Otherwise it is a container.
-    if (childCandidates.length === 0) {
-      const { metadata, ambiguityFlags } = parseMetadata(node.name);
-      const screen: FigmaScreenCandidate = {
-        id: node.id,
-        name: node.name,
-        normalizedName: normalizeText(node.name),
-        displayName: node.name,
-        originalName: node.name,
-        nodeType: node.type,
-        pageId,
-        pageName: parentPath.find((p) => p.type === "page")?.name ?? "",
-        pageNodeId: pageId,
-        breakpointId: currentBreakpoint?.id,
-        breakpointName: currentBreakpoint?.name,
-        breakpointCode: currentBreakpoint?.code,
-        parentPath,
-        width: dims.width,
-        height: dims.height,
-        visible: node.visible ?? true,
-        metadata,
-        ambiguityFlags,
-        ignored: false,
-      };
-      return [screen];
+    // If this node has non-rejected child candidates, it is a layout
+    // container rather than a leaf wireframe. The child candidates are kept
+    // and this node is recorded as rejected so it does not become a duplicate.
+    if (childCandidates.length > 0) {
+      candidate.confidence = "rejected";
+      candidate.confidenceScore = 0;
+      candidate.rejectionReasons.push("contains nested wireframe candidates");
+      candidate.ambiguityFlags.push("possible_layout_container");
+      result.rejected.push(candidate);
+      return childCandidates;
     }
+
+    return [candidate];
   }
 
   return childCandidates;
+}
+
+function buildCandidate(
+  node: FigmaNode,
+  fullPath: { id: string; name: string; type: string }[],
+  currentBreakpoint: { id: string; name: string; code: string; width?: number; height?: number } | undefined,
+  pageId: string,
+  config: ReturnType<typeof getPageConfig>,
+  depth: number,
+  parentName: string,
+): FigmaScreenCandidate {
+  const w = node.absoluteBoundingBox?.width ?? 0;
+  const h = node.absoluteBoundingBox?.height ?? 0;
+  const pageName =
+    fullPath.find((p) => p.type === "page")?.name ?? "";
+
+  const resolved = resolveConfidence(
+    node,
+    config,
+    currentBreakpoint,
+    depth,
+    parentName,
+  );
+
+  const { metadata, ambiguityFlags } = parseMetadata(node.name);
+
+  const allAmbiguity = Array.from(
+    new Set([...resolved.ambiguityFlags, ...ambiguityFlags]),
+  );
+
+  return {
+    id: node.id,
+    name: node.name,
+    normalizedName: normalizeText(node.name),
+    displayName: node.name,
+    originalName: node.name,
+    nodeType: node.type,
+    pageId,
+    pageName,
+    pageNodeId: pageId,
+    breakpointId: currentBreakpoint?.id,
+    breakpointName: currentBreakpoint?.name,
+    breakpointCode: currentBreakpoint?.code,
+    parentPath: fullPath.filter((p) =>
+      ["product", "module", "page", "breakpoint"].includes(p.type),
+    ),
+    fullParentPath: fullPath,
+    immediateParent: fullPath.length > 1 ? fullPath[fullPath.length - 2] : undefined,
+    width: w,
+    height: h,
+    visible: node.visible === false ? false : true,
+    metadata,
+    ambiguityFlags: allAmbiguity,
+    confidence: resolved.confidence,
+    confidenceScore: resolved.score,
+    detectionReasons: resolved.detectionReasons,
+    rejectionReasons: resolved.rejectionReasons,
+    childFrameCount: (node.children ?? []).filter((c) => c.type === "FRAME").length,
+    widthRatio: resolved.widthRatio,
+    containsShell: resolved.containsShell,
+    generic: resolved.generic,
+    depth,
+  };
 }

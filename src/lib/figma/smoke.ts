@@ -23,6 +23,7 @@ async function main() {
   console.log("Pages:", parsed.pages.length, "included:", parsed.pages.filter((p) => p.included).length);
   console.log("Breakpoints:", parsed.breakpoints.length);
   console.log("Screen candidates:", parsed.screens.length);
+  console.log("Confidence:", parsed.counts);
   console.log("Ignored:", parsed.ignored.length);
 
   console.log("\nSample breakpoints:");
