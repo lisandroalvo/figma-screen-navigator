@@ -15,7 +15,15 @@ function statusLabel(status: string) {
   return map[status] ?? status;
 }
 
-export function ScreenCard({ screen }: { screen: Screen }) {
+export function ScreenCard({
+  screen,
+  breakpoints = [],
+  variantCount,
+}: {
+  screen: Screen;
+  breakpoints?: string[];
+  variantCount?: number;
+}) {
   const context = [screen.scenario, screen.option, screen.condition, screen.state, screen.behavior]
     .filter(Boolean)
     .join(" · ");
@@ -37,14 +45,31 @@ export function ScreenCard({ screen }: { screen: Screen }) {
           <p className="font-medium text-zinc-900">{screen.parentPath[2]?.name}</p>
         </div>
         <div>
-          <span className="text-zinc-500">Breakpoint</span>
-          <p className="font-medium text-zinc-900">{screen.parentPath[3]?.name}</p>
-        </div>
-        <div>
           <span className="text-zinc-500">Status</span>
           <p className="font-medium text-zinc-900">{statusLabel(screen.status)}</p>
         </div>
+        <div>
+          <span className="text-zinc-500">Source</span>
+          <p className="font-medium text-zinc-900">{screen.source}</p>
+        </div>
       </div>
+      {breakpoints.length > 0 && (
+        <div className="mt-2 flex flex-wrap gap-1">
+          {breakpoints.map((bp) => (
+            <span
+              key={bp}
+              className="rounded bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-700"
+            >
+              {bp.toUpperCase()}
+            </span>
+          ))}
+          {variantCount !== undefined && (
+            <span className="rounded bg-zinc-50 px-2 py-0.5 text-xs text-zinc-500">
+              {variantCount} variant{variantCount === 1 ? "" : "s"}
+            </span>
+          )}
+        </div>
+      )}
       <div className="mt-4 grid gap-4 sm:grid-cols-[200px_1fr]">
         {screen.previewUrl ? (
           <Image
@@ -61,9 +86,6 @@ export function ScreenCard({ screen }: { screen: Screen }) {
         <div className="flex flex-col items-start gap-3">
           <p className="text-sm text-zinc-500">
             Original: <span className="text-zinc-700">{screen.originalName}</span>
-          </p>
-          <p className="text-xs text-zinc-400">
-            Source: {screen.source}
           </p>
           <div className="flex flex-wrap gap-2">
             <Link

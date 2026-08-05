@@ -2,6 +2,7 @@ import { FilterPanel } from "@/components/FilterPanel";
 import { ScreenCard } from "@/components/ScreenCard";
 import { SearchBox } from "@/components/SearchBox";
 import { getFilterOptions, searchScreens } from "@/lib/data";
+import { listVariantsByScreen } from "@/lib/repositories/screen-variants";
 import type { SearchFilters } from "@/lib/search";
 
 function stringOrUndefined(
@@ -35,6 +36,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     getFilterOptions(),
   ]);
 
+  const screensWithVariants = await Promise.all(
+    screens.map(async (screen) => {
+      const variants = await listVariantsByScreen(screen.id);
+      const breakpoints = variants
+        .map((v) => v.breakpointCode)
+        .filter((c): c is string => Boolean(c));
+      return { screen, breakpoints, variantCount: variants.length };
+    }),
+  );
+
   return (
     <main className="min-h-screen bg-zinc-50 p-6">
       <div className="mx-auto max-w-5xl space-y-6">
@@ -61,8 +72,13 @@ export default async function HomePage({ searchParams }: HomePageProps) {
             <p className="text-center text-zinc-500">No matching screens.</p>
           ) : (
             <div className="space-y-4">
-              {screens.map((screen) => (
-                <ScreenCard key={screen.id} screen={screen} />
+              {screensWithVariants.map(({ screen, breakpoints, variantCount }) => (
+                <ScreenCard
+                  key={screen.id}
+                  screen={screen}
+                  breakpoints={breakpoints}
+                  variantCount={variantCount}
+                />
               ))}
             </div>
           )}

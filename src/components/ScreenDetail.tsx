@@ -43,30 +43,28 @@ export function ScreenDetail({
       </h1>
       {context && <p className="mt-1 text-lg text-zinc-600">{context}</p>}
 
-      {variants.length > 1 && (
-        <div className="mt-4 flex flex-wrap gap-2">
-          {variants.map((v) => {
-            const isSelected = v.id === selectedVariant?.id;
-            const bp = v.breakpointCode?.toUpperCase() ?? v.id;
-            return (
-              <a
-                key={v.id}
-                href={`/screens/${screen.id}?variant=${v.breakpointCode ?? v.id}`}
-                className={`rounded border px-3 py-2 text-sm font-medium ${
-                  isSelected
-                    ? "border-zinc-900 bg-zinc-900 text-white"
-                    : "border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-100"
-                }`}
-              >
-                {bp}
-                {v.isPrimary && (
-                  <span className="ml-1 text-xs opacity-70">(primary)</span>
-                )}
-              </a>
-            );
-          })}
-        </div>
-      )}
+      <div className="mt-4 flex flex-wrap gap-2">
+        {variants.map((v) => {
+          const isSelected = v.id === selectedVariant?.id;
+          const bp = v.breakpointCode?.toUpperCase() ?? v.id;
+          return (
+            <a
+              key={v.id}
+              href={`/screens/${screen.id}?variant=${v.breakpointCode ?? v.id}`}
+              className={`rounded border px-3 py-2 text-sm font-medium ${
+                isSelected
+                  ? "border-zinc-900 bg-zinc-900 text-white"
+                  : "border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-100"
+              }`}
+            >
+              {bp}
+              {v.isPrimary && (
+                <span className="ml-1 text-xs opacity-70">(primary)</span>
+              )}
+            </a>
+          );
+        })}
+      </div>
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[2fr_1fr]">
         <div>
@@ -109,6 +107,18 @@ export function ScreenDetail({
           <div className="rounded border border-zinc-200 p-4">
             <h2 className="font-semibold text-zinc-900">Status</h2>
             <p className="text-zinc-700">{statusLabel(screen.status)}</p>
+            <p className="mt-1 text-sm text-zinc-500">Source: {screen.source}</p>
+            <p className="text-sm text-zinc-500">Variants: {variants.length}</p>
+            {selectedVariant?.previewStatus && (
+              <p className="text-sm text-zinc-500">
+                Preview: {selectedVariant.previewStatus}
+                {selectedVariant.previewGeneratedAt && (
+                  <span className="block text-xs">
+                    Generated {new Date(selectedVariant.previewGeneratedAt).toISOString()}
+                  </span>
+                )}
+              </p>
+            )}
           </div>
           <div className="rounded border border-zinc-200 p-4">
             <h2 className="font-semibold text-zinc-900">Structured metadata</h2>
