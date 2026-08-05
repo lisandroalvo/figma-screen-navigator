@@ -34,7 +34,7 @@ export interface SyncResult {
   counts: SyncCounts;
 }
 
-function buildFigmaUrl(fileKey: string, nodeId: string): string {
+export function buildFigmaUrl(fileKey: string, nodeId: string): string {
   const id = nodeId.replace(/:/g, "-");
   return `https://www.figma.com/design/${fileKey}?node-id=${encodeURIComponent(id)}`;
 }

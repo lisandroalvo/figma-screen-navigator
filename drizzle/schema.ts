@@ -59,6 +59,19 @@ export const proposedChangeStatusEnum = pgEnum("proposed_change_status", [
   "rejected",
 ]);
 
+export const screenSourceEnum = pgEnum("screen_source", [
+  "mock",
+  "figma",
+  "manual",
+]);
+
+export const screenVariantStatusEnum = pgEnum("screen_variant_status", [
+  "active",
+  "missing_review",
+  "deprecated",
+  "archived",
+]);
+
 export const productsTable = pgTable("products", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
@@ -187,6 +200,7 @@ export const screensTable = pgTable(
     parentPath: jsonb("parent_path").default([]).notNull(),
     ambiguityFlags: jsonb("ambiguity_flags").$type<string[]>().default([]).notNull(),
     metadata: jsonb("metadata").default({}).notNull(),
+    source: screenSourceEnum("source").default("figma").notNull(),
 
     lastFigmaModifiedAt: timestamp("last_figma_modified_at", {
       withTimezone: true,
@@ -211,6 +225,52 @@ export const screensTable = pgTable(
     index("screen_state_idx").on(table.state),
     index("screen_behavior_idx").on(table.behavior),
     index("screen_display_name_trgm_idx").on(table.displayName), // requires pg_trgm extension + migration
+  ],
+);
+
+export const screenVariantsTable = pgTable(
+  "screen_variants",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    screenId: uuid("screen_id")
+      .notNull()
+      .references(() => screensTable.id, { onDelete: "cascade" }),
+    breakpointId: uuid("breakpoint_id").references(() => breakpointsTable.id, {
+      onDelete: "set null",
+    }),
+    breakpointCode: text("breakpoint_code"),
+    figmaNodeId: text("figma_node_id").notNull(),
+    figmaFileKey: text("figma_file_key").notNull(),
+    figmaPageNodeId: text("figma_page_node_id").notNull(),
+    originalName: text("original_name").notNull(),
+    normalizedName: text("normalized_name").notNull(),
+    figmaUrl: text("figma_url").notNull(),
+    previewUrl: text("preview_url"),
+    width: integer("width"),
+    height: integer("height"),
+    parentPath: jsonb("parent_path").default([]).notNull(),
+    metadata: jsonb("metadata").default({}).notNull(),
+    ambiguityFlags: jsonb("ambiguity_flags").$type<string[]>().default([]).notNull(),
+    isPrimary: boolean("is_primary").default(false).notNull(),
+    status: screenVariantStatusEnum("status").default("active").notNull(),
+    lastFigmaModifiedAt: timestamp("last_figma_modified_at", {
+      withTimezone: true,
+    }),
+    lastSyncedAt: timestamp("last_synced_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    unique("variant_screen_node").on(table.screenId, table.figmaNodeId),
+    index("variant_screen_idx").on(table.screenId),
+    index("variant_breakpoint_idx").on(table.breakpointId),
+    index("variant_breakpoint_code_idx").on(table.breakpointCode),
+    index("variant_primary_idx").on(table.isPrimary),
+    index("variant_status_idx").on(table.status),
   ],
 );
 

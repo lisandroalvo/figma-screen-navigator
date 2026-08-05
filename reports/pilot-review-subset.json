@@ -1,0 +1,804 @@
+{
+  "syncJobId": "ce55190e-27d0-4053-8738-5fefb12bcd16",
+  "subset": [
+    {
+      "reason": "4+ breakpoints",
+      "id": "c494c10e-4adb-4396-a0f9-5405d796de64",
+      "type": "logical_screen",
+      "metadata": {
+        "screen": "Calculation Verified"
+      },
+      "pageName": "🟠 Calculation Detail ",
+      "variants": [
+        {
+          "id": "24202:59833",
+          "width": 1280,
+          "height": 858,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=24202-59833",
+          "metadata": {
+            "screen": "Calculation Verified"
+          },
+          "originalName": "Calculation Verified",
+          "breakpointCode": "xl"
+        },
+        {
+          "id": "35172:19303",
+          "width": 1024,
+          "height": 800,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-19303",
+          "metadata": {
+            "screen": "Calculation Verified"
+          },
+          "originalName": "Calculation Verified",
+          "breakpointCode": "lg"
+        },
+        {
+          "id": "35172:20831",
+          "width": 1024,
+          "height": 800,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-20831",
+          "metadata": {
+            "screen": "Calculation Verified"
+          },
+          "originalName": "Calculation Verified",
+          "breakpointCode": "lg"
+        },
+        {
+          "id": "35205:19240",
+          "width": 768,
+          "height": 800,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35205-19240",
+          "metadata": {
+            "screen": "Calculation Verified"
+          },
+          "originalName": "Calculation Verified",
+          "breakpointCode": "md"
+        },
+        {
+          "id": "35205:20681",
+          "width": 768,
+          "height": 800,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35205-20681",
+          "metadata": {
+            "screen": "Calculation Verified"
+          },
+          "originalName": "Calculation Verified",
+          "breakpointCode": "md"
+        },
+        {
+          "id": "35210:35741",
+          "width": 640,
+          "height": 800,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35210-35741",
+          "metadata": {
+            "screen": "Calculation Verified"
+          },
+          "originalName": "Calculation Verified",
+          "breakpointCode": "sm"
+        },
+        {
+          "id": "35213:37752",
+          "width": 640,
+          "height": 800,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35213-37752",
+          "metadata": {
+            "screen": "Calculation Verified"
+          },
+          "originalName": "Calculation Verified",
+          "breakpointCode": "sm"
+        }
+      ],
+      "confidence": "high",
+      "pageNodeId": "23420:206272",
+      "displayName": "Calculation Verified",
+      "isResponsive": true,
+      "originalName": "Calculation Verified",
+      "variantCount": 7,
+      "ambiguityFlags": [
+        "duplicate_breakpoint_variant"
+      ],
+      "primaryVariant": {
+        "id": "24202:59833",
+        "width": 1280,
+        "height": 858,
+        "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=24202-59833",
+        "originalName": "Calculation Verified",
+        "breakpointCode": "xl"
+      },
+      "confidenceScore": 140,
+      "hierarchyPattern": "screen_group_contains_screens",
+      "availableBreakpoints": [
+        "xl",
+        "lg",
+        "md",
+        "sm"
+      ],
+      "sameBreakpointCollision": true
+    },
+    {
+      "reason": "single variant",
+      "id": "c4f9b417-6e43-4af4-b696-4df25f368b1d",
+      "type": "logical_screen",
+      "metadata": {
+        "screen": "75% J&S Option",
+        "scenario": "Actuarial Increase"
+      },
+      "pageName": "🟠 Accrual Detail",
+      "variants": [
+        {
+          "id": "36872:10658",
+          "width": 1280,
+          "height": 847,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36872-10658",
+          "metadata": {
+            "screen": "75% J&S Option",
+            "scenario": "Actuarial Increase"
+          },
+          "originalName": "75% J&S Option - Actuarial Increase",
+          "breakpointCode": "xl"
+        }
+      ],
+      "confidence": "high",
+      "pageNodeId": "35005:26881",
+      "displayName": "75% J&S Option - Actuarial Increase",
+      "isResponsive": false,
+      "originalName": "75% J&S Option - Actuarial Increase",
+      "variantCount": 1,
+      "ambiguityFlags": [],
+      "primaryVariant": {
+        "id": "36872:10658",
+        "width": 1280,
+        "height": 847,
+        "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36872-10658",
+        "originalName": "75% J&S Option - Actuarial Increase",
+        "breakpointCode": "xl"
+      },
+      "confidenceScore": 140,
+      "hierarchyPattern": "screen_group_contains_screens",
+      "availableBreakpoints": [
+        "xl"
+      ],
+      "sameBreakpointCollision": false
+    },
+    {
+      "reason": "Estimate Detail",
+      "id": "d12d2b0a-7802-4e23-9f30-5df06aa0abbd",
+      "type": "logical_screen",
+      "metadata": {
+        "screen": "List Calculation",
+        "scenario": "Vesting Future"
+      },
+      "pageName": "🟠 List Estimates/Calculations",
+      "variants": [
+        {
+          "id": "37134:52444",
+          "width": 1024,
+          "height": 800,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37134-52444",
+          "metadata": {
+            "screen": "List Calculation",
+            "scenario": "Vesting Future"
+          },
+          "originalName": "List Calculation / Vesting Future",
+          "breakpointCode": "lg"
+        }
+      ],
+      "confidence": "high",
+      "pageNodeId": "23452:201927",
+      "displayName": "List Calculation / Vesting Future",
+      "isResponsive": false,
+      "originalName": "List Calculation / Vesting Future",
+      "variantCount": 1,
+      "ambiguityFlags": [],
+      "primaryVariant": {
+        "id": "37134:52444",
+        "width": 1024,
+        "height": 800,
+        "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37134-52444",
+        "originalName": "List Calculation / Vesting Future",
+        "breakpointCode": "lg"
+      },
+      "confidenceScore": 140,
+      "hierarchyPattern": "screen_group_contains_screens",
+      "availableBreakpoints": [
+        "lg"
+      ],
+      "sameBreakpointCollision": false
+    },
+    {
+      "reason": "Calculation Detail",
+      "id": "4189de29-1e07-4c11-aca6-74446be7b5f2",
+      "type": "logical_screen",
+      "metadata": {
+        "screen": "Calculation has been Rejected",
+        "scenario": "Full View"
+      },
+      "pageName": "🟠 Calculation Detail ",
+      "variants": [
+        {
+          "id": "35172:19405",
+          "width": 1024,
+          "height": 873,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-19405",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "lg"
+        },
+        {
+          "id": "35172:20933",
+          "width": 1024,
+          "height": 873,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-20933",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "lg"
+        },
+        {
+          "id": "35205:19345",
+          "width": 768,
+          "height": 1097,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35205-19345",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "md"
+        },
+        {
+          "id": "35205:20786",
+          "width": 768,
+          "height": 1133,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35205-20786",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "md"
+        },
+        {
+          "id": "35210:35848",
+          "width": 640,
+          "height": 1152,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35210-35848",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "sm"
+        },
+        {
+          "id": "35213:37859",
+          "width": 640,
+          "height": 1152,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35213-37859",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "sm"
+        }
+      ],
+      "confidence": "high",
+      "pageNodeId": "23420:206272",
+      "displayName": "Calculation has been Rejected / Full View",
+      "isResponsive": true,
+      "originalName": "Calculation has been Rejected / Full View",
+      "variantCount": 6,
+      "ambiguityFlags": [
+        "duplicate_breakpoint_variant"
+      ],
+      "primaryVariant": {
+        "id": "35172:19405",
+        "width": 1024,
+        "height": 873,
+        "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-19405",
+        "originalName": "Calculation has been Rejected / Full View",
+        "breakpointCode": "lg"
+      },
+      "confidenceScore": 140,
+      "hierarchyPattern": "screen_group_contains_screens",
+      "availableBreakpoints": [
+        "lg",
+        "md",
+        "sm"
+      ],
+      "sameBreakpointCollision": true
+    },
+    {
+      "reason": "Accrual Detail",
+      "id": "c4f9b417-6e43-4af4-b696-4df25f368b1d",
+      "type": "logical_screen",
+      "metadata": {
+        "screen": "75% J&S Option",
+        "scenario": "Actuarial Increase"
+      },
+      "pageName": "🟠 Accrual Detail",
+      "variants": [
+        {
+          "id": "36872:10658",
+          "width": 1280,
+          "height": 847,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36872-10658",
+          "metadata": {
+            "screen": "75% J&S Option",
+            "scenario": "Actuarial Increase"
+          },
+          "originalName": "75% J&S Option - Actuarial Increase",
+          "breakpointCode": "xl"
+        }
+      ],
+      "confidence": "high",
+      "pageNodeId": "35005:26881",
+      "displayName": "75% J&S Option - Actuarial Increase",
+      "isResponsive": false,
+      "originalName": "75% J&S Option - Actuarial Increase",
+      "variantCount": 1,
+      "ambiguityFlags": [],
+      "primaryVariant": {
+        "id": "36872:10658",
+        "width": 1280,
+        "height": 847,
+        "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36872-10658",
+        "originalName": "75% J&S Option - Actuarial Increase",
+        "breakpointCode": "xl"
+      },
+      "confidenceScore": 140,
+      "hierarchyPattern": "screen_group_contains_screens",
+      "availableBreakpoints": [
+        "xl"
+      ],
+      "sameBreakpointCollision": false
+    },
+    {
+      "reason": "List Estimates/Calculations",
+      "id": "d12d2b0a-7802-4e23-9f30-5df06aa0abbd",
+      "type": "logical_screen",
+      "metadata": {
+        "screen": "List Calculation",
+        "scenario": "Vesting Future"
+      },
+      "pageName": "🟠 List Estimates/Calculations",
+      "variants": [
+        {
+          "id": "37134:52444",
+          "width": 1024,
+          "height": 800,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37134-52444",
+          "metadata": {
+            "screen": "List Calculation",
+            "scenario": "Vesting Future"
+          },
+          "originalName": "List Calculation / Vesting Future",
+          "breakpointCode": "lg"
+        }
+      ],
+      "confidence": "high",
+      "pageNodeId": "23452:201927",
+      "displayName": "List Calculation / Vesting Future",
+      "isResponsive": false,
+      "originalName": "List Calculation / Vesting Future",
+      "variantCount": 1,
+      "ambiguityFlags": [],
+      "primaryVariant": {
+        "id": "37134:52444",
+        "width": 1024,
+        "height": 800,
+        "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37134-52444",
+        "originalName": "List Calculation / Vesting Future",
+        "breakpointCode": "lg"
+      },
+      "confidenceScore": 140,
+      "hierarchyPattern": "screen_group_contains_screens",
+      "availableBreakpoints": [
+        "lg"
+      ],
+      "sameBreakpointCollision": false
+    },
+    {
+      "reason": "Modal-related",
+      "id": "eb504190-e26c-4607-b6a6-b15f98be2a54",
+      "type": "logical_screen",
+      "metadata": {
+        "screen": "Confirm Verification",
+        "behavior": "Modal"
+      },
+      "pageName": "🟠 Calculation Detail ",
+      "variants": [
+        {
+          "id": "35205:17184",
+          "width": 768,
+          "height": 800,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35205-17184",
+          "metadata": {
+            "screen": "Confirm Verification",
+            "behavior": "Modal"
+          },
+          "originalName": "Confirm Verification / Modal ",
+          "breakpointCode": "md"
+        }
+      ],
+      "confidence": "high",
+      "pageNodeId": "23420:206272",
+      "displayName": "Confirm Verification / Modal ",
+      "isResponsive": false,
+      "originalName": "Confirm Verification / Modal ",
+      "variantCount": 1,
+      "ambiguityFlags": [],
+      "primaryVariant": {
+        "id": "35205:17184",
+        "width": 768,
+        "height": 800,
+        "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35205-17184",
+        "originalName": "Confirm Verification / Modal ",
+        "breakpointCode": "md"
+      },
+      "confidenceScore": 140,
+      "hierarchyPattern": "screen_group_contains_screens",
+      "availableBreakpoints": [
+        "md"
+      ],
+      "sameBreakpointCollision": false
+    },
+    {
+      "reason": "Default state",
+      "id": "8ac21abc-c35e-4c16-b5d9-f1d4ab73df0b",
+      "type": "logical_screen",
+      "metadata": {
+        "screen": "Default"
+      },
+      "pageName": "🟠 Calculation Detail ",
+      "variants": [
+        {
+          "id": "23421:231694",
+          "width": 1280,
+          "height": 858,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=23421-231694",
+          "metadata": {
+            "screen": "Default"
+          },
+          "originalName": "Default",
+          "breakpointCode": "xl"
+        },
+        {
+          "id": "35172:14069",
+          "width": 1024,
+          "height": 800,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-14069",
+          "metadata": {
+            "screen": "Default"
+          },
+          "originalName": "Default",
+          "breakpointCode": "lg"
+        },
+        {
+          "id": "35172:14990",
+          "width": 1024,
+          "height": 800,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-14990",
+          "metadata": {
+            "screen": "Default"
+          },
+          "originalName": "Default",
+          "breakpointCode": "lg"
+        },
+        {
+          "id": "35172:14564",
+          "width": 1024,
+          "height": 873,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-14564",
+          "metadata": {
+            "screen": "Default"
+          },
+          "originalName": "Default",
+          "breakpointCode": "lg"
+        },
+        {
+          "id": "35173:23944",
+          "width": 768,
+          "height": 800,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35173-23944",
+          "metadata": {
+            "screen": "Default"
+          },
+          "originalName": "Default",
+          "breakpointCode": "md"
+        },
+        {
+          "id": "35173:24903",
+          "width": 768,
+          "height": 800,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35173-24903",
+          "metadata": {
+            "screen": "Default"
+          },
+          "originalName": "Default",
+          "breakpointCode": "md"
+        },
+        {
+          "id": "35210:23591",
+          "width": 640,
+          "height": 800,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35210-23591",
+          "metadata": {
+            "screen": "Default"
+          },
+          "originalName": "Default",
+          "breakpointCode": "sm"
+        },
+        {
+          "id": "35210:30379",
+          "width": 640,
+          "height": 1123,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35210-30379",
+          "metadata": {
+            "screen": "Default"
+          },
+          "originalName": "Default",
+          "breakpointCode": "sm"
+        }
+      ],
+      "confidence": "high",
+      "pageNodeId": "23420:206272",
+      "displayName": "Default",
+      "isResponsive": true,
+      "originalName": "Default",
+      "variantCount": 8,
+      "ambiguityFlags": [
+        "duplicate_breakpoint_variant"
+      ],
+      "primaryVariant": {
+        "id": "23421:231694",
+        "width": 1280,
+        "height": 858,
+        "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=23421-231694",
+        "originalName": "Default",
+        "breakpointCode": "xl"
+      },
+      "confidenceScore": 140,
+      "hierarchyPattern": "screen_group_contains_screens",
+      "availableBreakpoints": [
+        "xl",
+        "lg",
+        "md",
+        "sm"
+      ],
+      "sameBreakpointCollision": true
+    },
+    {
+      "reason": "same-breakpoint collision",
+      "id": "4189de29-1e07-4c11-aca6-74446be7b5f2",
+      "type": "logical_screen",
+      "metadata": {
+        "screen": "Calculation has been Rejected",
+        "scenario": "Full View"
+      },
+      "pageName": "🟠 Calculation Detail ",
+      "variants": [
+        {
+          "id": "35172:19405",
+          "width": 1024,
+          "height": 873,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-19405",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "lg"
+        },
+        {
+          "id": "35172:20933",
+          "width": 1024,
+          "height": 873,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-20933",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "lg"
+        },
+        {
+          "id": "35205:19345",
+          "width": 768,
+          "height": 1097,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35205-19345",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "md"
+        },
+        {
+          "id": "35205:20786",
+          "width": 768,
+          "height": 1133,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35205-20786",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "md"
+        },
+        {
+          "id": "35210:35848",
+          "width": 640,
+          "height": 1152,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35210-35848",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "sm"
+        },
+        {
+          "id": "35213:37859",
+          "width": 640,
+          "height": 1152,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35213-37859",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "sm"
+        }
+      ],
+      "confidence": "high",
+      "pageNodeId": "23420:206272",
+      "displayName": "Calculation has been Rejected / Full View",
+      "isResponsive": true,
+      "originalName": "Calculation has been Rejected / Full View",
+      "variantCount": 6,
+      "ambiguityFlags": [
+        "duplicate_breakpoint_variant"
+      ],
+      "primaryVariant": {
+        "id": "35172:19405",
+        "width": 1024,
+        "height": 873,
+        "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-19405",
+        "originalName": "Calculation has been Rejected / Full View",
+        "breakpointCode": "lg"
+      },
+      "confidenceScore": 140,
+      "hierarchyPattern": "screen_group_contains_screens",
+      "availableBreakpoints": [
+        "lg",
+        "md",
+        "sm"
+      ],
+      "sameBreakpointCollision": true
+    },
+    {
+      "reason": "mock naming mismatch",
+      "id": "8c149c85-6d57-4eeb-9767-31c6834b568b",
+      "action": "missing",
+      "originalName": "Estimate Detail / 50% J&S / Retro / Early",
+      "figmaNodeId": "101:1",
+      "source": "figma"
+    },
+    {
+      "reason": "uncertain / low-confidence",
+      "id": "4189de29-1e07-4c11-aca6-74446be7b5f2",
+      "type": "logical_screen",
+      "metadata": {
+        "screen": "Calculation has been Rejected",
+        "scenario": "Full View"
+      },
+      "pageName": "🟠 Calculation Detail ",
+      "variants": [
+        {
+          "id": "35172:19405",
+          "width": 1024,
+          "height": 873,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-19405",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "lg"
+        },
+        {
+          "id": "35172:20933",
+          "width": 1024,
+          "height": 873,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-20933",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "lg"
+        },
+        {
+          "id": "35205:19345",
+          "width": 768,
+          "height": 1097,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35205-19345",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "md"
+        },
+        {
+          "id": "35205:20786",
+          "width": 768,
+          "height": 1133,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35205-20786",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "md"
+        },
+        {
+          "id": "35210:35848",
+          "width": 640,
+          "height": 1152,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35210-35848",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "sm"
+        },
+        {
+          "id": "35213:37859",
+          "width": 640,
+          "height": 1152,
+          "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35213-37859",
+          "metadata": {
+            "screen": "Calculation has been Rejected",
+            "scenario": "Full View"
+          },
+          "originalName": "Calculation has been Rejected / Full View",
+          "breakpointCode": "sm"
+        }
+      ],
+      "confidence": "high",
+      "pageNodeId": "23420:206272",
+      "displayName": "Calculation has been Rejected / Full View",
+      "isResponsive": true,
+      "originalName": "Calculation has been Rejected / Full View",
+      "variantCount": 6,
+      "ambiguityFlags": [
+        "duplicate_breakpoint_variant"
+      ],
+      "primaryVariant": {
+        "id": "35172:19405",
+        "width": 1024,
+        "height": 873,
+        "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-19405",
+        "originalName": "Calculation has been Rejected / Full View",
+        "breakpointCode": "lg"
+      },
+      "confidenceScore": 140,
+      "hierarchyPattern": "screen_group_contains_screens",
+      "availableBreakpoints": [
+        "lg",
+        "md",
+        "sm"
+      ],
+      "sameBreakpointCollision": true
+    }
+  ]
+}

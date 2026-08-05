@@ -8,6 +8,13 @@
       "when": 1785503835116,
       "tag": "0000_initial_design_index",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785919147818,
+      "tag": "0001_add_screen_variants",
+      "breakpoints": true
     }
   ]
 }
