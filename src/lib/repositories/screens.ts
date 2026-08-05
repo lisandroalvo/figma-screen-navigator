@@ -3,6 +3,7 @@ import {
   eq,
   ilike,
   inArray,
+  ne,
   or,
   sql,
   type SQL,
@@ -35,6 +36,7 @@ function mapScreen(row: typeof screensTable.$inferSelect): Screen {
     figmaUrl: row.figmaUrl,
     previewUrl: row.previewUrl,
     status: row.status,
+    source: row.source,
     screen: row.screen,
     flow: row.flow,
     step: row.step,
@@ -170,6 +172,11 @@ export async function searchScreens(
     filterConditions.push(ilike(screensTable.state, `%${escapeLike(filters.state)}%`));
   if (filters.scenario)
     filterConditions.push(ilike(screensTable.scenario, `%${escapeLike(filters.scenario)}%`));
+  if (filters.source) {
+    filterConditions.push(eq(screensTable.source, filters.source as Screen["source"]));
+  } else if (filters.includeMock !== true) {
+    filterConditions.push(ne(screensTable.source, "mock"));
+  }
 
   let score = sql<number>`0`.mapWith(Number);
 

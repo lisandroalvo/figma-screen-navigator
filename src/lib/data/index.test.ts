@@ -33,12 +33,12 @@ describe("data API (mock mode)", () => {
   });
 
   it("ranks representative search queries", async () => {
-    const results = await searchScreens("contact accordion open");
+    const results = await searchScreens("contact accordion open", { includeMock: true });
     expect(results[0].displayName).toMatch(/Contact Accordion.*Popover Open/i);
   });
 
   it("returns related and responsive screens", async () => {
-    const screen = (await searchScreens("estimate detail 50 j s retro early"))[0];
+    const screen = (await searchScreens("estimate detail 50 j s retro early", { includeMock: true }))[0];
     const related = await listRelatedScreens(screen.id);
     expect(related.length).toBeGreaterThan(0);
     const variants = await listResponsiveVariants(screen.id);

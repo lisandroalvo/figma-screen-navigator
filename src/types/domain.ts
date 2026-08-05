@@ -5,6 +5,8 @@ export type ScreenStatus =
   | "archived"
   | "missing_review";
 
+export type ScreenSource = "mock" | "figma" | "manual";
+
 export type RelationshipType =
   | "responsive_variant"
   | "state_variant"
@@ -129,6 +131,7 @@ export interface Screen {
   figmaUrl: string;
   previewUrl?: string | null;
   status: ScreenStatus;
+  source: ScreenSource;
 
   // Optional semantic metadata. Most are nullable.
   screen?: string | null;
@@ -150,6 +153,35 @@ export interface Screen {
   lastSyncedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface ScreenVariant {
+  id: string;
+  screenId: string;
+  breakpointId?: string | null;
+  breakpointCode?: string | null;
+  figmaNodeId: string;
+  figmaFileKey: string;
+  figmaPageNodeId: string;
+  originalName: string;
+  normalizedName: string;
+  figmaUrl: string;
+  previewUrl?: string | null;
+  width?: number | null;
+  height?: number | null;
+  parentPath: ParentPathItem[];
+  metadata: ScreenMetadata;
+  ambiguityFlags: string[];
+  isPrimary: boolean;
+  status: "active" | "missing_review" | "deprecated" | "archived";
+  lastFigmaModifiedAt?: Date | null;
+  lastSyncedAt?: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ScreenWithVariants extends Screen {
+  variants: ScreenVariant[];
 }
 
 export interface ScreenRelationship {

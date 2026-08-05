@@ -20,3 +20,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Preserve original Figma names in `originalName`. Use `normalizedName` and `displayName` for derived forms.
 - Use Figma node IDs as the primary identity for matching. Do not treat similarly named new nodes as the same record if the node ID changed.
 - Flag ambiguity instead of guessing. Ambiguity flags are better than wrong metadata.
+- Public QA search returns one logical screen per result, not one card per responsive Figma node.
+- Mock records (`source = 'mock'`) are excluded from public search by default and must only be shown when an explicit `includeMock` or `source='mock'` filter is set.
+- `screen_variants` stores exact responsive Figma nodes under a logical `screen`. Each logical screen has one primary variant.
+- Same-breakpoint collisions must remain unresolved and flagged for manual review. Do not merge them automatically.
+- Proposed logical groups in `proposed_changes` are not published records. Public routes must not read from `proposed_changes`.
+- Publication is disabled until the review workflow is approved by a human.

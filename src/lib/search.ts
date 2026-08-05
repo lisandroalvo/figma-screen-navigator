@@ -10,6 +10,8 @@ export interface SearchFilters {
   behavior?: string;
   state?: string;
   scenario?: string;
+  source?: string;
+  includeMock?: boolean;
 }
 
 export interface SearchResult {
@@ -158,6 +160,8 @@ function passesFilters(screen: Screen, filters: SearchFilters): boolean {
   if (filters.behavior && screen.behavior !== filters.behavior) return false;
   if (filters.state && screen.state !== filters.state) return false;
   if (filters.scenario && screen.scenario !== filters.scenario) return false;
+  if (filters.source && screen.source !== filters.source) return false;
+  if (filters.includeMock === false && screen.source === "mock") return false;
   return true;
 }
 

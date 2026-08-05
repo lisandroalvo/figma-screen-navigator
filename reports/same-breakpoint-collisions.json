@@ -1,0 +1,1219 @@
+{
+  "count": 18,
+  "collisions": [
+    {
+      "id": "4189de29-1e07-4c11-aca6-74446be7b5f2",
+      "displayName": "Calculation has been Rejected / Full View",
+      "pageName": "🟠 Calculation Detail ",
+      "availableBreakpoints": [
+        "lg",
+        "md",
+        "sm"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "lg",
+          "variants": [
+            {
+              "id": "35172:19405",
+              "width": 1024,
+              "height": 873,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-19405",
+              "metadata": {
+                "screen": "Calculation has been Rejected",
+                "scenario": "Full View"
+              },
+              "originalName": "Calculation has been Rejected / Full View",
+              "breakpointCode": "lg"
+            },
+            {
+              "id": "35172:20933",
+              "width": 1024,
+              "height": 873,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-20933",
+              "metadata": {
+                "screen": "Calculation has been Rejected",
+                "scenario": "Full View"
+              },
+              "originalName": "Calculation has been Rejected / Full View",
+              "breakpointCode": "lg"
+            }
+          ]
+        },
+        {
+          "breakpoint": "md",
+          "variants": [
+            {
+              "id": "35205:19345",
+              "width": 768,
+              "height": 1097,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35205-19345",
+              "metadata": {
+                "screen": "Calculation has been Rejected",
+                "scenario": "Full View"
+              },
+              "originalName": "Calculation has been Rejected / Full View",
+              "breakpointCode": "md"
+            },
+            {
+              "id": "35205:20786",
+              "width": 768,
+              "height": 1133,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35205-20786",
+              "metadata": {
+                "screen": "Calculation has been Rejected",
+                "scenario": "Full View"
+              },
+              "originalName": "Calculation has been Rejected / Full View",
+              "breakpointCode": "md"
+            }
+          ]
+        },
+        {
+          "breakpoint": "sm",
+          "variants": [
+            {
+              "id": "35210:35848",
+              "width": 640,
+              "height": 1152,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35210-35848",
+              "metadata": {
+                "screen": "Calculation has been Rejected",
+                "scenario": "Full View"
+              },
+              "originalName": "Calculation has been Rejected / Full View",
+              "breakpointCode": "sm"
+            },
+            {
+              "id": "35213:37859",
+              "width": 640,
+              "height": 1152,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35213-37859",
+              "metadata": {
+                "screen": "Calculation has been Rejected",
+                "scenario": "Full View"
+              },
+              "originalName": "Calculation has been Rejected / Full View",
+              "breakpointCode": "sm"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "screen": "Calculation has been Rejected",
+        "scenario": "Full View"
+      }
+    },
+    {
+      "id": "c494c10e-4adb-4396-a0f9-5405d796de64",
+      "displayName": "Calculation Verified",
+      "pageName": "🟠 Calculation Detail ",
+      "availableBreakpoints": [
+        "xl",
+        "lg",
+        "md",
+        "sm"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "lg",
+          "variants": [
+            {
+              "id": "35172:19303",
+              "width": 1024,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-19303",
+              "metadata": {
+                "screen": "Calculation Verified"
+              },
+              "originalName": "Calculation Verified",
+              "breakpointCode": "lg"
+            },
+            {
+              "id": "35172:20831",
+              "width": 1024,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-20831",
+              "metadata": {
+                "screen": "Calculation Verified"
+              },
+              "originalName": "Calculation Verified",
+              "breakpointCode": "lg"
+            }
+          ]
+        },
+        {
+          "breakpoint": "md",
+          "variants": [
+            {
+              "id": "35205:19240",
+              "width": 768,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35205-19240",
+              "metadata": {
+                "screen": "Calculation Verified"
+              },
+              "originalName": "Calculation Verified",
+              "breakpointCode": "md"
+            },
+            {
+              "id": "35205:20681",
+              "width": 768,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35205-20681",
+              "metadata": {
+                "screen": "Calculation Verified"
+              },
+              "originalName": "Calculation Verified",
+              "breakpointCode": "md"
+            }
+          ]
+        },
+        {
+          "breakpoint": "sm",
+          "variants": [
+            {
+              "id": "35210:35741",
+              "width": 640,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35210-35741",
+              "metadata": {
+                "screen": "Calculation Verified"
+              },
+              "originalName": "Calculation Verified",
+              "breakpointCode": "sm"
+            },
+            {
+              "id": "35213:37752",
+              "width": 640,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35213-37752",
+              "metadata": {
+                "screen": "Calculation Verified"
+              },
+              "originalName": "Calculation Verified",
+              "breakpointCode": "sm"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "screen": "Calculation Verified"
+      }
+    },
+    {
+      "id": "92716854-17d4-4ba0-a8b7-445d78855d6d",
+      "displayName": "List Worksheets",
+      "pageName": "🟠 List Estimates/Calculations",
+      "availableBreakpoints": [
+        "md",
+        "sm"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "md",
+          "variants": [
+            {
+              "id": "36830:20075",
+              "width": 768,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36830-20075",
+              "metadata": {
+                "screen": "List Worksheets"
+              },
+              "originalName": "List Worksheets",
+              "breakpointCode": "md"
+            },
+            {
+              "id": "37135:54631",
+              "width": 768,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37135-54631",
+              "metadata": {
+                "screen": "List Worksheets"
+              },
+              "originalName": "List Worksheets",
+              "breakpointCode": "md"
+            },
+            {
+              "id": "37135:55359",
+              "width": 768,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37135-55359",
+              "metadata": {
+                "screen": "List Worksheets"
+              },
+              "originalName": "List Worksheets",
+              "breakpointCode": "md"
+            },
+            {
+              "id": "36830:20205",
+              "width": 768,
+              "height": 1128,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36830-20205",
+              "metadata": {
+                "screen": "List Worksheets"
+              },
+              "originalName": "List Worksheets",
+              "breakpointCode": "md"
+            }
+          ]
+        },
+        {
+          "breakpoint": "sm",
+          "variants": [
+            {
+              "id": "36831:20219",
+              "width": 640,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36831-20219",
+              "metadata": {
+                "screen": "List Worksheets"
+              },
+              "originalName": "List Worksheets",
+              "breakpointCode": "sm"
+            },
+            {
+              "id": "37135:58376",
+              "width": 640,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37135-58376",
+              "metadata": {
+                "screen": "List Worksheets"
+              },
+              "originalName": "List Worksheets",
+              "breakpointCode": "sm"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "screen": "List Worksheets"
+      }
+    },
+    {
+      "id": "8ac21abc-c35e-4c16-b5d9-f1d4ab73df0b",
+      "displayName": "Default",
+      "pageName": "🟠 Calculation Detail ",
+      "availableBreakpoints": [
+        "xl",
+        "lg",
+        "md",
+        "sm"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "lg",
+          "variants": [
+            {
+              "id": "35172:14069",
+              "width": 1024,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-14069",
+              "metadata": {
+                "screen": "Default"
+              },
+              "originalName": "Default",
+              "breakpointCode": "lg"
+            },
+            {
+              "id": "35172:14990",
+              "width": 1024,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-14990",
+              "metadata": {
+                "screen": "Default"
+              },
+              "originalName": "Default",
+              "breakpointCode": "lg"
+            },
+            {
+              "id": "35172:14564",
+              "width": 1024,
+              "height": 873,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-14564",
+              "metadata": {
+                "screen": "Default"
+              },
+              "originalName": "Default",
+              "breakpointCode": "lg"
+            }
+          ]
+        },
+        {
+          "breakpoint": "md",
+          "variants": [
+            {
+              "id": "35173:23944",
+              "width": 768,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35173-23944",
+              "metadata": {
+                "screen": "Default"
+              },
+              "originalName": "Default",
+              "breakpointCode": "md"
+            },
+            {
+              "id": "35173:24903",
+              "width": 768,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35173-24903",
+              "metadata": {
+                "screen": "Default"
+              },
+              "originalName": "Default",
+              "breakpointCode": "md"
+            }
+          ]
+        },
+        {
+          "breakpoint": "sm",
+          "variants": [
+            {
+              "id": "35210:23591",
+              "width": 640,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35210-23591",
+              "metadata": {
+                "screen": "Default"
+              },
+              "originalName": "Default",
+              "breakpointCode": "sm"
+            },
+            {
+              "id": "35210:30379",
+              "width": 640,
+              "height": 1123,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35210-30379",
+              "metadata": {
+                "screen": "Default"
+              },
+              "originalName": "Default",
+              "breakpointCode": "sm"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "screen": "Default"
+      }
+    },
+    {
+      "id": "d6439732-9fd2-44cc-b88d-b83e85999c6d",
+      "displayName": "50 Month C&L / Default",
+      "pageName": "🟠 Floor Detail",
+      "availableBreakpoints": [
+        "xl"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "xl",
+          "variants": [
+            {
+              "id": "36872:52661",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36872-52661",
+              "metadata": {
+                "state": "Default",
+                "screen": "50 Month C&L"
+              },
+              "originalName": "50 Month C&L / Default",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "36872:53258",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36872-53258",
+              "metadata": {
+                "state": "Default",
+                "screen": "50 Month C&L"
+              },
+              "originalName": "50 Month C&L / Default",
+              "breakpointCode": "xl"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "state": "Default",
+        "screen": "50 Month C&L"
+      }
+    },
+    {
+      "id": "376c6dac-df7d-4623-8eca-3a51942a0e73",
+      "displayName": "Calculation has been Reviewed ",
+      "pageName": "🟠 Accrual Detail",
+      "availableBreakpoints": [
+        "xl"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "xl",
+          "variants": [
+            {
+              "id": "35005:27203",
+              "width": 1280,
+              "height": 847,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35005-27203",
+              "metadata": {
+                "screen": "Calculation has been Reviewed"
+              },
+              "originalName": "Calculation has been Reviewed ",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "35005:27813",
+              "width": 1280,
+              "height": 847,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35005-27813",
+              "metadata": {
+                "screen": "Calculation has been Reviewed"
+              },
+              "originalName": "Calculation has been Reviewed ",
+              "breakpointCode": "xl"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "screen": "Calculation has been Reviewed"
+      }
+    },
+    {
+      "id": "eba05ed4-f5da-49e7-a1c6-a3fca32441dc",
+      "displayName": "Calculation has been Reviewed ",
+      "pageName": "🟠 Calculation Detail ",
+      "availableBreakpoints": [
+        "lg",
+        "md",
+        "sm"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "sm",
+          "variants": [
+            {
+              "id": "35210:31722",
+              "width": 640,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35210-31722",
+              "metadata": {
+                "screen": "Calculation has been Reviewed"
+              },
+              "originalName": "Calculation has been Reviewed ",
+              "breakpointCode": "sm"
+            },
+            {
+              "id": "35210:33015",
+              "width": 640,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35210-33015",
+              "metadata": {
+                "screen": "Calculation has been Reviewed"
+              },
+              "originalName": "Calculation has been Reviewed ",
+              "breakpointCode": "sm"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "screen": "Calculation has been Reviewed"
+      }
+    },
+    {
+      "id": "cca4cdda-cfcc-4c2a-8c02-14e71285153e",
+      "displayName": "Confirm Verification",
+      "pageName": "🟠 Calculation Detail ",
+      "availableBreakpoints": [
+        "lg"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "lg",
+          "variants": [
+            {
+              "id": "35172:17214",
+              "width": 1024,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35172-17214",
+              "metadata": {
+                "screen": "Confirm Verification"
+              },
+              "originalName": "Confirm Verification",
+              "breakpointCode": "lg"
+            },
+            {
+              "id": "36048:50333",
+              "width": 1024,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36048-50333",
+              "metadata": {
+                "screen": "Confirm Verification"
+              },
+              "originalName": "Confirm Verification",
+              "breakpointCode": "lg"
+            },
+            {
+              "id": "36048:50762",
+              "width": 1024,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36048-50762",
+              "metadata": {
+                "screen": "Confirm Verification"
+              },
+              "originalName": "Confirm Verification",
+              "breakpointCode": "lg"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "screen": "Confirm Verification"
+      }
+    },
+    {
+      "id": "0f324ae7-85eb-46f9-93c5-1ca29792ce5e",
+      "displayName": "Create Calculation",
+      "pageName": "🟠 Calculation Detail ",
+      "availableBreakpoints": [
+        "lg",
+        "md",
+        "sm"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "sm",
+          "variants": [
+            {
+              "id": "35210:28925",
+              "width": 640,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35210-28925",
+              "metadata": {
+                "screen": "Create Calculation"
+              },
+              "originalName": "Create Calculation",
+              "breakpointCode": "sm"
+            },
+            {
+              "id": "35210:29616",
+              "width": 640,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35210-29616",
+              "metadata": {
+                "screen": "Create Calculation"
+              },
+              "originalName": "Create Calculation",
+              "breakpointCode": "sm"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "screen": "Create Calculation"
+      }
+    },
+    {
+      "id": "33a6f6f4-d01c-4992-bd20-ba2bb9dfcc6c",
+      "displayName": "Create Calculation Modal / Default",
+      "pageName": "🟠 List Estimates/Calculations",
+      "availableBreakpoints": [
+        "xl"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "xl",
+          "variants": [
+            {
+              "id": "37061:29582",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37061-29582",
+              "metadata": {
+                "state": "Default",
+                "screen": "Create Calculation Modal"
+              },
+              "originalName": "Create Calculation Modal / Default",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "37061:37731",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37061-37731",
+              "metadata": {
+                "state": "Default",
+                "screen": "Create Calculation Modal"
+              },
+              "originalName": "Create Calculation Modal / Default",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "37061:36950",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37061-36950",
+              "metadata": {
+                "state": "Default",
+                "screen": "Create Calculation Modal"
+              },
+              "originalName": "Create Calculation Modal / Default",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "37061:38444",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37061-38444",
+              "metadata": {
+                "state": "Default",
+                "screen": "Create Calculation Modal"
+              },
+              "originalName": "Create Calculation Modal / Default",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "37061:39229",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37061-39229",
+              "metadata": {
+                "state": "Default",
+                "screen": "Create Calculation Modal"
+              },
+              "originalName": "Create Calculation Modal / Default",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "37061:40225",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37061-40225",
+              "metadata": {
+                "state": "Default",
+                "screen": "Create Calculation Modal"
+              },
+              "originalName": "Create Calculation Modal / Default",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "37061:41132",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37061-41132",
+              "metadata": {
+                "state": "Default",
+                "screen": "Create Calculation Modal"
+              },
+              "originalName": "Create Calculation Modal / Default",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "37061:42835",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37061-42835",
+              "metadata": {
+                "state": "Default",
+                "screen": "Create Calculation Modal"
+              },
+              "originalName": "Create Calculation Modal / Default",
+              "breakpointCode": "xl"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "state": "Default",
+        "screen": "Create Calculation Modal"
+      }
+    },
+    {
+      "id": "f8481f4d-e48a-4052-8063-0284695f332c",
+      "displayName": "Create Estimate (Disability Pension)",
+      "pageName": "🟠 Estimate Detail ",
+      "availableBreakpoints": [
+        "lg",
+        "sm",
+        "md"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "md",
+          "variants": [
+            {
+              "id": "35535:72745",
+              "width": 768,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35535-72745",
+              "metadata": {
+                "screen": "Create Estimate",
+                "scenario": "Disability Pension"
+              },
+              "originalName": "Create Estimate (Disability Pension)",
+              "breakpointCode": "md"
+            },
+            {
+              "id": "35583:101709",
+              "width": 768,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=35583-101709",
+              "metadata": {
+                "screen": "Create Estimate",
+                "scenario": "Disability Pension"
+              },
+              "originalName": "Create Estimate (Disability Pension)",
+              "breakpointCode": "md"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "screen": "Create Estimate",
+        "scenario": "Disability Pension"
+      }
+    },
+    {
+      "id": "7eacba8a-293c-4370-8125-f2ec2f9a7cb0",
+      "displayName": "Estimate Detail / 50% J&S / Retro / Vested ",
+      "pageName": "🟠 Estimate Detail ",
+      "availableBreakpoints": [
+        "xl"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "xl",
+          "variants": [
+            {
+              "id": "36778:42598",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36778-42598",
+              "metadata": {
+                "state": "Vested",
+                "option": "Retro",
+                "screen": "Estimate Detail",
+                "scenario": "50% J&S"
+              },
+              "originalName": "Estimate Detail / 50% J&S / Retro / Vested ",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "36920:27710",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36920-27710",
+              "metadata": {
+                "state": "Vested",
+                "option": "Retro",
+                "screen": "Estimate Detail",
+                "scenario": "50% J&S"
+              },
+              "originalName": "Estimate Detail / 50% J&S / Retro / Vested 1",
+              "breakpointCode": "xl"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "state": "Vested",
+        "option": "Retro",
+        "screen": "Estimate Detail",
+        "scenario": "50% J&S"
+      }
+    },
+    {
+      "id": "12757dec-30eb-42a2-a25a-12c53132be26",
+      "displayName": "Estimate Detail / 60 Mo C&L / Retro / Early",
+      "pageName": "🟠 Estimate Detail ",
+      "availableBreakpoints": [
+        "xl"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "xl",
+          "variants": [
+            {
+              "id": "36778:42500",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36778-42500",
+              "metadata": {
+                "state": "Early",
+                "option": "Retro",
+                "screen": "Estimate Detail",
+                "scenario": "60 Mo C&L"
+              },
+              "originalName": "Estimate Detail / 60 Mo C&L / Retro / Early",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "36917:27362",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36917-27362",
+              "metadata": {
+                "state": "Early",
+                "option": "Retro",
+                "screen": "Estimate Detail",
+                "scenario": "60 Mo C&L"
+              },
+              "originalName": "Estimate Detail / 60 Mo C&L / Retro / Early",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "36917:28066",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36917-28066",
+              "metadata": {
+                "state": "Early",
+                "option": "Retro",
+                "screen": "Estimate Detail",
+                "scenario": "60 Mo C&L"
+              },
+              "originalName": "Estimate Detail / 60 Mo C&L / Retro / Early",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "36869:24159",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36869-24159",
+              "metadata": {
+                "state": "Early",
+                "option": "Retro",
+                "screen": "Estimate Detail",
+                "scenario": "60 Mo C&L"
+              },
+              "originalName": "Estimate Detail / 60 Mo C&L / Retro / Early",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "36868:68972",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36868-68972",
+              "metadata": {
+                "state": "Early",
+                "option": "Retro",
+                "screen": "Estimate Detail",
+                "scenario": "60 Mo C&L"
+              },
+              "originalName": "Estimate Detail / 60 Mo C&L /Retro / Early ",
+              "breakpointCode": "xl"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "state": "Early",
+        "option": "Retro",
+        "screen": "Estimate Detail",
+        "scenario": "60 Mo C&L"
+      }
+    },
+    {
+      "id": "0d59e850-f09d-407b-94bf-3ee8549faa7a",
+      "displayName": "Modal- Confirm-Review",
+      "pageName": "🟠 Calculation Detail ",
+      "availableBreakpoints": [
+        "xs"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "xs",
+          "variants": [
+            {
+              "id": "37261:71819",
+              "width": 427,
+              "height": 254,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37261-71819",
+              "metadata": {
+                "option": "Review",
+                "screen": "Modal",
+                "scenario": "Confirm"
+              },
+              "originalName": "Modal- Confirm-Review",
+              "breakpointCode": "xs"
+            },
+            {
+              "id": "37261:71877",
+              "width": 430,
+              "height": 254,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=37261-71877",
+              "metadata": {
+                "option": "Review",
+                "screen": "Modal",
+                "scenario": "Confirm"
+              },
+              "originalName": "Modal- Confirm-Review",
+              "breakpointCode": "xs"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "option": "Review",
+        "screen": "Modal",
+        "scenario": "Confirm"
+      }
+    },
+    {
+      "id": "d329dee3-b0e6-4393-9731-d37ff435bfa4",
+      "displayName": "Pension Estimate / Calculation Detail/ Actuarial Increase Selected.",
+      "pageName": "🟠 Estimate Detail ",
+      "availableBreakpoints": [
+        "lg",
+        "sm",
+        "md",
+        "xl"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "xl",
+          "variants": [
+            {
+              "id": "36918:26442",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36918-26442",
+              "metadata": {
+                "option": "Actuarial Increase Selected",
+                "screen": "Pension Estimate",
+                "scenario": "Calculation Detail"
+              },
+              "originalName": "Pension Estimate / Calculation Detail/ Actuarial Increase Selected.",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "36868:69366",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36868-69366",
+              "metadata": {
+                "option": "Actuarial Increase Selected",
+                "screen": "Pension Estimate",
+                "scenario": "Calculation Detail"
+              },
+              "originalName": "Pension Estimate / Calculation Detail/ Actuarial Increase Selected.",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "36868:69985",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36868-69985",
+              "metadata": {
+                "option": "Actuarial Increase Selected",
+                "screen": "Pension Estimate",
+                "scenario": "Calculation Detail"
+              },
+              "originalName": "Pension Estimate / Calculation Detail/ Actuarial Increase Selected.",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "36920:27085",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36920-27085",
+              "metadata": {
+                "option": "Actuarial Increase Selected",
+                "screen": "Pension Estimate",
+                "scenario": "Calculation Detail"
+              },
+              "originalName": "Pension Estimate / Calculation Detail/ Actuarial Increase Selected.",
+              "breakpointCode": "xl"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "option": "Actuarial Increase Selected",
+        "screen": "Pension Estimate",
+        "scenario": "Calculation Detail"
+      }
+    },
+    {
+      "id": "5499613e-ed0f-479b-ace9-34ced6e24dfe",
+      "displayName": "Pension Estimate / Calculation Detail/ Default 1",
+      "pageName": "🟠 Estimate Detail ",
+      "availableBreakpoints": [
+        "lg",
+        "sm",
+        "md"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "sm",
+          "variants": [
+            {
+              "id": "36783:35826",
+              "width": 640,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36783-35826",
+              "metadata": {
+                "state": "Default",
+                "screen": "Pension Estimate",
+                "scenario": "Calculation Detail"
+              },
+              "originalName": "Pension Estimate / Calculation Detail/ Default ",
+              "breakpointCode": "sm"
+            },
+            {
+              "id": "36783:39104",
+              "width": 640,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36783-39104",
+              "metadata": {
+                "state": "Default",
+                "screen": "Pension Estimate",
+                "scenario": "Calculation Detail"
+              },
+              "originalName": "Pension Estimate / Calculation Detail/ Default 6",
+              "breakpointCode": "sm"
+            }
+          ]
+        },
+        {
+          "breakpoint": "md",
+          "variants": [
+            {
+              "id": "36779:39140",
+              "width": 768,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36779-39140",
+              "metadata": {
+                "state": "Default",
+                "screen": "Pension Estimate",
+                "scenario": "Calculation Detail"
+              },
+              "originalName": "Pension Estimate / Calculation Detail/ Default 2",
+              "breakpointCode": "md"
+            },
+            {
+              "id": "36779:42400",
+              "width": 768,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36779-42400",
+              "metadata": {
+                "state": "Default",
+                "screen": "Pension Estimate",
+                "scenario": "Calculation Detail"
+              },
+              "originalName": "Pension Estimate / Calculation Detail/ Default 3",
+              "breakpointCode": "md"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "state": "Default",
+        "screen": "Pension Estimate",
+        "scenario": "Calculation Detail"
+      }
+    },
+    {
+      "id": "afe30d8f-47c9-47d2-baf2-91b2a572e496",
+      "displayName": "Pension Estimate / Calculation Detail/ Retro /  Actuarial Increase Under 70.",
+      "pageName": "🟠 Estimate Detail ",
+      "availableBreakpoints": [
+        "xl"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "xl",
+          "variants": [
+            {
+              "id": "36868:69888",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36868-69888",
+              "metadata": {
+                "option": "Retro",
+                "screen": "Pension Estimate",
+                "scenario": "Calculation Detail",
+                "condition": "Actuarial Increase Under 70"
+              },
+              "originalName": "Pension Estimate / Calculation Detail/ Retro /  Actuarial Increase Under 70.",
+              "breakpointCode": "xl"
+            },
+            {
+              "id": "36920:28327",
+              "width": 1280,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36920-28327",
+              "metadata": {
+                "option": "Retro",
+                "screen": "Pension Estimate",
+                "scenario": "Calculation Detail",
+                "condition": "Actuarial Increase Under 70"
+              },
+              "originalName": "Pension Estimate / Calculation Detail/ Retro /  Actuarial Increase Under 70.",
+              "breakpointCode": "xl"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "option": "Retro",
+        "screen": "Pension Estimate",
+        "scenario": "Calculation Detail",
+        "condition": "Actuarial Increase Under 70"
+      }
+    },
+    {
+      "id": "9eab4668-1709-4ae1-9dc8-9dfe37b7ef9b",
+      "displayName": "Pension Estimate / Calculation Detail/Only 60 Month C&L",
+      "pageName": "🟠 Estimate Detail ",
+      "availableBreakpoints": [
+        "lg",
+        "sm",
+        "md",
+        "xl"
+      ],
+      "collisions": [
+        {
+          "breakpoint": "sm",
+          "variants": [
+            {
+              "id": "36783:39877",
+              "width": 640,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36783-39877",
+              "metadata": {
+                "option": "Only 60 Month C&L",
+                "screen": "Pension Estimate",
+                "scenario": "Calculation Detail"
+              },
+              "originalName": "Pension Estimate / Calculation Detail/Only 60 Month C&L",
+              "breakpointCode": "sm"
+            },
+            {
+              "id": "36783:40373",
+              "width": 640,
+              "height": 800,
+              "figmaUrl": "https://www.figma.com/design/h0EjBthnQJMUPHNZpI23FY?node-id=36783-40373",
+              "metadata": {
+                "option": "Only 60 Month C&L",
+                "screen": "Pension Estimate",
+                "scenario": "Calculation Detail"
+              },
+              "originalName": "Pension Estimate / Calculation Detail/Only 60 Month C&L",
+              "breakpointCode": "sm"
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "option": "Only 60 Month C&L",
+        "screen": "Pension Estimate",
+        "scenario": "Calculation Detail"
+      }
+    }
+  ]
+}

@@ -60,6 +60,22 @@ Mock mode is intentional only. It will not silently replace a failed production 
 | `SyncJob` | Record of a Figma scan operation |
 | `ProposedChange` | Staged change awaiting admin approval |
 | `AuditLog` | Record of administrative actions (deferred) |
+| `ScreenVariant` | Exact responsive Figma node under a logical `Screen` |
+
+## Logical screens and responsive variants
+
+A `Screen` is the conceptual, searchable QA reference. A `ScreenVariant` is an exact Figma node for a specific breakpoint (XL, LG, MD, SM, XS). One logical screen may have several responsive variants.
+
+- The parser groups Figma nodes by module, page, and semantic metadata.
+- Each logical screen has one primary variant, selected by breakpoint priority: XL, LG, MD, SM, XS.
+- Public search returns one logical screen card, not one card per responsive Figma node.
+- The screen detail page can switch between exact variants using `?variant=<breakpoint>`.
+- `source` distinguishes `figma`, `mock`, and `manual` records. Mock records are excluded from public search by default.
+- Same-breakpoint collisions are flagged and must be resolved manually.
+
+## Proposed versus published data
+
+Figma synchronization creates `sync_jobs` and `proposed_changes`. Public QA routes read only published `screens` and `screen_variants`. Admin review routes may read `proposed_changes`. Proposals are not published automatically.
 
 ## Supabase setup
 
