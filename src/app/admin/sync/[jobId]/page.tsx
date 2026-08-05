@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getSyncJobById } from "@/lib/repositories/sync-jobs";
@@ -5,21 +7,32 @@ import { listProposedChangesByJob } from "@/lib/repositories/proposed-changes";
 
 const FILTER_OPTIONS = ["all", "high", "medium", "low", "rejected", "missing"];
 
+function getPilotIds() {
+  try {
+    const p = path.resolve(process.cwd(), "reports/pilot-review-subset.json");
+    const raw = JSON.parse(fs.readFileSync(p, "utf-8"));
+    return new Set((raw.subset as { id: string }[]).map((s) => s.id));
+  } catch {
+    return new Set<string>();
+  }
+}
+
 export default async function SyncJobPage({
   params,
   searchParams,
 }: {
   params: Promise<{ jobId: string }>;
-  searchParams: Promise<{ confidence?: string }>;
+  searchParams: Promise<{ confidence?: string; subset?: string }>;
 }) {
   const { jobId } = await params;
-  const { confidence } = await searchParams;
+  const { confidence, subset } = await searchParams;
   const job = await getSyncJobById(jobId);
   if (!job) notFound();
 
   const allChanges = await listProposedChangesByJob(jobId);
+  const pilotIds = getPilotIds();
 
-  const changes =
+  let changes =
     confidence && confidence !== "all" && confidence !== "missing"
       ? allChanges.filter((c) => {
           const after = (c.after as Record<string, unknown>) ?? {};
@@ -28,6 +41,13 @@ export default async function SyncJobPage({
       : confidence === "missing"
         ? allChanges.filter((c) => c.action === "missing")
         : allChanges;
+
+  if (subset === "pilot") {
+    changes = changes.filter((c) => {
+      const after = (c.after as Record<string, unknown>) ?? {};
+      return pilotIds.has(after.id as string);
+    });
+  }
 
   const counts = allChanges.reduce(
     (acc, c) => {
@@ -112,6 +132,28 @@ export default async function SyncJobPage({
           <h2 className="mb-2 text-xl font-semibold text-zinc-900">
             Filter by confidence
           </h2>
+          <div className="mb-2 flex gap-2">
+            <Link
+              href={`/admin/sync/${jobId}?subset=pilot`}
+              className={`rounded px-4 py-2 text-sm font-medium ${
+                subset === "pilot"
+                  ? "bg-zinc-900 text-white"
+                  : "bg-white text-zinc-700 hover:bg-zinc-100"
+              }`}
+            >
+              Pilot subset
+            </Link>
+            <Link
+              href={`/admin/sync/${jobId}`}
+              className={`rounded px-4 py-2 text-sm font-medium ${
+                !subset
+                  ? "bg-zinc-900 text-white"
+                  : "bg-white text-zinc-700 hover:bg-zinc-100"
+              }`}
+            >
+              All proposals
+            </Link>
+          </div>
           <div className="flex flex-wrap gap-2">
             {FILTER_OPTIONS.map((conf) => (
               <Link

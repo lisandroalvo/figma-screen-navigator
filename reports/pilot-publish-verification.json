@@ -1,0 +1,117 @@
+{
+  "totalReviewed": 11,
+  "published": 3,
+  "leftPending": 4,
+  "screensCreated": 3,
+  "variantsCreated": 3,
+  "searchPassCount": 3,
+  "previewPassCount": 3,
+  "figmaLinkPassCount": 3,
+  "metadataPassCount": 3,
+  "overallPassCount": 3,
+  "results": [
+    {
+      "group": "Calculation Verified",
+      "reason": "4+ breakpoints",
+      "published": false,
+      "status": "left_pending",
+      "notes": "4+ breakpoints",
+      "searchPass": null,
+      "previewPass": null,
+      "figmaLinkPass": null,
+      "metadataPass": null
+    },
+    {
+      "group": "75% J&S Option - Actuarial Increase",
+      "reason": "single variant",
+      "published": true,
+      "status": "published",
+      "screenId": "71b0745e-44ff-40fd-b036-ea0b65d2fdaf",
+      "publishedVariants": 1,
+      "expectedBreakpoints": [
+        "xl"
+      ],
+      "actualBreakpoints": [
+        "xl"
+      ],
+      "searchPass": true,
+      "previewPass": true,
+      "figmaLinkPass": true,
+      "metadataPass": true,
+      "overall": true,
+      "notes": ""
+    },
+    {
+      "group": "List Calculation / Vesting Future",
+      "reason": "Estimate Detail",
+      "published": true,
+      "status": "published",
+      "screenId": "0935c90d-a75c-4a9e-80ec-4b9981ea94e6",
+      "publishedVariants": 1,
+      "expectedBreakpoints": [
+        "lg"
+      ],
+      "actualBreakpoints": [
+        "lg"
+      ],
+      "searchPass": true,
+      "previewPass": true,
+      "figmaLinkPass": true,
+      "metadataPass": true,
+      "overall": true,
+      "notes": ""
+    },
+    {
+      "group": "Calculation has been Rejected / Full View",
+      "reason": "Calculation Detail",
+      "published": false,
+      "status": "left_pending",
+      "notes": "Calculation Detail",
+      "searchPass": null,
+      "previewPass": null,
+      "figmaLinkPass": null,
+      "metadataPass": null
+    },
+    {
+      "group": "Confirm Verification / Modal ",
+      "reason": "Modal-related",
+      "published": true,
+      "status": "published",
+      "screenId": "8d42e48e-1da5-491b-9ccb-411446b320fb",
+      "publishedVariants": 1,
+      "expectedBreakpoints": [
+        "md"
+      ],
+      "actualBreakpoints": [
+        "md"
+      ],
+      "searchPass": true,
+      "previewPass": true,
+      "figmaLinkPass": true,
+      "metadataPass": true,
+      "overall": true,
+      "notes": ""
+    },
+    {
+      "group": "Default",
+      "reason": "Default state",
+      "published": false,
+      "status": "left_pending",
+      "notes": "Default state",
+      "searchPass": null,
+      "previewPass": null,
+      "figmaLinkPass": null,
+      "metadataPass": null
+    },
+    {
+      "reason": "mock naming mismatch",
+      "published": false,
+      "status": "left_pending",
+      "notes": "mock naming mismatch",
+      "searchPass": null,
+      "previewPass": null,
+      "figmaLinkPass": null,
+      "metadataPass": null
+    }
+  ]
+}

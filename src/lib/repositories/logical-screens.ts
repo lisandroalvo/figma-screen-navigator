@@ -1,4 +1,3 @@
-import "server-only";
 import { eq } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import {
@@ -6,6 +5,7 @@ import {
   screensTable,
   screenVariantsTable,
 } from "../../../drizzle/schema";
+import type { ParentPathItem, Screen, ScreenVariant } from "@/types";
 
 export interface LogicalScreenReview {
   id: string;
@@ -47,17 +47,90 @@ export async function getLogicalScreenByProposalId(proposalId: string) {
   return after as unknown as LogicalScreenReview | null;
 }
 
-export async function getPublishedScreenWithVariants(screenId: string) {
+function mapVariant(
+  row: typeof screenVariantsTable.$inferSelect,
+): ScreenVariant {
+  return {
+    id: row.id,
+    screenId: row.screenId,
+    breakpointId: row.breakpointId,
+    breakpointCode: row.breakpointCode,
+    figmaNodeId: row.figmaNodeId,
+    figmaFileKey: row.figmaFileKey,
+    figmaPageNodeId: row.figmaPageNodeId,
+    originalName: row.originalName,
+    normalizedName: row.normalizedName,
+    figmaUrl: row.figmaUrl,
+    previewUrl: row.previewUrl,
+    width: row.width,
+    height: row.height,
+    parentPath:
+      ((row.parentPath ?? []) as unknown as ParentPathItem[]),
+    metadata: (row.metadata as Record<string, unknown>) ?? {},
+    ambiguityFlags: (row.ambiguityFlags as string[]) ?? [],
+    isPrimary: row.isPrimary,
+    status: row.status,
+    lastFigmaModifiedAt: row.lastFigmaModifiedAt,
+    lastSyncedAt: row.lastSyncedAt,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+  };
+}
+
+function mapScreenRow(row: typeof screensTable.$inferSelect): Screen {
+  return {
+    id: row.id,
+    productId: row.productId,
+    moduleId: row.moduleId,
+    figmaPageId: row.figmaPageId,
+    breakpointId: row.breakpointId,
+    figmaFileKey: row.figmaFileKey,
+    figmaPageNodeId: row.figmaPageNodeId,
+    figmaNodeId: row.figmaNodeId,
+    originalName: row.originalName,
+    normalizedName: row.normalizedName,
+    displayName: row.displayName,
+    figmaUrl: row.figmaUrl,
+    previewUrl: row.previewUrl,
+    status: row.status,
+    source: row.source,
+    screen: row.screen,
+    flow: row.flow,
+    step: row.step,
+    scenario: row.scenario,
+    option: row.option,
+    condition: row.condition,
+    behavior: row.behavior,
+    state: row.state,
+    keywords: row.keywords ?? [],
+    description: row.description,
+    parentPath:
+      ((row.parentPath ?? []) as unknown as ParentPathItem[]),
+    ambiguityFlags: (row.ambiguityFlags as string[]) ?? [],
+    metadata: (row.metadata as Record<string, unknown>) ?? {},
+    lastFigmaModifiedAt: row.lastFigmaModifiedAt,
+    lastSyncedAt: row.lastSyncedAt,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+  };
+}
+
+export async function getPublishedScreenWithVariants(
+  screenId: string,
+): Promise<{ screen: Screen; variants: ScreenVariant[] } | null> {
   const db = getDb();
-  const screen = await db
+  const screenRows = await db
     .select()
     .from(screensTable)
     .where(eq(screensTable.id, screenId))
     .limit(1);
-  if (!screen[0]) return null;
-  const variants = await db
+  if (!screenRows[0]) return null;
+  const variantRows = await db
     .select()
     .from(screenVariantsTable)
     .where(eq(screenVariantsTable.screenId, screenId));
-  return { screen: screen[0], variants };
+  return {
+    screen: mapScreenRow(screenRows[0]),
+    variants: variantRows.map(mapVariant),
+  };
 }

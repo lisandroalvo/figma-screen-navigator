@@ -1,4 +1,4 @@
-import type { Screen } from "@/types";
+import type { Screen, ScreenVariant } from "@/types";
 import { Breadcrumb } from "./Breadcrumb";
 import { PlaceholderPreview } from "./PlaceholderPreview";
 
@@ -16,9 +16,13 @@ function statusLabel(status: string) {
 export function ScreenDetail({
   screen,
   relatedScreens,
+  variants = [],
+  selectedVariant,
 }: {
   screen: Screen;
   relatedScreens: Screen[];
+  variants?: ScreenVariant[];
+  selectedVariant?: ScreenVariant;
 }) {
   const context = [
     screen.scenario,
@@ -38,21 +42,62 @@ export function ScreenDetail({
       </h1>
       {context && <p className="mt-1 text-lg text-zinc-600">{context}</p>}
 
+      {variants.length > 1 && (
+        <div className="mt-4 flex flex-wrap gap-2">
+          {variants.map((v) => {
+            const isSelected = v.id === selectedVariant?.id;
+            const bp = v.breakpointCode?.toUpperCase() ?? v.id;
+            return (
+              <a
+                key={v.id}
+                href={`/screens/${screen.id}?variant=${v.breakpointCode ?? v.id}`}
+                className={`rounded border px-3 py-2 text-sm font-medium ${
+                  isSelected
+                    ? "border-zinc-900 bg-zinc-900 text-white"
+                    : "border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-100"
+                }`}
+              >
+                {bp}
+                {v.isPrimary && (
+                  <span className="ml-1 text-xs opacity-70">(primary)</span>
+                )}
+              </a>
+            );
+          })}
+        </div>
+      )}
+
       <div className="mt-6 grid gap-8 lg:grid-cols-[2fr_1fr]">
         <div>
-          <PlaceholderPreview label={screen.displayName} />
+          {selectedVariant?.previewUrl ? (
+            <img
+              src={selectedVariant.previewUrl}
+              alt={selectedVariant.originalName}
+              className="w-full rounded border border-zinc-200 bg-white"
+            />
+          ) : (
+            <PlaceholderPreview label={selectedVariant?.originalName ?? screen.displayName} />
+          )}
           <div className="mt-4 rounded border border-zinc-200 p-4">
             <h2 className="font-semibold text-zinc-900">Original Figma name</h2>
             <p className="mt-1 text-zinc-700">{screen.originalName}</p>
           </div>
           <div className="mt-4 rounded border border-zinc-200 p-4">
             <h2 className="font-semibold text-zinc-900">Figma URL</h2>
-            <p className="mt-1 break-all text-sm text-zinc-500">
-              {screen.figmaUrl}
-            </p>
-            <p className="text-xs text-zinc-400">
-              (mock — not a live link yet)
-            </p>
+            <a
+              href={selectedVariant?.figmaUrl ?? screen.figmaUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-1 block break-all text-sm text-blue-600 hover:underline"
+            >
+              {selectedVariant?.figmaUrl ?? screen.figmaUrl}
+            </a>
+            {selectedVariant && (
+              <p className="text-xs text-zinc-400">
+                {selectedVariant.width}×{selectedVariant.height} ·{" "}
+                {selectedVariant.breakpointCode?.toUpperCase()}
+              </p>
+            )}
           </div>
         </div>
 
