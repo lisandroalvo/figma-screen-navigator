@@ -102,4 +102,5 @@ describe("parseFigmaFile", () => {
     expect(parsed.screens.filter((s) => s.confidence === "high" || s.confidence === "medium")).toHaveLength(0);
     expect(parsed.counts.rejected).toBeGreaterThan(0);
   });
+
 });

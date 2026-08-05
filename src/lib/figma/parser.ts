@@ -156,6 +156,13 @@ function isBreakpoint(node: FigmaNode): { is: boolean; code?: string } {
   return { is: false };
 }
 
+function parseBreakpointWidth(name: string): number | undefined {
+  const m = name.match(/\b(\d+)\s*px\b/i) || name.match(/\b(1280|1024|768|640|540|414|390|375|360)\b/);
+  if (!m) return undefined;
+  const n = Number.parseInt(m[1], 10);
+  return Number.isNaN(n) ? undefined : n;
+}
+
 function isComponentParent(name: string, patterns: RegExp[]): boolean {
   return patterns.some((p) => p.test(name));
 }
@@ -575,8 +582,8 @@ function collect(
       id: node.id,
       name: node.name,
       code: bp.code ?? "unknown",
-      width: node.absoluteBoundingBox?.width,
-      height: node.absoluteBoundingBox?.height,
+      width: parseBreakpointWidth(node.name) ?? node.absoluteBoundingBox?.width,
+      height: undefined,
     };
 
     const found: FigmaScreenCandidate[] = [];
@@ -621,7 +628,12 @@ function collect(
 
     if (candidate.confidence === "rejected") {
       result.rejected.push(candidate);
-      return childCandidates;
+      const isInternal =
+        candidate.rejectionReasons.includes("generic name") ||
+        candidate.rejectionReasons.includes("ignored name pattern") ||
+        candidate.rejectionReasons.includes("parent indicates component internal") ||
+        candidate.rejectionReasons.includes("exceeded max indexing depth");
+      return isInternal ? [] : childCandidates;
     }
 
     // If this node has non-rejected child candidates, it is a layout
