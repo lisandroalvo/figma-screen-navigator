@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getSyncJobById } from "@/lib/repositories/sync-jobs";
 import { listProposedChangesByJob } from "@/lib/repositories/proposed-changes";
 import { listRecentAuditLogs } from "@/lib/repositories/audit-logs";
+import { requireAdmin } from "@/lib/auth/session";
 import { ProposalActions } from "@/components/ProposalActions";
 
 const CONFIDENCE_OPTIONS = ["all", "high", "medium", "low", "rejected", "missing"];
@@ -28,6 +29,7 @@ export default async function SyncJobPage({
   params: Promise<{ jobId: string }>;
   searchParams: Promise<{ confidence?: string; status?: string; page?: string; subset?: string }>;
 }) {
+  await requireAdmin();
   const { jobId } = await params;
   const { confidence, status, page, subset } = await searchParams;
   const job = await getSyncJobById(jobId);

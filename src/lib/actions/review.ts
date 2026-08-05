@@ -6,8 +6,6 @@ import {
 } from "../../../drizzle/schema";
 import { publishApprovedScreen } from "@/lib/services/publish";
 
-const TEMP_ACTOR = "local-design-admin";
-
 export interface ReviewDecision {
   proposalId: string;
   decision: "approved" | "rejected" | "needs_review";
@@ -66,7 +64,7 @@ async function transitionProposal(
 
 export async function approveProposal(
   proposalId: string,
-  actorId = TEMP_ACTOR,
+  actorId: string,
   note = "",
 ) {
   return transitionProposal(
@@ -81,7 +79,7 @@ export async function approveProposal(
 
 export async function rejectProposal(
   proposalId: string,
-  actorId = TEMP_ACTOR,
+  actorId: string,
   note = "",
 ) {
   if (!note.trim()) throw new Error("A reason is required for rejection");
@@ -97,7 +95,7 @@ export async function rejectProposal(
 
 export async function markNeedsReview(
   proposalId: string,
-  actorId = TEMP_ACTOR,
+  actorId: string,
   note = "",
 ) {
   return transitionProposal(
@@ -112,7 +110,7 @@ export async function markNeedsReview(
 
 export async function publishApprovedProposal(
   proposalId: string,
-  actorId = TEMP_ACTOR,
+  actorId: string,
   note = "",
 ) {
   const db = getDb();

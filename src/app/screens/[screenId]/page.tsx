@@ -6,6 +6,7 @@ import {
   listResponsiveVariants,
 } from "@/lib/data";
 import { getPublishedScreenWithVariants } from "@/lib/repositories/logical-screens";
+import { requireAuth } from "@/lib/auth/session";
 import { ScreenDetail } from "@/components/ScreenDetail";
 
 export default async function ScreenPage({
@@ -17,6 +18,7 @@ export default async function ScreenPage({
 }) {
   const { screenId } = await params;
   const { variant } = await searchParams;
+  await requireAuth();
 
   const [screen, published, related, responsive] = await Promise.all([
     getScreenById(screenId),

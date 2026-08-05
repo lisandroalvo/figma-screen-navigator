@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth/session";
 import {
   approveProposal,
   rejectProposal,
@@ -9,25 +10,40 @@ import {
 } from "@/lib/actions/review";
 
 export async function approveProposalAction(proposalId: string, jobId: string) {
-  const result = await approveProposal(proposalId);
+  const { userId } = await requireAdmin();
+  const result = await approveProposal(proposalId, userId);
   revalidatePath(`/admin/sync/${jobId}`);
   return result;
 }
 
-export async function rejectProposalAction(proposalId: string, jobId: string, note: string) {
-  const result = await rejectProposal(proposalId, undefined, note);
+export async function rejectProposalAction(
+  proposalId: string,
+  jobId: string,
+  note: string,
+) {
+  const { userId } = await requireAdmin();
+  const result = await rejectProposal(proposalId, userId, note);
   revalidatePath(`/admin/sync/${jobId}`);
   return result;
 }
 
-export async function markNeedsReviewAction(proposalId: string, jobId: string, note: string) {
-  const result = await markNeedsReview(proposalId, undefined, note);
+export async function markNeedsReviewAction(
+  proposalId: string,
+  jobId: string,
+  note: string,
+) {
+  const { userId } = await requireAdmin();
+  const result = await markNeedsReview(proposalId, userId, note);
   revalidatePath(`/admin/sync/${jobId}`);
   return result;
 }
 
-export async function publishApprovedProposalAction(proposalId: string, jobId: string) {
-  const result = await publishApprovedProposal(proposalId);
+export async function publishApprovedProposalAction(
+  proposalId: string,
+  jobId: string,
+) {
+  const { userId } = await requireAdmin();
+  const result = await publishApprovedProposal(proposalId, userId);
   revalidatePath(`/admin/sync/${jobId}`);
   return result;
 }

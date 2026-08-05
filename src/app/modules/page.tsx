@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { requireAuth } from "@/lib/auth/session";
 import { listModulesWithCounts, listProducts } from "@/lib/data";
 
 export default async function ModulesPage() {
+  await requireAuth();
   const [modules, products] = await Promise.all([
     listModulesWithCounts(),
     listProducts(),

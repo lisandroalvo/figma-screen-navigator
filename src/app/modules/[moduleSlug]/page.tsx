@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { requireAuth } from "@/lib/auth/session";
 import { getModuleBySlug, listScreensByModule } from "@/lib/data";
 import { ScreenCard } from "@/components/ScreenCard";
 
@@ -9,6 +10,7 @@ export default async function ModulePage({
   params: Promise<{ moduleSlug: string }>;
 }) {
   const { moduleSlug } = await params;
+  await requireAuth();
   const figmaModule = await getModuleBySlug(moduleSlug);
   if (!figmaModule) notFound();
 

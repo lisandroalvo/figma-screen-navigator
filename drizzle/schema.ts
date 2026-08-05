@@ -11,6 +11,11 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 
+export const userRoleEnum = pgEnum("user_role", [
+  "qa_viewer",
+  "design_administrator",
+]);
+
 export const productStatusEnum = pgEnum("product_status", [
   "active",
   "draft",
@@ -369,6 +374,23 @@ export const auditLogsTable = pgTable(
       .notNull(),
   },
   (table) => [index("audit_entity_idx").on(table.entity, table.entityId)],
+);
+
+export const profilesTable = pgTable(
+  "profiles",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("user_id").notNull().unique(),
+    email: text("email").notNull(),
+    role: userRoleEnum("role").default("qa_viewer").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [index("profile_user_id_idx").on(table.userId)],
 );
 
 // SQL to add in a later migration for PostgreSQL full-text search:

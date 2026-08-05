@@ -1,6 +1,7 @@
 import { FilterPanel } from "@/components/FilterPanel";
 import { ScreenCard } from "@/components/ScreenCard";
 import { SearchBox } from "@/components/SearchBox";
+import { requireAuth } from "@/lib/auth/session";
 import { getFilterOptions, searchScreens } from "@/lib/data";
 import { listVariantsByScreen } from "@/lib/repositories/screen-variants";
 import type { SearchFilters } from "@/lib/search";
@@ -18,6 +19,7 @@ interface HomePageProps {
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const params = await searchParams;
+  await requireAuth();
   const query = stringOrUndefined(params.q) ?? "";
 
   const filters: SearchFilters = {

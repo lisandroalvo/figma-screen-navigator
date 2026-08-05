@@ -26,3 +26,14 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - Same-breakpoint collisions must remain unresolved and flagged for manual review. Do not merge them automatically.
 - Proposed logical groups in `proposed_changes` are not published records. Public routes must not read from `proposed_changes`.
 - Publication is disabled until the review workflow is approved by a human.
+
+## Authentication and security rules
+
+- Never bypass authentication. Every QA and admin route must call `requireAuth` or `requireAdmin`.
+- Never trust browser-provided roles or actor IDs. Use `requireAdmin` in server actions and derive the actor from the Supabase session.
+- Never expose service-role or Figma credentials. Only `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are public.
+- Do not commit secrets. `.env.local` and `.env*.local` must remain ignored.
+- Do not disable RLS for convenience. Prefer service-role server actions for complex writes.
+- `ADMIN_EMAILS` is a bootstrap mechanism only. After the first login, `profiles.role` is the source of truth.
+- Never publish all pending proposals automatically. Publication is a deliberate per-proposal admin action.
+- Do not modify Figma. The integration remains read-only.

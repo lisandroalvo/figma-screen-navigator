@@ -250,3 +250,73 @@ No direct pushes to `main`, no history rewrites, no production deploys, and no e
 - Audit logging in the UI
 - GitHub repository and Vercel project setup
 - Production deployment
+
+## Authentication and roles
+
+Authentication uses **Supabase Auth** with email magic links.
+
+- Users sign in at `/login` and receive a magic link by email.
+- The callback at `/login/callback` exchanges the auth code for a session.
+- `profiles` stores the user's role:
+  - `qa_viewer` — can search and view published screens and variants
+  - `design_administrator` — can review, approve, reject, publish, and refresh previews
+- The first administrator is bootstrapped via `ADMIN_EMAILS` (server-side, comma-separated, normalized).
+- After the first login, the `profiles` role is the source of truth.
+- `ADMIN_EMAILS` is only used for bootstrapping; it is never exposed to the browser.
+
+### Protected routes
+
+QA viewer:
+- `/`
+- `/modules`
+- `/modules/[moduleSlug]`
+- `/screens/[screenId]`
+
+Design administrator (also includes QA routes):
+- `/admin/sync/[jobId]`
+
+All admin server actions (`approveProposal`, `rejectProposal`, `markNeedsReview`, `publishApprovedProposal`) require an authenticated `design_administrator` and derive the actor from the session. The browser cannot supply an actor identity.
+
+### Adding users
+
+1. Invite or have the user sign in with the email magic link.
+2. The `profiles` record is created automatically with `qa_viewer`.
+3. To make a user an administrator, update their `profiles.role` to `design_administrator` directly in the database (until an admin user-management UI is built).
+
+### Supabase redirect URLs
+
+Configure in Supabase Auth:
+
+- Site URL: `http://localhost:3000` for local development
+- Additional redirect URLs:
+  - `http://localhost:3000/login/callback`
+  - `https://<vercel-preview-domain>/login/callback`
+  - `https://<vercel-production-domain>/login/callback`
+
+Do not allow unrestricted redirect domains.
+
+### RLS
+
+Row-level security is intended to be enabled on `profiles`. Application reads use service-role or the authenticated session; mutations happen through server actions. Do not disable RLS for convenience.
+
+## CI / CD
+
+GitHub Actions runs on every push and pull request to `main`:
+
+- `npm ci`
+- `npm run lint`
+- `npx tsc --noEmit`
+- `npm test`
+- `npm run build`
+
+Live Figma smoke tests are not run in CI unless `FIGMA_ACCESS_TOKEN` and `FIGMA_PENSION_CALCULATION_FILE_KEY` are securely provided.
+
+The Vercel project is connected to the `figma-screen-navigator` GitHub repository. Production deploys from `main`.
+
+## Known limitations
+
+- Magic-link auth only; no password or SSO.
+- No admin user-management UI yet.
+- Preview images use short-lived Figma CDN URLs; permanent object storage is a post-MVP enhancement.
+- Same-breakpoint collision comparison UI is not implemented.
+- Only the pilot logical screens are published; the remaining 55 groups are pending review.
