@@ -1,0 +1,126 @@
+{
+  "jobId": "ce55190e-27d0-4053-8738-5fefb12bcd16",
+  "selected": [
+    {
+      "proposalId": "0066b822-93f7-4adf-9a17-ecf56dfc6cf9",
+      "id": "181ae20f-9e15-4c90-85ca-d21bd33c2fb6",
+      "displayName": "Create Calculation Modal / Only 60mo C&L Available",
+      "pageName": "🟠 List Estimates/Calculations",
+      "availableBreakpoints": [
+        "xl"
+      ],
+      "variantCount": 1,
+      "isResponsive": false,
+      "confidence": "high",
+      "reason": "Estimate Detail"
+    },
+    {
+      "proposalId": "99922a28-09e3-4f49-a22e-fdc418587ce4",
+      "id": "12288087-8169-4c12-a469-bad02b026210",
+      "displayName": "Confirm Verification - Reject",
+      "pageName": "🟠 Calculation Detail ",
+      "availableBreakpoints": [
+        "sm"
+      ],
+      "variantCount": 1,
+      "isResponsive": false,
+      "confidence": "high",
+      "reason": "Calculation Detail"
+    },
+    {
+      "proposalId": "cc11861a-b21f-48c8-88f6-dcf3415703d1",
+      "id": "ab636574-225c-4019-b6f8-5e59800d1b53",
+      "displayName": "Calculation has been Rejected ",
+      "pageName": "🟠 Accrual Detail",
+      "availableBreakpoints": [
+        "xl"
+      ],
+      "variantCount": 1,
+      "isResponsive": false,
+      "confidence": "high",
+      "reason": "Accrual Detail"
+    },
+    {
+      "proposalId": "bf348e48-73e1-4700-861c-dee931466f86",
+      "id": "8491060e-b974-4f2c-b5c8-9d5e1ba24106",
+      "displayName": "Pension Estimate / Calculation Detail/No Delay Option.",
+      "pageName": "🟠 Estimate Detail ",
+      "availableBreakpoints": [
+        "lg",
+        "sm",
+        "md",
+        "xl"
+      ],
+      "variantCount": 4,
+      "isResponsive": true,
+      "confidence": "high",
+      "reason": "Responsive group"
+    },
+    {
+      "proposalId": "f010a244-a389-4250-b1a0-91a2f942e85d",
+      "id": "d8b39f35-eb04-402d-b20e-35b4d9d0eedf",
+      "displayName": "Calculation Verified",
+      "pageName": "🟠 Accrual Detail",
+      "availableBreakpoints": [
+        "xl"
+      ],
+      "variantCount": 1,
+      "isResponsive": false,
+      "confidence": "high",
+      "reason": "Single variant"
+    },
+    {
+      "proposalId": "2f60a872-24ec-43a8-9166-6be1a1359baa",
+      "id": "1acbfea1-d26c-4888-b37c-d5d4ec5acec1",
+      "displayName": "60 Month C&L / Default",
+      "pageName": "🟠 Floor Detail",
+      "availableBreakpoints": [
+        "xl"
+      ],
+      "variantCount": 1,
+      "isResponsive": false,
+      "confidence": "high",
+      "reason": "State example"
+    },
+    {
+      "proposalId": "9115b30d-607b-4fb6-8dfd-cc02bc9fe0e1",
+      "id": "da355949-b06b-4203-bf60-8e559aafe7d0",
+      "displayName": "Confirm Verification - Reject",
+      "pageName": "🟠 Accrual Detail",
+      "availableBreakpoints": [
+        "xl"
+      ],
+      "variantCount": 1,
+      "isResponsive": false,
+      "confidence": "high",
+      "reason": "Modal or behavior example"
+    },
+    {
+      "proposalId": "2d6e25a6-454c-44b7-b872-9f147dd3457f",
+      "id": "13d2de73-87e5-4e75-bdab-3609259fd909",
+      "displayName": "List Calculation / Merge Service Credits",
+      "pageName": "🟠 List Estimates/Calculations",
+      "availableBreakpoints": [
+        "lg",
+        "sm"
+      ],
+      "variantCount": 2,
+      "isResponsive": true,
+      "confidence": "high",
+      "reason": "List page"
+    },
+    {
+      "proposalId": "785512fa-92f2-4ba2-8cd1-2a477dba5566",
+      "id": "ec0692d8-a450-40d8-85b1-f3f63da58438",
+      "displayName": "Confirm Authorization",
+      "pageName": "🟠 Accrual Detail",
+      "availableBreakpoints": [
+        "xl"
+      ],
+      "variantCount": 1,
+      "isResponsive": false,
+      "confidence": "high",
+      "reason": "Additional safe screen"
+    }
+  ]
+}

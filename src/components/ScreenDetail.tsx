@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Screen, ScreenVariant } from "@/types";
 import { Breadcrumb } from "./Breadcrumb";
 import { PlaceholderPreview } from "./PlaceholderPreview";
@@ -70,9 +71,12 @@ export function ScreenDetail({
       <div className="mt-6 grid gap-8 lg:grid-cols-[2fr_1fr]">
         <div>
           {selectedVariant?.previewUrl ? (
-            <img
+            <Image
               src={selectedVariant.previewUrl}
               alt={selectedVariant.originalName}
+              width={selectedVariant.width ?? 800}
+              height={selectedVariant.height ?? 600}
+              unoptimized
               className="w-full rounded border border-zinc-200 bg-white"
             />
           ) : (

@@ -15,6 +15,13 @@
       "when": 1785919147818,
       "tag": "0001_add_screen_variants",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785935693694,
+      "tag": "0002_add_preview_status",
+      "breakpoints": true
     }
   ]
 }

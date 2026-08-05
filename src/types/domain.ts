@@ -174,6 +174,11 @@ export interface ScreenVariant {
   ambiguityFlags: string[];
   isPrimary: boolean;
   status: "active" | "missing_review" | "deprecated" | "archived";
+  previewGeneratedAt?: Date | null;
+  previewExpiresAt?: Date | null;
+  previewStatus?: string | null;
+  previewError?: string | null;
+  lastPreviewRefreshAt?: Date | null;
   lastFigmaModifiedAt?: Date | null;
   lastSyncedAt?: Date | null;
   createdAt: Date;

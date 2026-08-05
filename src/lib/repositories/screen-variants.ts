@@ -1,4 +1,3 @@
-import "server-only";
 import { eq, and } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import { screenVariantsTable } from "../../../drizzle/schema";

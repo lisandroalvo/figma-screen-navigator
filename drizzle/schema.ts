@@ -55,8 +55,10 @@ export const proposedChangeActionEnum = pgEnum("proposed_change_action", [
 
 export const proposedChangeStatusEnum = pgEnum("proposed_change_status", [
   "pending",
+  "needs_review",
   "approved",
   "rejected",
+  "published",
 ]);
 
 export const screenSourceEnum = pgEnum("screen_source", [
@@ -253,6 +255,17 @@ export const screenVariantsTable = pgTable(
     ambiguityFlags: jsonb("ambiguity_flags").$type<string[]>().default([]).notNull(),
     isPrimary: boolean("is_primary").default(false).notNull(),
     status: screenVariantStatusEnum("status").default("active").notNull(),
+    previewGeneratedAt: timestamp("preview_generated_at", {
+      withTimezone: true,
+    }),
+    previewExpiresAt: timestamp("preview_expires_at", {
+      withTimezone: true,
+    }),
+    previewStatus: text("preview_status"),
+    previewError: text("preview_error"),
+    lastPreviewRefreshAt: timestamp("last_preview_refresh_at", {
+      withTimezone: true,
+    }),
     lastFigmaModifiedAt: timestamp("last_figma_modified_at", {
       withTimezone: true,
     }),

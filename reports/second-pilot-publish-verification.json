@@ -1,0 +1,217 @@
+{
+  "selected": 9,
+  "approved": 9,
+  "published": 9,
+  "previewPassCount": 9,
+  "searchPassCount": 9,
+  "figmaLinkPassCount": 9,
+  "overallPassCount": 9,
+  "results": [
+    {
+      "group": "Create Calculation Modal / Only 60mo C&L Available",
+      "reviewDecision": "approved",
+      "published": true,
+      "status": "published",
+      "screenId": "6af3be2c-a87b-4eba-8244-8267c19ea8c4",
+      "publishedVariants": 1,
+      "expectedBreakpoints": [
+        "xl"
+      ],
+      "actualBreakpoints": [
+        "xl"
+      ],
+      "previewPass": true,
+      "searchPass": true,
+      "variantSelectorPass": true,
+      "figmaLinkPass": true,
+      "auditLogPass": true,
+      "metadataPass": true,
+      "overall": true,
+      "notes": ""
+    },
+    {
+      "group": "Confirm Verification - Reject",
+      "reviewDecision": "approved",
+      "published": true,
+      "status": "published",
+      "screenId": "ab76f185-3b96-410a-b077-617f449c7681",
+      "publishedVariants": 1,
+      "expectedBreakpoints": [
+        "sm"
+      ],
+      "actualBreakpoints": [
+        "sm"
+      ],
+      "previewPass": true,
+      "searchPass": true,
+      "variantSelectorPass": true,
+      "figmaLinkPass": true,
+      "auditLogPass": true,
+      "metadataPass": true,
+      "overall": true,
+      "notes": ""
+    },
+    {
+      "group": "Calculation has been Rejected ",
+      "reviewDecision": "approved",
+      "published": true,
+      "status": "published",
+      "screenId": "ab393de7-9165-46f5-b543-0efbda6c99dd",
+      "publishedVariants": 1,
+      "expectedBreakpoints": [
+        "xl"
+      ],
+      "actualBreakpoints": [
+        "xl"
+      ],
+      "previewPass": true,
+      "searchPass": true,
+      "variantSelectorPass": true,
+      "figmaLinkPass": true,
+      "auditLogPass": true,
+      "metadataPass": true,
+      "overall": true,
+      "notes": ""
+    },
+    {
+      "group": "Pension Estimate / Calculation Detail/No Delay Option.",
+      "reviewDecision": "approved",
+      "published": true,
+      "status": "published",
+      "screenId": "a92d0b84-8c5c-40e0-a149-ae1244d170dd",
+      "publishedVariants": 4,
+      "expectedBreakpoints": [
+        "lg",
+        "sm",
+        "md",
+        "xl"
+      ],
+      "actualBreakpoints": [
+        "lg",
+        "md",
+        "sm",
+        "xl"
+      ],
+      "previewPass": true,
+      "searchPass": true,
+      "variantSelectorPass": true,
+      "figmaLinkPass": true,
+      "auditLogPass": true,
+      "metadataPass": true,
+      "overall": true,
+      "notes": ""
+    },
+    {
+      "group": "Calculation Verified",
+      "reviewDecision": "approved",
+      "published": true,
+      "status": "published",
+      "screenId": "41a12cac-6bcf-4052-bf4e-3e536b1d362d",
+      "publishedVariants": 1,
+      "expectedBreakpoints": [
+        "xl"
+      ],
+      "actualBreakpoints": [
+        "xl"
+      ],
+      "previewPass": true,
+      "searchPass": true,
+      "variantSelectorPass": true,
+      "figmaLinkPass": true,
+      "auditLogPass": true,
+      "metadataPass": true,
+      "overall": true,
+      "notes": ""
+    },
+    {
+      "group": "60 Month C&L / Default",
+      "reviewDecision": "approved",
+      "published": true,
+      "status": "published",
+      "screenId": "7babb06d-8882-4e4f-9749-fddd2f1e2156",
+      "publishedVariants": 1,
+      "expectedBreakpoints": [
+        "xl"
+      ],
+      "actualBreakpoints": [
+        "xl"
+      ],
+      "previewPass": true,
+      "searchPass": true,
+      "variantSelectorPass": true,
+      "figmaLinkPass": true,
+      "auditLogPass": true,
+      "metadataPass": true,
+      "overall": true,
+      "notes": ""
+    },
+    {
+      "group": "Confirm Verification - Reject",
+      "reviewDecision": "approved",
+      "published": true,
+      "status": "published",
+      "screenId": "760a67b7-d295-4be8-89a2-59545773b684",
+      "publishedVariants": 1,
+      "expectedBreakpoints": [
+        "xl"
+      ],
+      "actualBreakpoints": [
+        "xl"
+      ],
+      "previewPass": true,
+      "searchPass": true,
+      "variantSelectorPass": true,
+      "figmaLinkPass": true,
+      "auditLogPass": true,
+      "metadataPass": true,
+      "overall": true,
+      "notes": ""
+    },
+    {
+      "group": "List Calculation / Merge Service Credits",
+      "reviewDecision": "approved",
+      "published": true,
+      "status": "published",
+      "screenId": "e1f10650-53eb-4594-a96f-975d219c2346",
+      "publishedVariants": 2,
+      "expectedBreakpoints": [
+        "lg",
+        "sm"
+      ],
+      "actualBreakpoints": [
+        "lg",
+        "sm"
+      ],
+      "previewPass": true,
+      "searchPass": true,
+      "variantSelectorPass": true,
+      "figmaLinkPass": true,
+      "auditLogPass": true,
+      "metadataPass": true,
+      "overall": true,
+      "notes": ""
+    },
+    {
+      "group": "Confirm Authorization",
+      "reviewDecision": "approved",
+      "published": true,
+      "status": "published",
+      "screenId": "c9962794-41bc-4439-b7af-1fb7ec5ac5c4",
+      "publishedVariants": 1,
+      "expectedBreakpoints": [
+        "xl"
+      ],
+      "actualBreakpoints": [
+        "xl"
+      ],
+      "previewPass": true,
+      "searchPass": true,
+      "variantSelectorPass": true,
+      "figmaLinkPass": true,
+      "auditLogPass": true,
+      "metadataPass": true,
+      "overall": true,
+      "notes": ""
+    }
+  ]
+}

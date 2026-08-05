@@ -69,8 +69,22 @@ export async function publishApprovedScreen(proposalId: string, actorId?: string
     .from(proposedChangesTable)
     .where(eq(proposedChangesTable.id, proposalId))
     .limit(1);
-  if (!proposal || proposal.action !== "new" || proposal.status !== "approved") {
-    throw new Error("Proposal must be an approved new logical screen");
+  if (!proposal || proposal.action !== "new") {
+    throw new Error("Proposal must be a new logical screen proposal");
+  }
+
+  // Idempotent: if already published, return the existing screen id.
+  if (proposal.screenId) {
+    const [existing] = await db
+      .select()
+      .from(screensTable)
+      .where(eq(screensTable.id, proposal.screenId))
+      .limit(1);
+    if (existing) return existing.id;
+  }
+
+  if (proposal.status !== "approved") {
+    throw new Error("Proposal must be approved before publication");
   }
 
   const after = (proposal.after as Record<string, unknown>) ?? {};
@@ -224,7 +238,7 @@ export async function publishApprovedScreen(proposalId: string, actorId?: string
 
   await db
     .update(proposedChangesTable)
-    .set({ screenId: screen.id })
+    .set({ screenId: screen.id, status: "published" })
     .where(eq(proposedChangesTable.id, proposalId));
 
   await db.insert(auditLogsTable).values({

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { Screen } from "@/types";
 import { Breadcrumb } from "./Breadcrumb";
@@ -45,10 +46,24 @@ export function ScreenCard({ screen }: { screen: Screen }) {
         </div>
       </div>
       <div className="mt-4 grid gap-4 sm:grid-cols-[200px_1fr]">
-        <PlaceholderPreview label={screen.displayName} />
+        {screen.previewUrl ? (
+          <Image
+            src={screen.previewUrl}
+            alt={screen.displayName}
+            width={200}
+            height={150}
+            unoptimized
+            className="rounded border border-zinc-200 bg-white object-cover"
+          />
+        ) : (
+          <PlaceholderPreview label={screen.displayName} />
+        )}
         <div className="flex flex-col items-start gap-3">
           <p className="text-sm text-zinc-500">
             Original: <span className="text-zinc-700">{screen.originalName}</span>
+          </p>
+          <p className="text-xs text-zinc-400">
+            Source: {screen.source}
           </p>
           <div className="flex flex-wrap gap-2">
             <Link
@@ -57,9 +72,14 @@ export function ScreenCard({ screen }: { screen: Screen }) {
             >
               View details
             </Link>
-            <span className="inline-flex items-center rounded border border-zinc-300 px-3 py-2 text-sm text-zinc-400">
-              Open in Figma (mock)
-            </span>
+            <a
+              href={screen.figmaUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center rounded border border-zinc-300 px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-100"
+            >
+              Open in Figma
+            </a>
           </div>
         </div>
       </div>
