@@ -37,3 +37,13 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - `ADMIN_EMAILS` is a bootstrap mechanism only. After the first login, `profiles.role` is the source of truth.
 - Never publish all pending proposals automatically. Publication is a deliberate per-proposal admin action.
 - Do not modify Figma. The integration remains read-only.
+
+## Deployment and RLS rules
+
+- RLS must remain enabled on all application tables. Never weaken policies for convenience.
+- Never use browser-provided roles or actor IDs. Always derive roles from the Supabase session server-side.
+- Never expose service-role or Figma credentials to the browser, source maps, or logs.
+- Never broaden Supabase redirect URLs beyond the known local, preview, and production domains.
+- Never publish all pending proposals automatically. Publication is a deliberate per-proposal admin action.
+- Never modify Figma. The integration remains read-only.
+- Do not commit `.env.local` or any file containing real credentials.

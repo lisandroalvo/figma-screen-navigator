@@ -29,6 +29,13 @@
       "when": 1785938160041,
       "tag": "0003_add_profiles",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1785941000000,
+      "tag": "0004_enable_auth_rls",
+      "breakpoints": true
     }
   ]
 }

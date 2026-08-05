@@ -7,6 +7,7 @@ import { listProposedChangesByJob } from "@/lib/repositories/proposed-changes";
 import { listRecentAuditLogs } from "@/lib/repositories/audit-logs";
 import { requireAdmin } from "@/lib/auth/session";
 import { ProposalActions } from "@/components/ProposalActions";
+import { RefreshPreviewButton } from "@/components/RefreshPreviewButton";
 
 const CONFIDENCE_OPTIONS = ["all", "high", "medium", "low", "rejected", "missing"];
 const STATUS_OPTIONS = ["all", "pending", "needs_review", "approved", "rejected", "published"];
@@ -276,6 +277,12 @@ export default async function SyncJobPage({
                       status={change.status}
                       hasCollision={hasCollision}
                     />
+                    {change.screenId && (
+                      <RefreshPreviewButton
+                        screenId={change.screenId}
+                        jobId={jobId}
+                      />
+                    )}
                   </div>
                 </li>
               );

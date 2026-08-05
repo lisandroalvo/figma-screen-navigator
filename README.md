@@ -320,3 +320,51 @@ The Vercel project is connected to the `figma-screen-navigator` GitHub repositor
 - Preview images use short-lived Figma CDN URLs; permanent object storage is a post-MVP enhancement.
 - Same-breakpoint collision comparison UI is not implemented.
 - Only the pilot logical screens are published; the remaining 55 groups are pending review.
+
+## Row-level security
+
+RLS is enabled on all application tables:
+
+- `products`, `modules`, `figma_pages`, `breakpoints` — readable by any authenticated user
+- `screens`, `screen_variants` — readable by any authenticated user when `status = 'qa_ready'` and `source = 'figma'`
+- `sync_jobs`, `proposed_changes`, `audit_logs`, `screen_relationships` — readable by `design_administrator` only
+- `profiles` — users may read their own profile; administrators may read all profiles
+
+No direct client-side write policies are granted. Mutations run through server-side actions using a privileged database role.
+
+Run the RLS smoke test:
+
+```bash
+npm run db:rls-smoke
+```
+
+This verifies that all required tables have RLS enabled. Supabase Auth policies rely on `auth.uid()` and a `current_user_role()` helper in the public schema.
+
+## Preview refresh
+
+Administrators can refresh Figma previews for individual published screens from the sync job detail page. The button is visible only on published proposals and requires `design_administrator` access.
+
+## GitHub and Vercel setup
+
+1. Install the GitHub CLI: `brew install gh` (or `gh` from official installers)
+2. Authenticate: `gh auth login`
+3. Create the repository: `gh repo create figma-screen-navigator --private --source=. --push`
+4. Install the Vercel CLI: `npm install --global vercel` (or `npx vercel`)
+5. Authenticate: `vercel login`
+6. Create and link the project: `vercel --confirm`
+7. Add environment variables in the Vercel dashboard or via `vercel env add`
+
+## Current published scope
+
+- 12 published Figma screens
+- 16 published variants
+- 9 mock screens (excluded from public search)
+- 55 logical groups pending review
+
+## Known limitations
+
+- Magic-link auth only.
+- No admin user-management UI.
+- Preview images use Figma CDN URLs; no permanent object storage.
+- Same-breakpoint collision comparison UI not built.
+- Only the pilot batch is published.
