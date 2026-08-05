@@ -4,8 +4,17 @@ export type IndexingStrategy =
   | "recursive"
   | "manual_include";
 
+export type HierarchyPattern =
+  | "breakpoint_contains_screens"
+  | "screen_contains_breakpoints"
+  | "group_contains_breakpoint_variants"
+  | "screen_group_contains_screens"
+  | "direct_page_screens"
+  | "unknown";
+
 export interface PageConfig {
   strategy: IndexingStrategy;
+  hierarchyPattern: HierarchyPattern;
   allowedGroupPatterns?: RegExp[];
   allowedDirectChildren?: boolean;
   maxDepth: number;
@@ -28,6 +37,7 @@ export interface ModuleConfig {
 
 const DEFAULT_PAGE: PageConfig = {
   strategy: "direct_children",
+  hierarchyPattern: "screen_group_contains_screens",
   allowedDirectChildren: true,
   maxDepth: 4,
   minWidth: 200,
@@ -37,6 +47,7 @@ const DEFAULT_PAGE: PageConfig = {
 
 const FLOOR_DETAIL: PageConfig = {
   strategy: "direct_children",
+  hierarchyPattern: "screen_group_contains_screens",
   allowedDirectChildren: true,
   maxDepth: 3,
   minWidth: 200,

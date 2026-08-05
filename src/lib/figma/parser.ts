@@ -43,6 +43,7 @@ export interface FigmaScreenCandidate {
   generic: boolean;
   depth: number;
   nestedIn?: string;
+  hierarchyPattern: import("./config").HierarchyPattern;
 }
 
 export interface FigmaParseResult {
@@ -244,10 +245,36 @@ function getPageConfig(pageName: string) {
   return pilotConfig.pageConfigs[key] ?? pilotConfig.defaultPageConfig;
 }
 
+function hasShellDescendants(node: FigmaNode): boolean {
+  return (node.children ?? []).some(
+    (c) =>
+      pilotConfig.shellChildPatterns.some((p) => p.test(c.name)) ||
+      hasShellDescendants(c),
+  );
+}
+
+function inferBreakpointFromDimensions(
+  w: number,
+): { name: string; code: string; width: number } | undefined {
+  const bp = [
+    { code: "xl", width: 1280 },
+    { code: "lg", width: 1024 },
+    { code: "md", width: 768 },
+    { code: "sm", width: 640 },
+    { code: "xs", width: 414 },
+  ];
+  for (const b of bp) {
+    if (Math.abs(w - b.width) <= 20) {
+      return { name: b.code, code: b.code, width: b.width };
+    }
+  }
+  return undefined;
+}
+
 function resolveConfidence(
   node: FigmaNode,
   config: ReturnType<typeof getPageConfig>,
-  currentBreakpoint: { width?: number; height?: number } | undefined,
+  currentBreakpoint: { id?: string; name?: string; code: string; width?: number; height?: number } | undefined,
   depth: number,
   parentName: string,
 ): {
@@ -259,6 +286,7 @@ function resolveConfidence(
   containsShell: boolean;
   generic: boolean;
   widthRatio?: number;
+  inferredBreakpoint?: { id?: string; name?: string; code: string; width: number };
 } {
   const reasons: string[] = [];
   const rejections: string[] = [];
@@ -266,15 +294,21 @@ function resolveConfidence(
 
   const w = node.absoluteBoundingBox?.width ?? 0;
   const h = node.absoluteBoundingBox?.height ?? 0;
-  const bpWidth = currentBreakpoint?.width;
+
+  // If the node is not inside an explicitly named breakpoint, infer one from
+  // its own width. This lets full-size wireframes sitting directly under a
+  // page-level group still receive a breakpoint and width ratio.
+  const inferredBreakpoint = !currentBreakpoint
+    ? inferBreakpointFromDimensions(w)
+    : undefined;
+  const bpWidth =
+    currentBreakpoint?.width ?? inferredBreakpoint?.width ?? undefined;
   const bpHeight = currentBreakpoint?.height;
   const widthRatio = bpWidth && bpWidth > 0 ? w / bpWidth : undefined;
   const heightRatio = bpHeight && bpHeight > 0 ? h / bpHeight : undefined;
 
   const children = node.children ?? [];
-  const containsShell = children.some((c) =>
-    pilotConfig.shellChildPatterns.some((p) => p.test(c.name)),
-  );
+  const containsShell = hasShellDescendants(node);
 
   const generic =
     /\b(frame|group|rectangle|ellipse|component|instance)\s*\d*\b/i.test(
@@ -301,9 +335,6 @@ function resolveConfidence(
     ambiguity.push("low_width_ratio");
   }
 
-  // Behavior-named frames that are much smaller than the breakpoint are
-  // usually overlays inside a complete wireframe. The complete wireframe
-  // (parent or ancestor) should remain the searchable screen.
   const hasBehaviorInName = pilotConfig.behaviorKeywords.some((b) =>
     new RegExp(`\\b${b}\\b`, "i").test(node.name),
   );
@@ -333,6 +364,7 @@ function resolveConfidence(
       containsShell,
       generic,
       widthRatio,
+      inferredBreakpoint,
     };
   }
 
@@ -341,6 +373,13 @@ function resolveConfidence(
   if (currentBreakpoint) {
     reasons.push("under recognized breakpoint");
     score += 20;
+  } else if (inferredBreakpoint) {
+    reasons.push("width matches a standard breakpoint");
+    score += 15;
+    if (depth <= 2) {
+      reasons.push("direct child of page");
+      score += 5;
+    }
   } else if (depth <= 2) {
     reasons.push("direct child of page");
     score += 10;
@@ -349,9 +388,12 @@ function resolveConfidence(
   }
 
   if (widthRatio !== undefined) {
-    if (widthRatio >= 0.8) {
-      reasons.push("width close to breakpoint");
+    if (widthRatio >= 0.9) {
+      reasons.push("width matches breakpoint closely");
       score += 25;
+    } else if (widthRatio >= 0.8) {
+      reasons.push("width close to breakpoint");
+      score += 20;
     } else if (widthRatio >= config.minWidthRatio) {
       reasons.push("width above minimum ratio");
       score += 10;
@@ -359,7 +401,7 @@ function resolveConfidence(
     }
   }
 
-  if (heightRatio !== undefined && heightRatio >= 0.5) {
+  if (heightRatio !== undefined && heightRatio >= 0.6) {
     reasons.push("height close to breakpoint");
     score += 10;
   }
@@ -394,6 +436,9 @@ function resolveConfidence(
   } else if (behaviorChildren.length === structuralChildren.length) {
     reasons.push("contains only behavior-variant children");
     score += 10;
+  } else if (containsShell || (widthRatio && widthRatio >= 0.9)) {
+    reasons.push("full-size wireframe with internal layout");
+    score += 10;
   } else {
     ambiguity.push("possible_layout_container");
   }
@@ -403,9 +448,9 @@ function resolveConfidence(
 
   let confidence: Confidence = "medium";
   if (
-    score >= 80 &&
-    reasons.includes("under recognized breakpoint") &&
-    (containsShell || (widthRatio && widthRatio >= 0.8))
+    score >= 85 &&
+    (currentBreakpoint || inferredBreakpoint) &&
+    (containsShell || (widthRatio && widthRatio >= 0.9))
   ) {
     confidence = "high";
   } else if (score < 60 || ambiguity.length > 1) {
@@ -421,6 +466,7 @@ function resolveConfidence(
     containsShell,
     generic,
     widthRatio,
+    inferredBreakpoint,
   };
 }
 
@@ -634,9 +680,9 @@ function buildCandidate(
     pageId,
     pageName,
     pageNodeId: pageId,
-    breakpointId: currentBreakpoint?.id,
-    breakpointName: currentBreakpoint?.name,
-    breakpointCode: currentBreakpoint?.code,
+    breakpointId: currentBreakpoint?.id ?? resolved.inferredBreakpoint?.id,
+    breakpointName: currentBreakpoint?.name ?? resolved.inferredBreakpoint?.name,
+    breakpointCode: currentBreakpoint?.code ?? resolved.inferredBreakpoint?.code,
     parentPath: fullPath.filter((p) =>
       ["product", "module", "page", "breakpoint"].includes(p.type),
     ),
@@ -644,6 +690,7 @@ function buildCandidate(
     immediateParent: fullPath.length > 1 ? fullPath[fullPath.length - 2] : undefined,
     width: w,
     height: h,
+    hierarchyPattern: config.hierarchyPattern,
     visible: node.visible === false ? false : true,
     metadata,
     ambiguityFlags: allAmbiguity,

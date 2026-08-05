@@ -186,6 +186,9 @@ export default async function SyncJobPage({
                         {after.depth !== undefined
                           ? ` · depth ${after.depth}`
                           : ""}
+                        {after.hierarchyPattern
+                          ? ` · ${String(after.hierarchyPattern)}`
+                          : ""}
                       </p>
                       {reasonText && (
                         <p className="mt-1 text-xs text-zinc-500">
