@@ -4,6 +4,7 @@ import { getServerEnv } from "../env";
 import * as schema from "../../../drizzle/schema";
 
 let dbInstance: ReturnType<typeof drizzle> | null = null;
+let clientInstance: ReturnType<typeof postgres> | null = null;
 
 export function getDb() {
   if (dbInstance) return dbInstance;
@@ -15,7 +16,12 @@ export function getDb() {
     );
   }
 
-  const client = postgres(env.DATABASE_URL, { prepare: false });
-  dbInstance = drizzle(client, { schema });
+  clientInstance = postgres(env.DATABASE_URL, {
+    prepare: false,
+    max: 1,
+    idle_timeout: 20,
+    connect_timeout: 10,
+  });
+  dbInstance = drizzle(clientInstance, { schema });
   return dbInstance;
 }
