@@ -3,6 +3,8 @@ import Link from "next/link";
 import { scanPilotModule } from "@/lib/figma/sync";
 import { listSyncJobs } from "@/lib/repositories/sync-jobs";
 
+export const dynamic = "force-dynamic";
+
 async function startScan() {
   "use server";
   const result = await scanPilotModule();

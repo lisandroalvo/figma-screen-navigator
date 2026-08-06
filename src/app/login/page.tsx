@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { LoginForm } from "@/components/LoginForm";
 import { getUserProfile } from "@/lib/auth/session";
 
+export const dynamic = "force-dynamic";
+
 export default async function LoginPage() {
   const profile = await getUserProfile();
   if (profile) {

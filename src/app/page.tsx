@@ -6,6 +6,8 @@ import { getFilterOptions, searchScreens } from "@/lib/data";
 import { listVariantsByScreen } from "@/lib/repositories/screen-variants";
 import type { SearchFilters } from "@/lib/search";
 
+export const dynamic = "force-dynamic";
+
 function stringOrUndefined(
   value: string | string[] | undefined,
 ): string | undefined {

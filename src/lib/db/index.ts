@@ -9,7 +9,7 @@ export function getDb() {
   if (dbInstance) return dbInstance;
 
   const env = getServerEnv();
-  if (env.DATA_SOURCE !== "database") {
+  if (env.DATA_SOURCE !== "database" || !env.DATABASE_URL) {
     throw new Error(
       "Database mode is not enabled. Set DATA_SOURCE=database and provide DATABASE_URL.",
     );

@@ -4,6 +4,8 @@ import { requireAuth } from "@/lib/auth/session";
 import { getModuleBySlug, listScreensByModule } from "@/lib/data";
 import { ScreenCard } from "@/components/ScreenCard";
 
+export const dynamic = "force-dynamic";
+
 export default async function ModulePage({
   params,
 }: {

@@ -2,6 +2,8 @@ import Link from "next/link";
 import { requireAuth } from "@/lib/auth/session";
 import { listModulesWithCounts, listProducts } from "@/lib/data";
 
+export const dynamic = "force-dynamic";
+
 export default async function ModulesPage() {
   await requireAuth();
   const [modules, products] = await Promise.all([

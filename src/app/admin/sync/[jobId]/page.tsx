@@ -9,6 +9,8 @@ import { requireAdmin } from "@/lib/auth/session";
 import { ProposalActions } from "@/components/ProposalActions";
 import { RefreshPreviewButton } from "@/components/RefreshPreviewButton";
 
+export const dynamic = "force-dynamic";
+
 const CONFIDENCE_OPTIONS = ["all", "high", "medium", "low", "rejected", "missing"];
 const STATUS_OPTIONS = ["all", "pending", "needs_review", "approved", "rejected", "published"];
 const PAGE_OPTIONS = ["all", "Estimate", "Calculation", "Accrual", "List", "Floor"];

@@ -9,6 +9,8 @@ import { getPublishedScreenWithVariants } from "@/lib/repositories/logical-scree
 import { requireAuth } from "@/lib/auth/session";
 import { ScreenDetail } from "@/components/ScreenDetail";
 
+export const dynamic = "force-dynamic";
+
 export default async function ScreenPage({
   params,
   searchParams,
