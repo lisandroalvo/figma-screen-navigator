@@ -46,7 +46,8 @@ async function main() {
     (u) => u.email?.toLowerCase() === adminEmail.toLowerCase(),
   );
 
-  const password = generatePassword();
+  const explicitPassword = process.argv[2];
+  const password = explicitPassword ?? generatePassword();
   let userId: string | undefined;
 
   if (existing) {
@@ -59,7 +60,7 @@ async function main() {
     );
     if (error) throw error;
     userId = data.user.id;
-    console.log("Existing user updated with a new temporary password.");
+    console.log("Existing user updated with a new password.");
   } else {
     const { data, error } = await supabase.auth.admin.createUser({
       email: adminEmail,
@@ -68,7 +69,7 @@ async function main() {
     });
     if (error) throw error;
     userId = data.user?.id;
-    console.log("New user created with a temporary password.");
+    console.log("New user created with a new password.");
   }
 
   if (!userId) throw new Error("Could not obtain user ID after upsert.");
@@ -86,14 +87,17 @@ async function main() {
       set: { role: "design_administrator" },
     });
 
-  const path = "/tmp/.figma-admin-password";
-  fs.writeFileSync(path, `${password}`, { mode: 0o600 });
-
   console.log(`Profile set to design_administrator.`);
-  console.log(`Temporary password written to ${path}`);
-  console.log(
-    `Read it with: cat ${path}  (delete the file immediately after signing in)`,
-  );
+
+  if (!explicitPassword) {
+    const path = "/tmp/.figma-admin-password";
+    fs.writeFileSync(path, `${password}`, { mode: 0o600 });
+    console.log(`Temporary password written to ${path}`);
+    console.log(
+      `Read it with: cat ${path}  (delete the file immediately after signing in)`,
+    );
+  }
+
   console.log("User ID:", userId);
 }
 
