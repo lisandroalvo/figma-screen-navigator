@@ -38,6 +38,21 @@ The slash-separated segments in a wireframe name are **not** guaranteed to repre
 - **Testing:** Vitest
 - **CI/CD:** GitHub + Vercel (deferred)
 
+## Authentication
+
+The application uses **Supabase Auth** with two sign-in methods on the login page:
+
+- **Password** — the primary, recommended production method.
+- **Magic link** — secondary; intended for local development and rare recovery use.
+
+### Important: Magic Link in production
+
+Supabase’s built-in email provider has a low project-wide sending rate limit. In production, the Magic link tab will quickly hit this limit and show:
+
+> “Too many sign-in emails were requested. Use Password sign-in or try again later.”
+
+To use Magic Link reliably in production you must configure a **custom SMTP provider** in Supabase (e.g. Resend, SendGrid, AWS SES). Without a custom SMTP provider, the Password tab should be the default sign-in method.
+
 ## Data-source mode
 
 The application runs in one of two explicit modes, controlled by `DATA_SOURCE` in `.env.local`:

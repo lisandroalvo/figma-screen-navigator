@@ -1,30 +1,89 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 
 type Method = "password" | "magic";
+
+type SubmitStatus = "idle" | "loading" | "success" | "error";
+
+const RATE_LIMIT_KEYWORDS = [
+  "over_email_send_rate_limit",
+  "email rate limit exceeded",
+];
+
+const RETRY_SECONDS = 30;
+
+function isRateLimitError(message: string | null): boolean {
+  if (!message) return false;
+  const lower = message.toLowerCase();
+  return RATE_LIMIT_KEYWORDS.some((keyword) => lower.includes(keyword));
+}
+
+function friendlyError(
+  method: Method,
+  raw: string | null,
+): { title: string; body: string } {
+  if (isRateLimitError(raw)) {
+    return {
+      title: "Too many sign-in emails were requested.",
+      body: "Use Password sign-in or try again later.",
+    };
+  }
+
+  if (method === "password") {
+    return {
+      title: "Sign in failed.",
+      body: "Check your email and password and try again.",
+    };
+  }
+
+  return {
+    title: "Could not send the magic link.",
+    body: raw ? "Please try again in a moment." : "Please try again later.",
+  };
+}
 
 export function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [method, setMethod] = useState<Method>("magic");
+  const [method, setMethod] = useState<Method>("password");
   const [showPassword, setShowPassword] = useState(false);
-  const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState<SubmitStatus>("idle");
+  const [message, setMessage] = useState<{ title: string; body: string } | null>(null);
+  const [countdown, setCountdown] = useState(0);
+  const submitted = useRef(false);
 
   const normalized = email.trim().toLowerCase();
 
+  useEffect(() => {
+    if (countdown <= 0) return;
+    const timer = setInterval(() => {
+      setCountdown((c) => {
+        if (c <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return c - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [countdown]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (submitted.current) return;
+
     setStatus("loading");
-    setMessage("");
+    setMessage(null);
+    submitted.current = true;
 
     if (!normalized || !normalized.includes("@")) {
       setStatus("error");
-      setMessage("Please enter a valid email address.");
+      setMessage(friendlyError(method, null));
+      submitted.current = false;
       return;
     }
 
@@ -34,7 +93,8 @@ export function LoginForm() {
       if (method === "password") {
         if (!password) {
           setStatus("error");
-          setMessage("Please enter your password.");
+          setMessage(friendlyError(method, null));
+          submitted.current = false;
           return;
         }
         const { error } = await supabase.auth.signInWithPassword({
@@ -44,10 +104,10 @@ export function LoginForm() {
 
         if (error) {
           setStatus("error");
-          setMessage(error.message);
+          setMessage(friendlyError(method, error.message));
         } else {
           setStatus("success");
-          setMessage("Signed in.");
+          setMessage({ title: "Signed in.", body: "" });
           router.push("/");
         }
       } else {
@@ -67,22 +127,27 @@ export function LoginForm() {
 
         if (error) {
           setStatus("error");
-          setMessage(error.message);
+          setMessage(friendlyError(method, error.message));
         } else {
           setStatus("success");
-          setMessage("Check your email for the magic link.");
+          setMessage({
+            title: "Check your email for the magic link.",
+            body: `You can request another in ${RETRY_SECONDS} seconds.`,
+          });
+          setCountdown(RETRY_SECONDS);
         }
       }
     } catch (err) {
       setStatus("error");
-      setMessage(
-        err instanceof Error
-          ? err.message
-          : "Could not reach Supabase. Check your connection.",
-      );
+      const raw = err instanceof Error ? err.message : "unknown";
+      setMessage(friendlyError(method, raw));
       console.error("Login error:", err);
+    } finally {
+      submitted.current = false;
     }
   }
+
+  const isLoading = status === "loading";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -154,26 +219,31 @@ export function LoginForm() {
 
       <button
         type="submit"
-        disabled={status === "loading"}
+        disabled={isLoading || (method === "magic" && countdown > 0)}
         className="w-full rounded bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-700 disabled:opacity-50"
       >
-        {status === "loading"
+        {isLoading
           ? method === "password"
             ? "Signing in..."
             : "Sending..."
           : method === "password"
             ? "Sign in with password"
-            : "Sign in with email"}
+            : countdown > 0
+              ? `Resend in ${countdown}s`
+              : "Send magic link"}
       </button>
 
       {message && (
-        <p
-          className={`text-sm ${
-            status === "error" ? "text-red-600" : "text-green-600"
+        <div
+          className={`space-y-1 rounded p-3 text-sm ${
+            status === "error"
+              ? "border border-red-200 bg-red-50 text-red-700"
+              : "border border-green-200 bg-green-50 text-green-700"
           }`}
         >
-          {message}
-        </p>
+          <p className="font-medium">{message.title}</p>
+          {message.body && <p>{message.body}</p>}
+        </div>
       )}
     </form>
   );
