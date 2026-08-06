@@ -8,6 +8,7 @@ const optionalNonEmptyString = z.preprocess(
 const publicEnvSchema = z.object({
   NEXT_PUBLIC_SUPABASE_URL: z.string().url(),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1),
+  NEXT_PUBLIC_APP_URL: z.string().url(),
 });
 
 const baseServerSchema = z.object({
@@ -39,11 +40,27 @@ export type PublicEnv = z.infer<typeof publicEnvSchema>;
 export type ServerEnv = z.infer<typeof serverEnvSchema>;
 
 export function getPublicEnv(): PublicEnv {
-  return publicEnvSchema.parse(process.env);
+  // Static references are required so Next.js can inline NEXT_PUBLIC_*
+  // values into the browser bundle at build/dev time.
+  return publicEnvSchema.parse({
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+  });
 }
 
 export function getServerEnv(): ServerEnv {
-  return serverEnvSchema.parse(process.env);
+  return serverEnvSchema.parse({
+    DATA_SOURCE: process.env.DATA_SOURCE,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+    FIGMA_ACCESS_TOKEN: process.env.FIGMA_ACCESS_TOKEN,
+    FIGMA_PENSION_CALCULATION_FILE_KEY:
+      process.env.FIGMA_PENSION_CALCULATION_FILE_KEY,
+    FIGMA_WEBHOOK_SECRET: process.env.FIGMA_WEBHOOK_SECRET,
+    ADMIN_EMAILS: process.env.ADMIN_EMAILS,
+    DATABASE_URL: process.env.DATABASE_URL,
+    DATABASE_DIRECT_URL: process.env.DATABASE_DIRECT_URL,
+  });
 }
 
 export function isDatabaseMode(): boolean {
