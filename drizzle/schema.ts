@@ -190,6 +190,10 @@ export const screensTable = pgTable(
     displayName: text("display_name").notNull(),
     figmaUrl: text("figma_url").notNull(),
     previewUrl: text("preview_url"),
+    previewStoragePath: text("preview_storage_path"),
+    previewUpdatedAt: timestamp("preview_updated_at", {
+      withTimezone: true,
+    }),
     status: screenStatusEnum("status").default("draft").notNull(),
 
     // Optional semantic metadata columns
@@ -253,6 +257,10 @@ export const screenVariantsTable = pgTable(
     normalizedName: text("normalized_name").notNull(),
     figmaUrl: text("figma_url").notNull(),
     previewUrl: text("preview_url"),
+    previewStoragePath: text("preview_storage_path"),
+    previewUpdatedAt: timestamp("preview_updated_at", {
+      withTimezone: true,
+    }),
     width: integer("width"),
     height: integer("height"),
     parentPath: jsonb("parent_path").default([]).notNull(),

@@ -78,7 +78,7 @@ export function ScreenCard({
             width={200}
             height={150}
             unoptimized
-            className="rounded border border-zinc-200 bg-white object-cover"
+            className="aspect-[4/3] w-full rounded border border-zinc-200 bg-white object-contain"
           />
         ) : (
           <PlaceholderPreview label={screen.displayName} />
