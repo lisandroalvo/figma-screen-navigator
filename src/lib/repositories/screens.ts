@@ -178,7 +178,7 @@ export async function searchScreens(
     filterConditions.push(ne(screensTable.source, "mock"));
   }
 
-  let score = sql<number>`0`.mapWith(Number);
+  let score = sql<number>`0.0`.mapWith(Number);
 
   const termConditions: (SQL<unknown> | undefined)[] = [];
   for (const raw of terms) {
