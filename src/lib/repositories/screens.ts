@@ -231,31 +231,38 @@ export async function searchScreens(
   }
 
   const allConditions = [...filterConditions, ...termConditions];
+  const where =
+    allConditions.length > 0 ? (and(...allConditions) as SQL<unknown>) : undefined;
 
-  const dbQuery = db
-    .select({
-      screen: screensTable,
-      module: modulesTable,
-      page: figmaPagesTable,
-      breakpoint: breakpointsTable,
-      score,
-    })
-    .from(screensTable)
-    .innerJoin(modulesTable, eq(screensTable.moduleId, modulesTable.id))
-    .innerJoin(figmaPagesTable, eq(screensTable.figmaPageId, figmaPagesTable.id))
-    .innerJoin(
-      breakpointsTable,
-      eq(screensTable.breakpointId, breakpointsTable.id),
-    )
-    .$dynamic();
+  const baseSelect = {
+    screen: screensTable,
+    module: modulesTable,
+    page: figmaPagesTable,
+    breakpoint: breakpointsTable,
+  };
 
-  if (allConditions.length > 0) {
-    dbQuery.where(and(...allConditions) as SQL<unknown>);
-  }
+  const buildBaseQuery = (includeScore: boolean) => {
+    const select = includeScore ? { ...baseSelect, score } : baseSelect;
+    const q = db
+      .select(select)
+      .from(screensTable)
+      .innerJoin(modulesTable, eq(screensTable.moduleId, modulesTable.id))
+      .innerJoin(figmaPagesTable, eq(screensTable.figmaPageId, figmaPagesTable.id))
+      .innerJoin(
+        breakpointsTable,
+        eq(screensTable.breakpointId, breakpointsTable.id),
+      );
+    return where ? q.where(where) : q;
+  };
 
-  const rows = await dbQuery
-    .orderBy(sql`${score} DESC`, screensTable.displayName)
-    .limit(100);
+  const rows =
+    terms.length > 0
+      ? await buildBaseQuery(true)
+          .orderBy(sql`${score} DESC`, screensTable.displayName)
+          .limit(100)
+      : await buildBaseQuery(false)
+          .orderBy(screensTable.displayName)
+          .limit(100);
 
   return rows.map((r) => mapScreen(r.screen));
 }
