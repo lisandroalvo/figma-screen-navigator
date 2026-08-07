@@ -24,7 +24,14 @@ export function ScreenCard({
   breakpoints?: string[];
   variantCount?: number;
 }) {
-  const context = [screen.scenario, screen.option, screen.condition, screen.state, screen.behavior]
+  // Build compact context line: Module · Page
+  const contextParts = [];
+  if (screen.moduleName) contextParts.push(screen.moduleName);
+  if (screen.pageName) contextParts.push(screen.pageName);
+  const modulePageContext = contextParts.join(" · ");
+
+  // Build metadata context: scenario, option, state, etc.
+  const metadataContext = [screen.scenario, screen.option, screen.condition, screen.state, screen.behavior]
     .filter(Boolean)
     .join(" · ");
 
@@ -34,25 +41,10 @@ export function ScreenCard({
       <h3 className="mt-2 text-lg font-semibold text-zinc-900">
         {screen.displayName}
       </h3>
-      {context && <p className="text-sm text-zinc-600">{context}</p>}
-      <div className="mt-3 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
-        <div>
-          <span className="text-zinc-500">Module</span>
-          <p className="font-medium text-zinc-900">{screen.parentPath[1]?.name}</p>
-        </div>
-        <div>
-          <span className="text-zinc-500">Page</span>
-          <p className="font-medium text-zinc-900">{screen.parentPath[2]?.name}</p>
-        </div>
-        <div>
-          <span className="text-zinc-500">Status</span>
-          <p className="font-medium text-zinc-900">{statusLabel(screen.status)}</p>
-        </div>
-        <div>
-          <span className="text-zinc-500">Source</span>
-          <p className="font-medium text-zinc-900">{screen.source}</p>
-        </div>
-      </div>
+      {modulePageContext && (
+        <p className="text-sm text-zinc-500">{modulePageContext}</p>
+      )}
+      {metadataContext && <p className="text-sm text-zinc-600">{metadataContext}</p>}
       {breakpoints.length > 0 && (
         <div className="mt-2 flex flex-wrap gap-1">
           {breakpoints.map((bp) => (
@@ -70,6 +62,24 @@ export function ScreenCard({
           )}
         </div>
       )}
+      <div className="mt-3 grid grid-cols-2 gap-2 text-sm sm:grid-cols-4">
+        <div>
+          <span className="text-zinc-500">Module</span>
+          <p className="font-medium text-zinc-900">{screen.moduleName || screen.parentPath[1]?.name || "—"}</p>
+        </div>
+        <div>
+          <span className="text-zinc-500">Page</span>
+          <p className="font-medium text-zinc-900">{screen.pageName || screen.parentPath[2]?.name || "—"}</p>
+        </div>
+        <div>
+          <span className="text-zinc-500">Status</span>
+          <p className="font-medium text-zinc-900">{statusLabel(screen.status)}</p>
+        </div>
+        <div>
+          <span className="text-zinc-500">Source</span>
+          <p className="font-medium text-zinc-900">{screen.source}</p>
+        </div>
+      </div>
       <div className="mt-4 grid gap-4 sm:grid-cols-[200px_1fr]">
         {screen.previewUrl ? (
           <Image

@@ -13,6 +13,7 @@ import {
   breakpointsTable,
   figmaPagesTable,
   modulesTable,
+  productsTable,
   screenRelationshipsTable,
   screensTable,
 } from "../../../drizzle/schema";
@@ -20,7 +21,16 @@ import { tokenize } from "@/lib/search";
 import type { Screen } from "@/types";
 import type { SearchFilters } from "@/lib/search";
 
-function mapScreen(row: typeof screensTable.$inferSelect): Screen {
+function mapScreen(
+  row: typeof screensTable.$inferSelect,
+  context?: {
+    productName?: string;
+    productSlug?: string;
+    moduleName?: string;
+    moduleSlug?: string;
+    pageName?: string;
+  }
+): Screen {
   return {
     id: row.id,
     productId: row.productId,
@@ -37,6 +47,11 @@ function mapScreen(row: typeof screensTable.$inferSelect): Screen {
     previewUrl: row.previewUrl,
     status: row.status,
     source: row.source,
+    productName: context?.productName,
+    productSlug: context?.productSlug,
+    moduleName: context?.moduleName,
+    moduleSlug: context?.moduleSlug,
+    pageName: context?.pageName,
     screen: row.screen,
     flow: row.flow,
     step: row.step,
@@ -67,7 +82,7 @@ export async function listScreens(): Promise<Screen[]> {
     .select()
     .from(screensTable)
     .orderBy(screensTable.displayName);
-  return rows.map(mapScreen);
+  return rows.map((r) => mapScreen(r));
 }
 
 export async function getScreenById(id: string): Promise<Screen | null> {
@@ -87,7 +102,7 @@ export async function listScreensByModule(moduleId: string): Promise<Screen[]> {
     .from(screensTable)
     .where(eq(screensTable.moduleId, moduleId))
     .orderBy(screensTable.displayName);
-  return rows.map(mapScreen);
+  return rows.map((r) => mapScreen(r));
 }
 
 export async function listRelatedScreens(screenId: string): Promise<Screen[]> {
@@ -112,7 +127,7 @@ export async function listRelatedScreens(screenId: string): Promise<Screen[]> {
     .select()
     .from(screensTable)
     .where(inArray(screensTable.id, ids));
-  return rows.map(mapScreen);
+  return rows.map((r) => mapScreen(r));
 }
 
 export async function listResponsiveVariants(
@@ -142,7 +157,7 @@ export async function listResponsiveVariants(
     .select()
     .from(screensTable)
     .where(inArray(screensTable.id, ids));
-  return rows.map(mapScreen);
+  return rows.map((r) => mapScreen(r));
 }
 
 export async function searchScreens(
@@ -197,9 +212,11 @@ export async function searchScreens(
         ilike(screensTable.behavior, t),
         ilike(screensTable.state, t),
         ilike(screensTable.description, t),
+        ilike(productsTable.name, t),
         ilike(modulesTable.name, t),
         ilike(figmaPagesTable.name, t),
         ilike(breakpointsTable.name, t),
+        ilike(breakpointsTable.code, t),
         sql`${screensTable.keywords}::text ILIKE ${t}`,
       ),
     );
@@ -210,7 +227,9 @@ export async function searchScreens(
       (case when ${ilike(screensTable.originalName, t)} then 10 else 0 end) +
       (case when ${ilike(modulesTable.name, t)} then 8 else 0 end) +
       (case when ${ilike(figmaPagesTable.name, t)} then 8 else 0 end) +
+      (case when ${ilike(productsTable.name, t)} then 7 else 0 end) +
       (case when ${ilike(breakpointsTable.name, t)} then 6 else 0 end) +
+      (case when ${ilike(breakpointsTable.code, t)} then 6 else 0 end) +
       (case when ${ilike(screensTable.scenario, t)} then 4 else 0 end) +
       (case when ${ilike(screensTable.behavior, t)} then 4 else 0 end) +
       (case when ${ilike(screensTable.state, t)} then 4 else 0 end) +
@@ -236,6 +255,7 @@ export async function searchScreens(
 
   const baseSelect = {
     screen: screensTable,
+    product: productsTable,
     module: modulesTable,
     page: figmaPagesTable,
     breakpoint: breakpointsTable,
@@ -246,6 +266,7 @@ export async function searchScreens(
     const q = db
       .select(select)
       .from(screensTable)
+      .innerJoin(productsTable, eq(screensTable.productId, productsTable.id))
       .innerJoin(modulesTable, eq(screensTable.moduleId, modulesTable.id))
       .innerJoin(figmaPagesTable, eq(screensTable.figmaPageId, figmaPagesTable.id))
       .innerJoin(
@@ -264,5 +285,11 @@ export async function searchScreens(
           .orderBy(screensTable.displayName)
           .limit(100);
 
-  return rows.map((r) => mapScreen(r.screen));
+  return rows.map((r) => mapScreen(r.screen, {
+    productName: r.product.name,
+    productSlug: r.product.slug,
+    moduleName: r.module.name,
+    moduleSlug: r.module.slug,
+    pageName: r.page.name,
+  }));
 }

@@ -132,6 +132,13 @@ export interface Screen {
   previewUrl?: string | null;
   status: ScreenStatus;
   source: ScreenSource;
+  
+  // Denormalized context for search and display
+  productName?: string | null;
+  productSlug?: string | null;
+  moduleName?: string | null;
+  moduleSlug?: string | null;
+  pageName?: string | null;
 
   // Optional semantic metadata. Most are nullable.
   screen?: string | null;
