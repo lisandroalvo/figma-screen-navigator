@@ -6,8 +6,10 @@ export interface LogicalScreenGroup {
   id: string;
   displayName: string;
   originalName: string;
+  logicalName: string; // Derived from sectionName or metadata.screen
   pageName: string;
   pageNodeId: string;
+  sectionName?: string; // For component-based hierarchy
   metadata: FigmaScreenCandidate["metadata"];
   variants: FigmaScreenCandidate[];
   primaryVariant: FigmaScreenCandidate;
@@ -22,9 +24,16 @@ export interface LogicalScreenGroup {
 
 export function screenIdentityKey(c: FigmaScreenCandidate): string {
   const m = c.metadata ?? {};
+  
+  // For component-based screens (INSTANCE), use sectionName as the logical screen name
+  // For frame-based screens, use metadata.screen or originalName
+  const logicalScreenName = c.sectionName 
+    ? c.sectionName.toLowerCase()
+    : (m.screen ?? c.originalName).toLowerCase();
+  
   const parts = [
     c.pageName,
-    (m.screen ?? c.originalName).toLowerCase(),
+    logicalScreenName,
     (m.flow ?? "").toLowerCase(),
     (m.scenario ?? "").toLowerCase(),
     (m.option ?? "").toLowerCase(),
@@ -82,12 +91,19 @@ export function groupIntoLogicalScreens(
     );
     if (sameBreakpointCollision) ambiguityFlags.push("duplicate_breakpoint_variant");
 
+    // Derive logical name from sectionName (for INSTANCE) or metadata.screen (for FRAME)
+    const logicalName = primary.sectionName 
+      ? primary.sectionName
+      : (primary.metadata.screen ?? primary.originalName);
+
     groups.push({
       id: crypto.randomUUID(),
       displayName: primary.displayName ?? primary.originalName,
       originalName: primary.originalName,
+      logicalName,
       pageName: primary.pageName,
       pageNodeId: primary.pageNodeId,
+      sectionName: primary.sectionName,
       metadata: primary.metadata,
       variants,
       primaryVariant: primary,

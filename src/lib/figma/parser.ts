@@ -1,5 +1,6 @@
 import type { FigmaFileResponse, FigmaNode } from "./client";
 import { pilotConfig } from "./config";
+import { shouldIgnoreFigmaPage } from "./page-classification";
 
 export type Confidence = "high" | "medium" | "low" | "rejected";
 
@@ -13,6 +14,7 @@ export interface FigmaScreenCandidate {
   pageId: string;
   pageName: string;
   pageNodeId: string;
+  sectionName?: string; // Logical screen section (parent of breakpoint section)
   breakpointId?: string;
   breakpointName?: string;
   breakpointCode?: string;
@@ -76,6 +78,7 @@ export interface FigmaParseResult {
     rejected: number;
     ignored: number;
   };
+  detectedScreenIds: Set<string>; // Track detected screens to prevent nested detection
 }
 
 const IGNORED_PAGE_PATTERNS = [
@@ -132,6 +135,10 @@ function tokenizeName(name: string): string[] {
     .filter((s) => s.length > 0);
 }
 
+/**
+ * Checks if a node represents a breakpoint container.
+ * Breakpoints are typically FRAME or SECTION nodes with dimension indicators.
+ */
 function isBreakpoint(node: FigmaNode): { is: boolean; code?: string } {
   if (node.type !== "FRAME" && node.type !== "SECTION") return { is: false };
   const hasDims =
@@ -147,6 +154,7 @@ function isBreakpoint(node: FigmaNode): { is: boolean; code?: string } {
     { code: "lg", pattern: /\b(?:lg|large)\b/i },
     { code: "md", pattern: /\b(?:md|medium|tablet)\b/i },
     { code: "sm", pattern: /\b(?:sm|small|mobile)\b/i },
+    { code: "xs", pattern: /\b(?:xs|extra[-\s]?small)\b/i },
   ];
   for (const bp of patterns) {
     if (bp.pattern.test(node.name) || bp.pattern.test(node.name.toLowerCase())) {
@@ -154,6 +162,78 @@ function isBreakpoint(node: FigmaNode): { is: boolean; code?: string } {
     }
   }
   return { is: false };
+}
+
+/**
+ * Checks if a node is a breakpoint section that should contain screen variants.
+ * This is used to identify the hierarchical pattern:
+ * Logical Screen Section → Breakpoint Section → Screen Variant
+ */
+function isBreakpointSection(node: FigmaNode): { is: boolean; code?: string } {
+  if (node.type !== "SECTION") return { is: false };
+  
+  const patterns = [
+    { code: "xl", pattern: /^xl$/i },
+    { code: "lg", pattern: /^lg$/i },
+    { code: "md", pattern: /^md$/i },
+    { code: "sm", pattern: /^sm$/i },
+    { code: "xs", pattern: /^xs$/i },
+  ];
+  
+  const trimmedName = node.name.trim();
+  for (const bp of patterns) {
+    if (bp.pattern.test(trimmedName)) {
+      return { is: true, code: bp.code };
+    }
+  }
+  return { is: false };
+}
+
+/**
+ * Checks if an INSTANCE node qualifies as a screen variant based on hierarchy.
+ * 
+ * Qualification rules:
+ * 1. Must be an INSTANCE node
+ * 2. Must have screen-like dimensions (width >= 320, height >= 400)
+ * 3. Must be a direct child of a breakpoint section (XL, LG, MD, SM, XS)
+ * 4. Must not be nested inside another screen candidate
+ * 
+ * This prevents nested component instances (buttons, headers, etc.) from
+ * being detected as screens.
+ * 
+ * @param node - The INSTANCE node to check
+ * @param parentPath - Path of ancestors (does NOT include the current node)
+ * @param detectedScreenIds - Set of already-detected screen IDs
+ */
+function isQualifiedScreenInstance(
+  node: FigmaNode,
+  parentPath: { id: string; name: string; type: string }[],
+  detectedScreenIds: Set<string>,
+): boolean {
+  if (node.type !== "INSTANCE") return false;
+  
+  // Check dimensions
+  const width = node.absoluteBoundingBox?.width ?? 0;
+  const height = node.absoluteBoundingBox?.height ?? 0;
+  if (width < 320 || height < 400) return false;
+  
+  // Check if nested inside an already-detected screen
+  for (const ancestor of parentPath) {
+    if (detectedScreenIds.has(ancestor.id)) {
+      return false; // Nested inside a screen, reject
+    }
+  }
+  
+  // Check if immediate parent is a breakpoint section
+  // parentPath[parentPath.length - 1] is the immediate parent
+  const immediateParent = parentPath[parentPath.length - 1];
+  if (!immediateParent) return false;
+  
+  // Parent must be a SECTION with a breakpoint name (XL, LG, MD, SM, XS)
+  if (immediateParent.type !== "SECTION") return false;
+  
+  const breakpointPattern = /^(xl|lg|md|sm|xs)$/i;
+  return breakpointPattern.test(immediateParent.name.trim());
 }
 
 function parseBreakpointWidth(name: string): number | undefined {
@@ -317,10 +397,11 @@ function resolveConfidence(
   const children = node.children ?? [];
   const containsShell = hasShellDescendants(node);
 
-  const generic =
-    /\b(frame|group|rectangle|ellipse|component|instance)\s*\d*\b/i.test(
-      node.name,
-    ) || /^\d+$/.test(node.name.trim());
+  // For INSTANCE nodes, be more lenient with generic names
+  // "Layout Instance" or "Component Instance" are acceptable for component-based screens
+  const generic = node.type === "INSTANCE"
+    ? /^(frame|group|rectangle|ellipse)\s*\d*$/i.test(node.name.trim()) || /^\d+$/.test(node.name.trim())
+    : /\b(frame|group|rectangle|ellipse|component|instance)\s*\d*\b/i.test(node.name) || /^\d+$/.test(node.name.trim());
 
   if (generic) {
     rejections.push("generic name");
@@ -357,7 +438,8 @@ function resolveConfidence(
     rejections.push("exceeded max indexing depth");
     ambiguity.push("uncertain_parent_boundary");
   }
-  if (node.type !== "FRAME") {
+  // Allow both FRAME and INSTANCE nodes as screen candidates
+  if (node.type !== "FRAME" && node.type !== "INSTANCE") {
     rejections.push(`node type is ${node.type}`);
   }
 
@@ -490,20 +572,35 @@ export function parseFigmaFile(
     ignored: [],
     rejected: [],
     counts: { high: 0, medium: 0, low: 0, rejected: 0, ignored: 0 },
+    detectedScreenIds: new Set(),
   };
 
   for (const page of file.document.children ?? []) {
-    const isIgnoredPage = IGNORED_PAGE_PATTERNS.some((p) => p.test(page.name));
+    // Check if this is a component library page
+    const isComponentsPage = shouldIgnoreFigmaPage(page.name);
+    
+    // Check if this matches other ignored patterns
+    const isIgnoredPattern = IGNORED_PAGE_PATTERNS.some((p) => p.test(page.name));
+    
+    const isIgnoredPage = isComponentsPage || isIgnoredPattern;
+    
     if (page.type !== "CANVAS" || isIgnoredPage) {
+      let reason = "not a canvas";
+      if (isComponentsPage) {
+        reason = "reserved component-library page";
+      } else if (isIgnoredPattern) {
+        reason = "ignored page pattern";
+      }
+      
       result.pages.push({
         id: page.id,
         name: page.name,
         normalizedName: normalizeText(page.name),
         nodeId: page.id,
         included: false,
-        reason: isIgnoredPage ? "ignored page" : "not a canvas",
+        reason,
       });
-      result.ignored.push({ id: page.id, name: page.name, reason: "ignored page" });
+      result.ignored.push({ id: page.id, name: page.name, reason });
       result.counts.ignored++;
       continue;
     }
@@ -566,6 +663,7 @@ function collect(
   const entry = { id: node.id, name: node.name, type: node.type };
   const fullPath = [...parentPath, entry];
 
+  // Check for traditional breakpoint nodes (with dimension indicators)
   const bp = isBreakpoint(node);
   if (bp.is) {
     result.breakpoints.push({
@@ -584,6 +682,25 @@ function collect(
       code: bp.code ?? "unknown",
       width: parseBreakpointWidth(node.name) ?? node.absoluteBoundingBox?.width,
       height: undefined,
+    };
+
+    const found: FigmaScreenCandidate[] = [];
+    for (const child of node.children ?? []) {
+      found.push(...collect(child, fullPath, bpInfo, pageId, config, depth + 1, result, node.name));
+    }
+    return found;
+  }
+
+  // Check for simple breakpoint sections (just "XL", "LG", "MD", "SM", "XS")
+  // These are used in component-based hierarchies
+  const bpSection = isBreakpointSection(node);
+  if (bpSection.is) {
+    const bpInfo = {
+      id: node.id,
+      name: node.name,
+      code: bpSection.code ?? "unknown",
+      width: node.absoluteBoundingBox?.width,
+      height: node.absoluteBoundingBox?.height,
     };
 
     const found: FigmaScreenCandidate[] = [];
@@ -615,6 +732,7 @@ function collect(
     }
   }
 
+  // Handle FRAME nodes (existing logic)
   if (node.type === "FRAME") {
     const candidate = buildCandidate(
       node,
@@ -624,6 +742,7 @@ function collect(
       config,
       depth,
       parentName,
+      result.detectedScreenIds,
     );
 
     if (candidate.confidence === "rejected") {
@@ -648,6 +767,43 @@ function collect(
       return childCandidates;
     }
 
+    // Mark this as a detected screen to prevent nested instances from being detected
+    result.detectedScreenIds.add(node.id);
+    return [candidate];
+  }
+
+  // Handle INSTANCE nodes (component-based screens)
+  if (node.type === "INSTANCE") {
+    // Check if this instance qualifies as a screen variant
+    // Note: parentPath doesn't include the current node yet
+    if (!isQualifiedScreenInstance(node, parentPath, result.detectedScreenIds)) {
+      // Not a qualified screen instance, but might contain child screens
+      return childCandidates;
+    }
+
+    // Use currentBreakpoint if available (set by breakpoint section parent)
+    const breakpointInfo = currentBreakpoint;
+
+    const candidate = buildCandidate(
+      node,
+      fullPath,
+      breakpointInfo,
+      pageId,
+      config,
+      depth,
+      parentName,
+      result.detectedScreenIds,
+    );
+
+    if (candidate.confidence === "rejected") {
+      result.rejected.push(candidate);
+      return childCandidates;
+    }
+
+    // Mark this as a detected screen to prevent nested instances from being detected
+    result.detectedScreenIds.add(node.id);
+    
+    // Don't recurse into children of INSTANCE nodes to avoid detecting nested components
     return [candidate];
   }
 
@@ -662,6 +818,7 @@ function buildCandidate(
   config: ReturnType<typeof getPageConfig>,
   depth: number,
   parentName: string,
+  _detectedScreenIds: Set<string>,
 ): FigmaScreenCandidate {
   const w = node.absoluteBoundingBox?.width ?? 0;
   const h = node.absoluteBoundingBox?.height ?? 0;
@@ -682,6 +839,25 @@ function buildCandidate(
     new Set([...resolved.ambiguityFlags, ...ambiguityFlags]),
   );
 
+  // Extract section name for component-based hierarchy
+  // Pattern: Page → Logical Screen Section → Breakpoint Section → Instance
+  // We want the section name before the breakpoint section
+  let sectionName: string | undefined;
+  if (node.type === "INSTANCE" && fullPath.length >= 3) {
+    // Check if immediate parent is a breakpoint section
+    const immediateParent = fullPath[fullPath.length - 2];
+    if (immediateParent && immediateParent.type === "SECTION") {
+      const bpCheck = isBreakpointSection(immediateParent as FigmaNode);
+      if (bpCheck.is) {
+        // Parent of breakpoint section is the logical screen section
+        const logicalScreenSection = fullPath[fullPath.length - 3];
+        if (logicalScreenSection && logicalScreenSection.type === "SECTION") {
+          sectionName = logicalScreenSection.name;
+        }
+      }
+    }
+  }
+
   return {
     id: node.id,
     name: node.name,
@@ -692,6 +868,7 @@ function buildCandidate(
     pageId,
     pageName,
     pageNodeId: pageId,
+    sectionName,
     breakpointId: currentBreakpoint?.id ?? resolved.inferredBreakpoint?.id,
     breakpointName: currentBreakpoint?.name ?? resolved.inferredBreakpoint?.name,
     breakpointCode: currentBreakpoint?.code ?? resolved.inferredBreakpoint?.code,

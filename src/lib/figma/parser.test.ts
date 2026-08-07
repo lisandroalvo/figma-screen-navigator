@@ -103,4 +103,128 @@ describe("parseFigmaFile", () => {
     expect(parsed.counts.rejected).toBeGreaterThan(0);
   });
 
+  it('excludes "Components" page from screen detection', () => {
+    const file = makeFile("Test Module", [
+      {
+        name: "Components",
+        id: "1:1",
+        children: [
+          { name: "Button Component", id: "2:1", type: "FRAME", w: 1920, h: 1080 },
+          { name: "Layout Component", id: "2:2", type: "INSTANCE", w: 1280, h: 800 },
+        ],
+      },
+      {
+        name: "Product Page",
+        id: "1:2",
+        children: [
+          { name: "Estimate Detail / XL", id: "3:1", type: "FRAME", w: 1920, h: 1080 },
+        ],
+      },
+    ]);
+    const parsed = parseFigmaFile("abc", file);
+    
+    // Components page should be excluded
+    const componentsPage = parsed.pages.find((p) => p.name === "Components");
+    expect(componentsPage?.included).toBe(false);
+    expect(componentsPage?.reason).toBe("reserved component-library page");
+    
+    // No screens should be detected from Components page
+    const componentsScreens = parsed.screens.filter((s) => s.pageName === "Components");
+    expect(componentsScreens).toHaveLength(0);
+    
+    // Product page should still be processed
+    const productPage = parsed.pages.find((p) => p.name === "Product Page");
+    expect(productPage?.included).toBe(true);
+  });
+
+  it('excludes "Component" page (singular)', () => {
+    const file = makeFile("Test Module", [
+      {
+        name: "Component",
+        id: "1:1",
+        children: [
+          { name: "Large Frame", id: "2:1", type: "FRAME", w: 1920, h: 1080 },
+        ],
+      },
+    ]);
+    const parsed = parseFigmaFile("abc", file);
+    
+    const componentPage = parsed.pages.find((p) => p.name === "Component");
+    expect(componentPage?.included).toBe(false);
+    expect(componentPage?.reason).toBe("reserved component-library page");
+  });
+
+  it('excludes " COMPONENTS " with whitespace', () => {
+    const file = makeFile("Test Module", [
+      {
+        name: " COMPONENTS ",
+        id: "1:1",
+        children: [
+          { name: "Large Frame", id: "2:1", type: "FRAME", w: 1920, h: 1080 },
+        ],
+      },
+    ]);
+    const parsed = parseFigmaFile("abc", file);
+    
+    const componentsPage = parsed.pages.find((p) => p.name === " COMPONENTS ");
+    expect(componentsPage?.included).toBe(false);
+    expect(componentsPage?.reason).toBe("reserved component-library page");
+  });
+
+  it('does NOT exclude "Component Detail" page', () => {
+    const file = makeFile("Test Module", [
+      {
+        name: "Component Detail",
+        id: "1:1",
+        children: [
+          { name: "Screen / XL", id: "2:1", type: "FRAME", w: 1920, h: 1080 },
+        ],
+      },
+    ]);
+    const parsed = parseFigmaFile("abc", file);
+    
+    const page = parsed.pages.find((p) => p.name === "Component Detail");
+    expect(page?.included).toBe(true);
+  });
+
+  it('does NOT exclude "Component Maintenance" page', () => {
+    const file = makeFile("Test Module", [
+      {
+        name: "Component Maintenance",
+        id: "1:1",
+        children: [
+          { name: "Screen / XL", id: "2:1", type: "FRAME", w: 1920, h: 1080 },
+        ],
+      },
+    ]);
+    const parsed = parseFigmaFile("abc", file);
+    
+    const page = parsed.pages.find((p) => p.name === "Component Maintenance");
+    expect(page?.included).toBe(true);
+  });
+
+  it("works normally for modules without Components page", () => {
+    const file = makeFile("Test Module", [
+      {
+        name: "Calculation Detail",
+        id: "1:1",
+        children: [
+          { name: "Screen / XL", id: "2:1", type: "FRAME", w: 1920, h: 1080 },
+        ],
+      },
+      {
+        name: "Estimate Detail",
+        id: "1:2",
+        children: [
+          { name: "Screen / XL", id: "3:1", type: "FRAME", w: 1920, h: 1080 },
+        ],
+      },
+    ]);
+    const parsed = parseFigmaFile("abc", file);
+    
+    // All pages should be included
+    expect(parsed.pages.filter((p) => p.included)).toHaveLength(2);
+    expect(parsed.pages.filter((p) => !p.included)).toHaveLength(0);
+  });
+
 });
