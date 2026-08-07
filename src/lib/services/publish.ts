@@ -112,11 +112,16 @@ export async function publishApprovedScreen(proposalId: string, actorId?: string
     .limit(1);
   if (!figmaModule) throw new Error("Module not found");
 
-  // Ensure the Figma page exists.
+  // Ensure the Figma page exists (scoped to module).
   let [figmaPage] = await db
     .select()
     .from(figmaPagesTable)
-    .where(eq(figmaPagesTable.figmaNodeId, pageNodeId))
+    .where(
+      and(
+        eq(figmaPagesTable.moduleId, figmaModule.id),
+        eq(figmaPagesTable.figmaNodeId, pageNodeId),
+      ),
+    )
     .limit(1);
   if (!figmaPage) {
     [figmaPage] = await db
