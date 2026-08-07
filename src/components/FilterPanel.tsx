@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useTransition } from "react";
 import type { SearchFilters } from "@/lib/search";
 
 interface FilterOption {
@@ -19,15 +19,18 @@ interface FilterPanelProps {
   };
   initialFilters: SearchFilters;
   resultCount: number;
+  isPending: boolean;
 }
 
 export function FilterPanel({
   options,
   initialFilters,
   resultCount,
+  isPending,
 }: FilterPanelProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [, startTransition] = useTransition();
 
   const update = useCallback(
     (updates: Record<string, string>) => {
@@ -39,7 +42,9 @@ export function FilterPanel({
           params.delete(key);
         }
       }
-      router.replace(`?${params.toString()}`, { scroll: false });
+      startTransition(() => {
+        router.replace(`?${params.toString()}`, { scroll: false });
+      });
     },
     [router, searchParams],
   );
@@ -59,7 +64,9 @@ export function FilterPanel({
       "state",
       "scenario",
     ].forEach((key) => params.delete(key));
-    router.replace(`?${params.toString()}`, { scroll: false });
+    startTransition(() => {
+      router.replace(`?${params.toString()}`, { scroll: false });
+    });
   };
 
   return (
@@ -76,6 +83,7 @@ export function FilterPanel({
           onChange={(value) => update({ productId: value })}
           options={options.products}
           allLabel="All products"
+          disabled={isPending}
         />
         <SelectFilter
           label="Module"
@@ -84,6 +92,7 @@ export function FilterPanel({
           onChange={(value) => update({ moduleId: value })}
           options={options.modules}
           allLabel="All modules"
+          disabled={isPending}
         />
         <SelectFilter
           label="Page"
@@ -92,6 +101,7 @@ export function FilterPanel({
           onChange={(value) => update({ figmaPageId: value })}
           options={options.pages}
           allLabel="All pages"
+          disabled={isPending}
         />
         <SelectFilter
           label="Breakpoint"
@@ -100,6 +110,7 @@ export function FilterPanel({
           onChange={(value) => update({ breakpointId: value })}
           options={options.breakpoints}
           allLabel="All breakpoints"
+          disabled={isPending}
         />
         <SelectFilter
           label="Status"
@@ -108,6 +119,7 @@ export function FilterPanel({
           onChange={(value) => update({ status: value })}
           options={options.statuses.map((s) => ({ id: s, name: s }))}
           allLabel="All statuses"
+          disabled={isPending}
         />
         <TextFilter
           label="Behavior"
@@ -115,6 +127,7 @@ export function FilterPanel({
           value={getValue("behavior")}
           onChange={(value) => update({ behavior: value })}
           placeholder="e.g. Tooltip, Modal"
+          disabled={isPending}
         />
         <TextFilter
           label="State"
@@ -122,6 +135,7 @@ export function FilterPanel({
           value={getValue("state")}
           onChange={(value) => update({ state: value })}
           placeholder="e.g. Open, Empty"
+          disabled={isPending}
         />
         <TextFilter
           label="Scenario"
@@ -129,11 +143,13 @@ export function FilterPanel({
           value={getValue("scenario")}
           onChange={(value) => update({ scenario: value })}
           placeholder="e.g. 50% J&S"
+          disabled={isPending}
         />
       </div>
       <button
         onClick={clear}
-        className="mt-3 text-sm text-zinc-600 underline hover:text-zinc-900"
+        disabled={isPending}
+        className="mt-3 text-sm text-zinc-600 underline hover:text-zinc-900 disabled:opacity-50"
       >
         Clear all filters
       </button>
@@ -148,6 +164,7 @@ function SelectFilter({
   onChange,
   options,
   allLabel,
+  disabled,
 }: {
   label: string;
   name: string;
@@ -155,6 +172,7 @@ function SelectFilter({
   onChange: (value: string) => void;
   options: FilterOption[];
   allLabel: string;
+  disabled: boolean;
 }) {
   return (
     <label className="flex flex-col gap-1 text-sm">
@@ -163,7 +181,8 @@ function SelectFilter({
         name={name}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="rounded border border-zinc-300 px-2 py-1.5"
+        disabled={disabled}
+        className="rounded border border-zinc-300 px-2 py-1.5 disabled:opacity-50"
       >
         <option value="">{allLabel}</option>
         {options.map((o) => (
@@ -182,12 +201,14 @@ function TextFilter({
   value,
   onChange,
   placeholder,
+  disabled,
 }: {
   label: string;
   name: string;
   value: string;
   onChange: (value: string) => void;
   placeholder: string;
+  disabled: boolean;
 }) {
   return (
     <label className="flex flex-col gap-1 text-sm">
@@ -198,7 +219,8 @@ function TextFilter({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="rounded border border-zinc-300 px-2 py-1.5"
+        disabled={disabled}
+        className="rounded border border-zinc-300 px-2 py-1.5 disabled:opacity-50"
       />
     </label>
   );

@@ -1,6 +1,4 @@
-import { FilterPanel } from "@/components/FilterPanel";
-import { ScreenCard } from "@/components/ScreenCard";
-import { SearchBox } from "@/components/SearchBox";
+import { SearchResults } from "@/components/SearchResults";
 import { requireAuth } from "@/lib/auth/session";
 import { getFilterOptions, searchScreens } from "@/lib/data";
 import { listVariantsByScreen } from "@/lib/repositories/screen-variants";
@@ -63,30 +61,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
           </p>
         </header>
 
-        <SearchBox key={query} initialQuery={query} />
-
-        <FilterPanel
+        <SearchResults
+          query={query}
+          filters={filters}
+          screens={screensWithVariants}
           options={options}
-          initialFilters={filters}
-          resultCount={screens.length}
         />
-
-        <section aria-label="Search results">
-          {screens.length === 0 ? (
-            <p className="text-center text-zinc-500">No matching screens.</p>
-          ) : (
-            <div className="space-y-4">
-              {screensWithVariants.map(({ screen, breakpoints, variantCount }) => (
-                <ScreenCard
-                  key={screen.id}
-                  screen={screen}
-                  breakpoints={breakpoints}
-                  variantCount={variantCount}
-                />
-              ))}
-            </div>
-          )}
-        </section>
       </div>
     </main>
   );
