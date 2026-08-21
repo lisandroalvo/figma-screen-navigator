@@ -1,0 +1,2 @@
+ALTER TABLE "flows" ADD COLUMN "start_step_id" uuid;--> statement-breakpoint
+ALTER TABLE "flows" ADD CONSTRAINT "flows_start_step_id_flow_steps_id_fk" FOREIGN KEY ("start_step_id") REFERENCES "public"."flow_steps"("id") ON DELETE set null ON UPDATE no action;

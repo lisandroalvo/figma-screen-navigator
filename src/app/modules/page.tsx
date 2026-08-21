@@ -1,43 +1,38 @@
 import Link from "next/link";
-import { requireAuth } from "@/lib/auth/session";
-import { listModulesWithCounts, listProducts } from "@/lib/data";
+import { getNavigatorIndex } from "@/lib/navigator";
+import ModulesBrowser from "@/components/navigator/ModulesBrowser";
 
 export const dynamic = "force-dynamic";
 
 export default async function ModulesPage() {
-  await requireAuth();
-  const [modules, products] = await Promise.all([
-    listModulesWithCounts(),
-    listProducts(),
-  ]);
-  const product = products[0];
+  const index = await getNavigatorIndex();
+  const modules = [...index.modules]
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((m) => ({
+      id: m.id,
+      slug: m.slug,
+      name: m.name,
+      fileUrl: m.fileUrl,
+      pageCount: m.pageCount,
+      flowCount: m.flowCount,
+    }));
 
   return (
-    <main className="min-h-screen bg-zinc-50 p-6">
-      <div className="mx-auto max-w-4xl">
-        <h1 className="text-3xl font-semibold text-zinc-900">Modules</h1>
-        <p className="mt-1 text-zinc-600">
-          Product: <span className="font-medium">{product?.name}</span>
-        </p>
-        <ul className="mt-6 space-y-3">
-          {modules.map((module) => (
-            <li key={module.id}>
-              <Link
-                href={`/modules/${module.slug}`}
-                className="block rounded border border-zinc-200 bg-white p-4 shadow-sm hover:border-zinc-400"
-              >
-                <h2 className="text-lg font-medium text-zinc-900">
-                  {module.name}
-                </h2>
-                <p className="text-sm text-zinc-500">
-                  {module.screensCount} screen
-                  {module.screensCount === 1 ? "" : "s"} · Figma file: {" "}
-                  {module.figmaFileName ?? module.figmaFileKey}
-                </p>
-              </Link>
-            </li>
-          ))}
-        </ul>
+    <main className="min-h-screen bg-zinc-50 p-4 sm:p-6">
+      <div className="mx-auto max-w-3xl space-y-4">
+        <header className="flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-semibold text-zinc-900">Modules</h1>
+            <p className="text-sm text-zinc-500">
+              {index.counts.modules} modules · {index.counts.pages} pages · {index.counts.flows} flows
+            </p>
+          </div>
+          <Link href="/" className="text-sm text-zinc-600 hover:text-zinc-900 hover:underline">
+            ← Search
+          </Link>
+        </header>
+
+        <ModulesBrowser modules={modules} />
       </div>
     </main>
   );

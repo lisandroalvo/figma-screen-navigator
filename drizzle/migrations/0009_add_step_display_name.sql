@@ -1,0 +1,1 @@
+ALTER TABLE "flow_steps" ADD COLUMN "display_name" text;

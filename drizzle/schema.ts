@@ -1,4 +1,5 @@
 import {
+  type AnyPgColumn,
   boolean,
   index,
   integer,
@@ -45,6 +46,35 @@ export const syncJobStatusEnum = pgEnum("sync_job_status", [
   "running",
   "completed",
   "failed",
+]);
+
+export const flowStatusEnum = pgEnum("flow_status", [
+  "draft",
+  "review_required",
+  "qa_ready",
+  "archived",
+]);
+
+export const flowStepTypeEnum = pgEnum("flow_step_type", [
+  "screen",
+  "decision",
+]);
+
+export const flowInteractionTriggerEnum = pgEnum("flow_interaction_trigger", [
+  "click",
+  "branch",
+  "next",
+]);
+
+export const flowInteractionSourceEnum = pgEnum("flow_interaction_source", [
+  "manual",
+  "inferred",
+]);
+
+export const flowGuidanceTypeEnum = pgEnum("flow_guidance_type", [
+  "guidance",
+  "action",
+  "qa_note",
 ]);
 
 export const proposedChangeActionEnum = pgEnum("proposed_change_action", [
@@ -416,3 +446,185 @@ export const profilesTable = pgTable(
 //     )
 //   ) STORED;
 // CREATE INDEX screens_search_vector_idx ON screens USING GIN (search_vector);
+
+// ============================================================
+// FLOW DOMAIN TABLES
+// ============================================================
+
+export const flowsTable = pgTable(
+  "flows",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    productId: uuid("product_id")
+      .notNull()
+      .references(() => productsTable.id, { onDelete: "cascade" }),
+    moduleId: uuid("module_id")
+      .notNull()
+      .references(() => modulesTable.id, { onDelete: "cascade" }),
+    figmaPageId: uuid("figma_page_id")
+      .notNull()
+      .references(() => figmaPagesTable.id, { onDelete: "cascade" }),
+    name: text("name").notNull(),
+    normalizedName: text("normalized_name").notNull(),
+    figmaFileKey: text("figma_file_key").notNull(),
+    figmaSectionNodeId: text("figma_section_node_id").notNull(),
+    figmaUrl: text("figma_url").notNull(),
+    previewUrl: text("preview_url"),
+    previewStoragePath: text("preview_storage_path"),
+    // Explicit entry point for the interactive player. Nullable so existing
+    // flows keep working; set to null if the referenced step is deleted.
+    startStepId: uuid("start_step_id").references(
+      (): AnyPgColumn => flowStepsTable.id,
+      { onDelete: "set null" },
+    ),
+    status: flowStatusEnum("status").default("draft").notNull(),
+    lastSyncedAt: timestamp("last_synced_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    unique("flow_module_section").on(table.moduleId, table.figmaSectionNodeId),
+    index("flow_module_idx").on(table.moduleId),
+    index("flow_page_idx").on(table.figmaPageId),
+    index("flow_status_idx").on(table.status),
+  ],
+);
+
+export const flowStepsTable = pgTable(
+  "flow_steps",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    flowId: uuid("flow_id")
+      .notNull()
+      .references(() => flowsTable.id, { onDelete: "cascade" }),
+    figmaNodeId: text("figma_node_id").notNull(),
+    name: text("name").notNull(),
+    normalizedName: text("normalized_name").notNull(),
+    // Human-verified display label (Figma frame name is kept in `name`).
+    displayName: text("display_name"),
+    stepType: flowStepTypeEnum("step_type").default("screen").notNull(),
+    previewUrl: text("preview_url"),
+    previewStoragePath: text("preview_storage_path"),
+    figmaX: integer("figma_x"),
+    figmaY: integer("figma_y"),
+    figmaWidth: integer("figma_width"),
+    figmaHeight: integer("figma_height"),
+    displayOrder: integer("display_order"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    unique("flow_step_node").on(table.flowId, table.figmaNodeId),
+    index("flow_step_flow_idx").on(table.flowId),
+  ],
+);
+
+export const flowInteractionsTable = pgTable(
+  "flow_interactions",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    flowId: uuid("flow_id")
+      .notNull()
+      .references(() => flowsTable.id, { onDelete: "cascade" }),
+    sourceStepId: uuid("source_step_id")
+      .notNull()
+      .references(() => flowStepsTable.id, { onDelete: "cascade" }),
+    destinationStepId: uuid("destination_step_id")
+      .notNull()
+      .references(() => flowStepsTable.id, { onDelete: "cascade" }),
+    label: text("label"),
+    trigger: flowInteractionTriggerEnum("trigger").default("click").notNull(),
+    source: flowInteractionSourceEnum("source").default("manual").notNull(),
+    reviewStatus: text("review_status").default("proposed"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("flow_interaction_flow_idx").on(table.flowId),
+    index("flow_interaction_source_idx").on(table.sourceStepId),
+  ],
+);
+
+export const flowHotspotsTable = pgTable(
+  "flow_hotspots",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    interactionId: uuid("interaction_id")
+      .notNull()
+      .references(() => flowInteractionsTable.id, { onDelete: "cascade" }),
+    xPercent: integer("x_percent").notNull(),
+    yPercent: integer("y_percent").notNull(),
+    widthPercent: integer("width_percent").notNull(),
+    heightPercent: integer("height_percent").notNull(),
+    label: text("label"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [index("flow_hotspot_interaction_idx").on(table.interactionId)],
+);
+
+export const flowGuidanceTable = pgTable(
+  "flow_guidance",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    flowId: uuid("flow_id")
+      .notNull()
+      .references(() => flowsTable.id, { onDelete: "cascade" }),
+    stepId: uuid("step_id").references(() => flowStepsTable.id, {
+      onDelete: "cascade",
+    }),
+    figmaNodeId: text("figma_node_id").notNull(),
+    text: text("text").notNull(),
+    guidanceType: flowGuidanceTypeEnum("guidance_type")
+      .default("guidance")
+      .notNull(),
+    // A note may belong to a screen, an interaction, a decision, or the whole
+    // flow. scope selects which association column is authoritative.
+    scope: text("scope").default("step").notNull(), // flow | step | interaction | decision
+    interactionId: uuid("interaction_id").references(
+      (): AnyPgColumn => flowInteractionsTable.id,
+      { onDelete: "set null" },
+    ),
+    decisionStepId: uuid("decision_step_id").references(
+      (): AnyPgColumn => flowStepsTable.id,
+      { onDelete: "set null" },
+    ),
+    // Richer classification kept alongside the coarse guidanceType enum.
+    category: text("category"), // USER_GUIDANCE | ACTION_INSTRUCTION | QA_NOTE | EXPLANATION | DECISION_CONTEXT | GENERAL_FLOW_NOTE
+    confidence: text("confidence"), // low | medium | high
+    reviewStatus: text("review_status").default("proposed").notNull(), // proposed | approved | rejected | needs_review
+    // Position metadata from Figma (traceability / re-association).
+    figmaX: integer("figma_x"),
+    figmaY: integer("figma_y"),
+    figmaWidth: integer("figma_width"),
+    figmaHeight: integer("figma_height"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("flow_guidance_flow_idx").on(table.flowId),
+    index("flow_guidance_step_idx").on(table.stepId),
+    index("flow_guidance_interaction_idx").on(table.interactionId),
+    index("flow_guidance_review_idx").on(table.reviewStatus),
+  ],
+);

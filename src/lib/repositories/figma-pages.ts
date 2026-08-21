@@ -23,6 +23,58 @@ export async function listPages(): Promise<FigmaPage[]> {
   return rows.map(mapFigmaPage);
 }
 
+/**
+ * Upsert a page by (moduleId, figmaNodeId) — the file-scoped identity. Node IDs
+ * are NOT globally unique across files, so both parts are required. Never
+ * deletes. `isSearchable` is left as-is on update (Components pages stay
+ * searchable/navigable — the exclusion applies to screen detection, not here).
+ */
+export async function upsertPage(data: {
+  moduleId: string;
+  figmaNodeId: string;
+  name: string;
+  normalizedName: string;
+  orderIndex: number;
+}): Promise<FigmaPage> {
+  const db = getDb();
+  const [existing] = await db
+    .select()
+    .from(figmaPagesTable)
+    .where(
+      and(
+        eq(figmaPagesTable.moduleId, data.moduleId),
+        eq(figmaPagesTable.figmaNodeId, data.figmaNodeId),
+      ),
+    )
+    .limit(1);
+
+  if (existing) {
+    const [updated] = await db
+      .update(figmaPagesTable)
+      .set({
+        name: data.name,
+        normalizedName: data.normalizedName,
+        orderIndex: data.orderIndex,
+        updatedAt: new Date(),
+      })
+      .where(eq(figmaPagesTable.id, existing.id))
+      .returning();
+    return mapFigmaPage(updated);
+  }
+
+  const [created] = await db
+    .insert(figmaPagesTable)
+    .values({
+      moduleId: data.moduleId,
+      figmaNodeId: data.figmaNodeId,
+      name: data.name,
+      normalizedName: data.normalizedName,
+      orderIndex: data.orderIndex,
+    })
+    .returning();
+  return mapFigmaPage(created);
+}
+
 export async function listPagesByModule(
   moduleId: string,
 ): Promise<FigmaPage[]> {

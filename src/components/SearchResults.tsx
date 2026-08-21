@@ -12,6 +12,8 @@ interface FilterOption {
   name: string;
 }
 
+export type Navigate = (filters: Partial<SearchFilters>) => void;
+
 interface SearchResultsProps {
   query: string;
   filters: SearchFilters;

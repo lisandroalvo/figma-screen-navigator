@@ -18,6 +18,11 @@ const serverEnvSchema = z.object({
   DATABASE_DIRECT_URL: optionalNonEmptyString,
   FIGMA_ACCESS_TOKEN: optionalNonEmptyString,
   FIGMA_PENSION_CALCULATION_FILE_KEY: optionalNonEmptyString,
+  // Legacy project-wide scope. No longer the authoritative Navigator source.
+  FIGMA_NBF_PROJECT_ID: optionalNonEmptyString,
+  // CURRENT authoritative Navigator scope: the NBF-MODULES Figma folder.
+  FIGMA_NBF_TEAM_ID: optionalNonEmptyString,
+  FIGMA_NBF_FOLDER_ID: optionalNonEmptyString,
   FIGMA_WEBHOOK_SECRET: optionalNonEmptyString,
   ADMIN_EMAILS: optionalNonEmptyString,
 });
@@ -44,6 +49,9 @@ export function getServerEnv(): ServerEnv {
     FIGMA_ACCESS_TOKEN: process.env.FIGMA_ACCESS_TOKEN,
     FIGMA_PENSION_CALCULATION_FILE_KEY:
       process.env.FIGMA_PENSION_CALCULATION_FILE_KEY,
+    FIGMA_NBF_PROJECT_ID: process.env.FIGMA_NBF_PROJECT_ID,
+    FIGMA_NBF_TEAM_ID: process.env.FIGMA_NBF_TEAM_ID,
+    FIGMA_NBF_FOLDER_ID: process.env.FIGMA_NBF_FOLDER_ID,
     FIGMA_WEBHOOK_SECRET: process.env.FIGMA_WEBHOOK_SECRET,
     ADMIN_EMAILS: process.env.ADMIN_EMAILS,
   });
