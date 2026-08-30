@@ -19,25 +19,25 @@ export default async function PageDetailPage({
     .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
-    <main className="min-h-screen bg-zinc-50 p-4 sm:p-6">
+    <main className="min-h-screen bg-brandbg p-4 sm:p-6">
       <div className="mx-auto max-w-3xl space-y-4">
         {/* Breadcrumb */}
-        <nav className="text-sm text-zinc-500">
-          <Link href="/modules" className="hover:text-zinc-900 hover:underline">
+        <nav className="text-sm text-primary/60">
+          <Link href="/modules" className="text-primary/70 hover:text-primary hover:underline">
             Modules
           </Link>
-          <span className="mx-1 text-zinc-400">›</span>
-          <Link href={`/modules/${moduleSlug}`} className="hover:text-zinc-900 hover:underline">
+          <span className="mx-1 text-primary/40">›</span>
+          <Link href={`/modules/${moduleSlug}`} className="text-primary/70 hover:text-primary hover:underline">
             {page.moduleName}
           </Link>
-          <span className="mx-1 text-zinc-400">›</span>
-          <span className="font-medium text-zinc-700">{page.name}</span>
+          <span className="mx-1 text-primary/40">›</span>
+          <span className="font-semibold text-primary">{page.name}</span>
         </nav>
 
         <header className="flex flex-wrap items-start justify-between gap-2">
           <div>
-            <h1 className="text-xl font-semibold text-zinc-900">{page.name}</h1>
-            <p className="text-sm text-zinc-500">
+            <h1 className="text-xl font-semibold text-primary">{page.name}</h1>
+            <p className="text-sm text-primary/60">
               {flows.length} flow{flows.length === 1 ? "" : "s"}
             </p>
           </div>
@@ -46,7 +46,7 @@ export default async function PageDetailPage({
               href={page.pageUrl}
               target="_blank"
               rel="noreferrer"
-              className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 hover:bg-zinc-100"
+              className="rounded-md border border-primary bg-surface px-3 py-1.5 text-sm text-primary hover:bg-brandbg"
             >
               Open Page in Figma ↗
             </a>
@@ -54,37 +54,34 @@ export default async function PageDetailPage({
         </header>
 
         <section className="space-y-2">
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-primary">
             Flow sections
           </h2>
           {flows.length === 0 ? (
-            <p className="rounded-lg border border-zinc-200 bg-white p-4 text-sm text-zinc-500 shadow-sm">
+            <p className="rounded-lg border border-primary/15 bg-surface p-4 text-sm text-primary/70 shadow-sm">
               No Flow sections on this Page.
             </p>
           ) : (
-            <ul className="divide-y divide-zinc-100 overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm">
+            <ul className="divide-y divide-primary/10 overflow-hidden rounded-lg border border-primary/15 bg-surface shadow-sm">
+              {/* Interactive prototype hidden for now: the Flow row opens the
+                  exact Figma SECTION rather than launching the FlowPlayer. The
+                  /flows/[id] route and its data remain intact, just not linked. */}
               {flows.map((f) => (
-                <li key={f.id} className="group flex items-center gap-2 pl-3 pr-2 hover:bg-zinc-50">
-                  <Link
-                    href={`/flows/${f.id}`}
-                    className="flex flex-1 items-center gap-3 rounded py-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
-                  >
-                    <span className="shrink-0 rounded bg-amber-100 px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-amber-800">
-                      Flow
-                    </span>
-                    <span className="flex-1 truncate text-sm font-medium text-zinc-900">
-                      {f.name}
-                    </span>
-                    <span className="shrink-0 text-zinc-400 group-hover:text-zinc-700">→</span>
-                  </Link>
+                <li key={f.id} className="group hover:bg-brandbg">
                   <a
                     href={f.figmaUrl}
                     target="_blank"
                     rel="noreferrer"
                     aria-label={`Open ${f.name} in Figma`}
-                    className="shrink-0 rounded px-2 py-1 text-xs text-zinc-400 hover:bg-zinc-100 hover:text-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+                    className="flex items-center gap-3 px-3 py-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   >
-                    Figma ↗
+                    <span className="shrink-0 rounded border border-primary/20 bg-brandbg px-1.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-primary">
+                      Flow
+                    </span>
+                    <span className="flex-1 truncate text-sm font-medium text-primary">
+                      {f.name}
+                    </span>
+                    <span className="shrink-0 text-xs text-primary/70 group-hover:text-primary group-hover:underline">Figma ↗</span>
                   </a>
                 </li>
               ))}

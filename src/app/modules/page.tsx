@@ -18,16 +18,16 @@ export default async function ModulesPage() {
     }));
 
   return (
-    <main className="min-h-screen bg-zinc-50 p-4 sm:p-6">
+    <main className="min-h-screen bg-brandbg p-4 sm:p-6">
       <div className="mx-auto max-w-3xl space-y-4">
         <header className="flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-semibold text-zinc-900">Modules</h1>
-            <p className="text-sm text-zinc-500">
+            <h1 className="text-xl font-semibold text-primary">Modules</h1>
+            <p className="text-sm text-primary/60">
               {index.counts.modules} modules · {index.counts.pages} pages · {index.counts.flows} flows
             </p>
           </div>
-          <Link href="/" className="text-sm text-zinc-600 hover:text-zinc-900 hover:underline">
+          <Link href="/" className="text-sm text-primary/70 hover:text-primary hover:underline">
             ← Search
           </Link>
         </header>

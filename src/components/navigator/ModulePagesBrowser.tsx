@@ -33,14 +33,14 @@ export default function ModulePagesBrowser({
           onChange={(e) => setQ(e.target.value)}
           placeholder="Search pages..."
           aria-label="Search pages"
-          className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm shadow-sm focus:border-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-200"
+          className="w-full rounded-md border border-primary/20 bg-surface px-3 py-2 text-sm text-primary shadow-sm placeholder:text-primary/40 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
         />
-        <div className="flex shrink-0 overflow-hidden rounded-md border border-zinc-300 text-sm">
+        <div className="flex shrink-0 overflow-hidden rounded-md border border-primary/30 text-sm">
           <button
             type="button"
             onClick={() => setOnlyFlows(false)}
             aria-pressed={!onlyFlows}
-            className={`px-3 py-2 ${!onlyFlows ? "bg-zinc-900 text-white" : "bg-white text-zinc-700 hover:bg-zinc-50"}`}
+            className={`px-3 py-2 ${!onlyFlows ? "bg-primary text-white" : "bg-surface text-primary hover:bg-brandbg"}`}
           >
             All
           </button>
@@ -48,7 +48,7 @@ export default function ModulePagesBrowser({
             type="button"
             onClick={() => setOnlyFlows(true)}
             aria-pressed={onlyFlows}
-            className={`px-3 py-2 ${onlyFlows ? "bg-zinc-900 text-white" : "bg-white text-zinc-700 hover:bg-zinc-50"}`}
+            className={`border-l border-primary/30 px-3 py-2 ${onlyFlows ? "bg-primary text-white" : "bg-surface text-primary hover:bg-brandbg"}`}
           >
             Has flows
           </button>
@@ -56,29 +56,29 @@ export default function ModulePagesBrowser({
       </div>
 
       {filtered.length === 0 ? (
-        <p className="py-6 text-center text-sm text-zinc-500">
+        <p className="rounded-lg border border-primary/15 bg-surface py-6 text-center text-sm text-primary/70 shadow-sm">
           No pages match{needle ? ` “${q}”` : ""}
           {onlyFlows ? " with flows" : ""}.
         </p>
       ) : (
-        <ul className="divide-y divide-zinc-100 overflow-hidden rounded-lg border border-zinc-200 bg-white shadow-sm">
+        <ul className="divide-y divide-primary/10 overflow-hidden rounded-lg border border-primary/15 bg-surface shadow-sm">
           {filtered.map((p) => (
-            <li key={p.id} className="group flex items-center gap-2 pl-3 pr-2 hover:bg-zinc-50">
+            <li key={p.id} className="group flex items-center gap-2 pl-3 pr-2 hover:bg-brandbg">
               <Link
                 href={`/modules/${moduleSlug}/pages/${p.id}`}
-                className="flex flex-1 items-center gap-3 rounded py-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+                className="flex flex-1 items-center gap-3 rounded py-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
-                <span className="flex-1 truncate text-sm font-medium text-zinc-900">
+                <span className="flex-1 truncate text-sm font-medium text-primary">
                   {p.name}
                 </span>
                 {p.flowCount > 0 ? (
-                  <span className="shrink-0 rounded bg-amber-100 px-1.5 py-0.5 text-xs font-medium text-amber-800">
+                  <span className="shrink-0 rounded border border-primary/20 bg-brandbg px-1.5 py-0.5 text-xs font-medium text-primary">
                     {p.flowCount} flow{p.flowCount === 1 ? "" : "s"}
                   </span>
                 ) : (
-                  <span className="shrink-0 text-xs text-zinc-400">0 flows</span>
+                  <span className="shrink-0 text-xs text-primary/40">0 flows</span>
                 )}
-                <span className="shrink-0 text-zinc-400 group-hover:text-zinc-700">→</span>
+                <span className="shrink-0 text-primary/50 group-hover:text-primary">→</span>
               </Link>
               {p.pageUrl && (
                 <a
@@ -86,7 +86,7 @@ export default function ModulePagesBrowser({
                   target="_blank"
                   rel="noreferrer"
                   aria-label={`Open ${p.name} page in Figma`}
-                  className="shrink-0 rounded px-2 py-1 text-xs text-zinc-400 hover:bg-zinc-100 hover:text-zinc-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+                  className="shrink-0 rounded px-2 py-1 text-xs text-primary/70 hover:bg-brandbg hover:text-primary hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
                   Figma ↗
                 </a>

@@ -14,6 +14,7 @@ import { collectFolderFiles, getFile, type FigmaNode } from "../src/lib/figma/cl
 import { listModules } from "../src/lib/repositories/modules";
 import { listPages } from "../src/lib/repositories/figma-pages";
 import { listFlows } from "../src/lib/repositories/flows";
+import { withFigmaRetry } from "../src/lib/db/retry";
 
 const FOLDER_IDS = (process.env.FIGMA_NBF_FOLDER_ID || "641708986")
   .split(",")
@@ -54,7 +55,7 @@ async function main() {
   for (const file of files) {
     let tree;
     try {
-      tree = await getFile(file.key, { depth: 4 });
+      tree = await withFigmaRetry(() => getFile(file.key, { depth: 4 }), { module: file.name, op: "getFile" });
     } catch (e) {
       const msg = e instanceof Error ? e.message : String(e);
       if (/not supported/i.test(msg)) { unsupported++; console.log(`[UNSUPPORTED] ${file.name}`); }

@@ -1,8 +1,21 @@
 @import "tailwindcss";
 
+/*
+ * Brand color system (single source of truth). Registered as Tailwind theme
+ * colors so utilities like bg-primary / text-primary / border-primary/20 /
+ * bg-brandbg work everywhere. Opacity modifiers (e.g. text-primary/60) provide
+ * the derived muted/border/hover variants — no other brand colors are used.
+ *   primary  #003C87   surface #FFFFFF   brandbg #EEF4FF
+ */
+@theme {
+  --color-primary: #003c87;
+  --color-surface: #ffffff;
+  --color-brandbg: #eef4ff;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #eef4ff;
+  --foreground: #003c87;
 }
 
 @theme inline {
@@ -10,13 +23,6 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {

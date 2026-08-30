@@ -494,6 +494,130 @@ export const flowsTable = pgTable(
   ],
 );
 
+/**
+ * flow_screens — the SCREEN leaf of the Module -> Page -> Flow -> Screen
+ * hierarchy (added 2026-08-21 as an Annuity pilot). A Screen is the root
+ * wireframe/state FRAME detected inside a Flow SECTION. This is a NEW dedicated
+ * additive table (not the legacy `screens` table, which has a NOT NULL
+ * breakpointId page-scoped model and is consumed by the frozen screen-search
+ * sync/publish/preview system; and not `flow_steps`, which is owned by the
+ * FlowPlayer/Golden Flow). Isolating screens here keeps this pilot from
+ * touching either system. Identity is file-scoped: (moduleId, figmaNodeId).
+ */
+export const flowScreensTable = pgTable(
+  "flow_screens",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    productId: uuid("product_id")
+      .notNull()
+      .references(() => productsTable.id, { onDelete: "cascade" }),
+    moduleId: uuid("module_id")
+      .notNull()
+      .references(() => modulesTable.id, { onDelete: "cascade" }),
+    figmaPageId: uuid("figma_page_id")
+      .notNull()
+      .references(() => figmaPagesTable.id, { onDelete: "cascade" }),
+    // Nullable: screens may live under any SECTION, not only a top-level Flow.
+    flowId: uuid("flow_id").references(() => flowsTable.id, { onDelete: "cascade" }),
+    figmaFileKey: text("figma_file_key").notNull(),
+    figmaPageNodeId: text("figma_page_node_id").notNull(),
+    figmaSectionNodeId: text("figma_section_node_id"),
+    // Nearest parent SECTION + Flow context (resolved during global detection).
+    parentSectionNodeId: text("parent_section_node_id"),
+    parentSectionName: text("parent_section_name"),
+    parentFlowNodeId: text("parent_flow_node_id"),
+    parentFlowName: text("parent_flow_name"),
+    // The SCREEN root node id (file-scoped). Deep links target THIS node.
+    figmaNodeId: text("figma_node_id").notNull(),
+    // Figma node name (may be auto "Frame 8948459"), kept for traceability.
+    figmaFrameName: text("figma_frame_name").notNull(),
+    // Authored screen name (the frame's title TEXT child); the searchable name.
+    name: text("name").notNull(),
+    normalizedName: text("normalized_name").notNull(),
+    figmaUrl: text("figma_url").notNull(),
+    width: integer("width"),
+    height: integer("height"),
+    detectionConfidence: text("detection_confidence").notNull(),
+    detectionReason: text("detection_reason"),
+    // 'detected' = high-confidence auto-indexed; 'needs_review' = ambiguous.
+    status: text("status").default("detected").notNull(),
+    orderIndex: integer("order_index"),
+    lastSyncedAt: timestamp("last_synced_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    unique("flow_screen_module_node").on(table.moduleId, table.figmaNodeId),
+    index("flow_screen_flow_idx").on(table.flowId),
+    index("flow_screen_module_idx").on(table.moduleId),
+    index("flow_screen_page_idx").on(table.figmaPageId),
+    index("flow_screen_status_idx").on(table.status),
+    index("flow_screen_normalized_idx").on(table.normalizedName),
+  ],
+);
+
+/**
+ * flow_sections — every searchable Figma SECTION node (added 2026-08-23 as an
+ * Annuity pilot). FLOW = Figma SECTION, but the interactive `flows` table only
+ * holds top-level "- Flow" containers (with status/startStepId/interactions/
+ * Golden Flow). This additive, SEARCH-ONLY table lets ANY authored SECTION
+ * (including nested ones like "Add Beneficiary Modal", "Pop Up", "Table") be
+ * found by substring without overloading interactive Flow semantics. It carries
+ * NO player/status data. Identity is file-scoped: (moduleId, figmaNodeId). The
+ * Navigator hides sections whose node id is already a top-level Flow, so a
+ * "- Flow" section shows once (as FLOW), never duplicated as SECTION.
+ */
+export const flowSectionsTable = pgTable(
+  "flow_sections",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    productId: uuid("product_id")
+      .notNull()
+      .references(() => productsTable.id, { onDelete: "cascade" }),
+    moduleId: uuid("module_id")
+      .notNull()
+      .references(() => modulesTable.id, { onDelete: "cascade" }),
+    figmaPageId: uuid("figma_page_id")
+      .notNull()
+      .references(() => figmaPagesTable.id, { onDelete: "cascade" }),
+    figmaFileKey: text("figma_file_key").notNull(),
+    figmaPageNodeId: text("figma_page_node_id").notNull(),
+    // The SECTION node id (file-scoped). Deep links target THIS node.
+    figmaNodeId: text("figma_node_id").notNull(),
+    parentNodeId: text("parent_node_id"),
+    parentName: text("parent_name"),
+    // Nearest ancestor SECTION whose name ends "- flow" (if any). Lets a result
+    // show "› parent Flow" only when the hierarchy genuinely proves one.
+    parentFlowNodeId: text("parent_flow_node_id"),
+    parentFlowName: text("parent_flow_name"),
+    name: text("name").notNull(),
+    normalizedName: text("normalized_name").notNull(),
+    figmaUrl: text("figma_url").notNull(),
+    depth: integer("depth"),
+    // true when name ends "- flow" (also a top-level interactive Flow container).
+    isFlowContainer: boolean("is_flow_container").default(false).notNull(),
+    status: text("status").default("detected").notNull(),
+    lastSyncedAt: timestamp("last_synced_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    unique("flow_section_module_node").on(table.moduleId, table.figmaNodeId),
+    index("flow_section_module_idx").on(table.moduleId),
+    index("flow_section_page_idx").on(table.figmaPageId),
+    index("flow_section_status_idx").on(table.status),
+    index("flow_section_normalized_idx").on(table.normalizedName),
+  ],
+);
+
 export const flowStepsTable = pgTable(
   "flow_steps",
   {

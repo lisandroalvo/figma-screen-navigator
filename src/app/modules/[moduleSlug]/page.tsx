@@ -31,21 +31,21 @@ export default async function ModuleDetailPage({
     }));
 
   return (
-    <main className="min-h-screen bg-zinc-50 p-4 sm:p-6">
+    <main className="min-h-screen bg-brandbg p-4 sm:p-6">
       <div className="mx-auto max-w-3xl space-y-4">
         {/* Breadcrumb */}
-        <nav className="text-sm text-zinc-500">
-          <Link href="/modules" className="hover:text-zinc-900 hover:underline">
+        <nav className="text-sm text-primary/60">
+          <Link href="/modules" className="text-primary/70 hover:text-primary hover:underline">
             Modules
           </Link>
-          <span className="mx-1 text-zinc-400">›</span>
-          <span className="font-medium text-zinc-700">{mod.name}</span>
+          <span className="mx-1 text-primary/40">›</span>
+          <span className="font-semibold text-primary">{mod.name}</span>
         </nav>
 
         <header className="flex flex-wrap items-start justify-between gap-2">
           <div>
-            <h1 className="text-xl font-semibold text-zinc-900">{mod.name}</h1>
-            <p className="text-sm text-zinc-500">
+            <h1 className="text-xl font-semibold text-primary">{mod.name}</h1>
+            <p className="text-sm text-primary/60">
               {mod.pageCount} page{mod.pageCount === 1 ? "" : "s"} · {mod.flowCount} flow{mod.flowCount === 1 ? "" : "s"}
             </p>
           </div>
@@ -53,14 +53,14 @@ export default async function ModuleDetailPage({
             href={mod.fileUrl}
             target="_blank"
             rel="noreferrer"
-            className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 hover:bg-zinc-100"
+            className="rounded-md border border-primary bg-surface px-3 py-1.5 text-sm text-primary hover:bg-brandbg"
           >
             Open File in Figma ↗
           </a>
         </header>
 
         <section className="space-y-2">
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-primary">
             Pages
           </h2>
           <ModulePagesBrowser moduleSlug={moduleSlug} pages={pages} />

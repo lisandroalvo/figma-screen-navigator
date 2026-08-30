@@ -2,48 +2,38 @@ import "server-only";
 import { listModules } from "@/lib/repositories/modules";
 import { listPages } from "@/lib/repositories/figma-pages";
 import { listFlows } from "@/lib/repositories/flows";
+import { listDetectedFlowScreens } from "@/lib/repositories/flow-screens";
+import { listDetectedFlowSections } from "@/lib/repositories/flow-sections";
+import type {
+  ModuleResult,
+  PageResult,
+  FlowResult,
+  SectionResult,
+  ScreenResult,
+  NavigatorIndex,
+} from "@/lib/navigator-search";
 
-export interface ModuleResult {
-  type: "module";
-  id: string;
-  slug: string;
-  name: string;
-  figmaFileKey: string;
-  fileUrl: string;
-  pageCount: number;
-  flowCount: number;
-}
-export interface PageResult {
-  type: "page";
-  id: string;
-  name: string;
-  moduleId: string;
-  moduleName: string;
-  moduleSlug: string;
-  figmaFileKey: string;
-  figmaNodeId: string;
-  pageUrl: string;
-  flowCount: number;
-}
-export interface FlowResult {
-  type: "flow";
-  id: string;
-  name: string;
-  moduleName: string;
-  moduleSlug: string;
-  pageId: string;
-  pageName: string;
-  figmaUrl: string;
-  status: string;
-}
-export type NavigatorResult = ModuleResult | PageResult | FlowResult;
-
-export interface NavigatorIndex {
-  modules: ModuleResult[];
-  pages: PageResult[];
-  flows: FlowResult[];
-  counts: { modules: number; pages: number; flows: number };
-}
+// Types + pure search live in navigator-search (client-importable). Re-export so
+// existing server-side importers of "@/lib/navigator" keep working unchanged.
+export type {
+  ModuleResult,
+  PageResult,
+  FlowResult,
+  SectionResult,
+  ScreenResult,
+  NavigatorResult,
+  NavigatorIndex,
+  RankedResults,
+} from "@/lib/navigator-search";
+export {
+  searchNavigator,
+  searchModules,
+  searchPages,
+  searchFlows,
+  searchSections,
+  searchScreens,
+  scoreEntity,
+} from "@/lib/navigator-search";
 
 const fileUrl = (key: string) => `https://www.figma.com/file/${key}`;
 const pageUrl = (key: string, node: string) =>
@@ -51,10 +41,12 @@ const pageUrl = (key: string, node: string) =>
 
 /** Load the full Module -> Page -> Flow index (small dataset; joined in JS). */
 export async function getNavigatorIndex(): Promise<NavigatorIndex> {
-  const [allModules, allPages, allFlows] = await Promise.all([
+  const [allModules, allPages, allFlows, allScreens, allSections] = await Promise.all([
     listModules(),
     listPages(),
     listFlows(),
+    listDetectedFlowScreens(),
+    listDetectedFlowSections(),
   ]);
 
   // The Navigator shows CURRENT Figma truth only. Stale/archived records stay
@@ -139,62 +131,69 @@ export async function getNavigatorIndex(): Promise<NavigatorIndex> {
     status: f.status,
   }));
 
+  const currentPageById = new Map(pages.map((p) => [p.id, p]));
+
+  // SECTIONS (additive, search-only). Surface every authored SECTION on a
+  // current Page EXCEPT the top-level "- Flow" containers (which already show as
+  // FlowResult) — deduped by node id so a section never appears twice. Scoped to
+  // current pages/modules just like everything else.
+  const flowSectionNodeIds = new Set(flows.map((f) => f.figmaSectionNodeId));
+  const moduleBySlugName = new Map(modules.map((m) => [m.id, m]));
+  const sectionResults: SectionResult[] = allSections
+    .map((s): SectionResult | null => {
+      const page = currentPageById.get(s.figmaPageId);
+      if (!page) return null; // page not current -> hide
+      if (s.isFlowContainer || flowSectionNodeIds.has(s.figmaNodeId)) return null; // shown as FLOW
+      const mod = moduleBySlugName.get(s.moduleId);
+      if (!mod) return null;
+      return {
+        type: "section",
+        id: s.id,
+        name: s.name,
+        moduleName: mod.name,
+        moduleSlug: mod.slug,
+        pageId: s.figmaPageId,
+        pageName: page.name,
+        // Prefer the nearest ancestor Flow when the hierarchy proves one;
+        // otherwise fall back to the immediate parent section name.
+        parentName: s.parentFlowName ?? s.parentName ?? "",
+        figmaUrl: s.figmaUrl,
+      };
+    })
+    .filter((s): s is SectionResult => s !== null);
+
+  // SCREENS (additive). Scoped to current Pages of current Modules (a screen may
+  // live under any Section, not only a Flow). Only status='detected' is loaded.
+  // Hierarchy context uses the nearest parent Flow, else parent Section.
+  const screenResults: ScreenResult[] = allScreens
+    .map((s): ScreenResult | null => {
+      const page = currentPageById.get(s.figmaPageId);
+      if (!page) return null; // page not current -> hide
+      const mod = moduleBySlugName.get(s.moduleId);
+      if (!mod) return null;
+      return {
+        type: "screen",
+        id: s.id,
+        name: s.name,
+        moduleName: mod.name,
+        moduleSlug: mod.slug,
+        pageId: s.figmaPageId,
+        pageName: page.name,
+        parentName: s.parentFlowName ?? s.parentSectionName ?? "",
+        figmaUrl: s.figmaUrl,
+      };
+    })
+    .filter((s): s is ScreenResult => s !== null);
+
   return {
     modules: moduleResults,
     pages: pageResults,
     flows: flowResults,
-    counts: { modules: modules.length, pages: pages.length, flows: flows.length },
+    sections: sectionResults,
+    screens: screenResults,
+    // counts intentionally excludes sections: the home "Flows" metric stays the
+    // count of top-level interactive Flows (§ regression), even though search
+    // can additionally return SECTION results.
+    counts: { modules: modules.length, pages: pages.length, flows: flows.length, screens: screenResults.length },
   };
-}
-
-function tokenize(s: string): string[] {
-  return s.toLowerCase().split(/[^a-z0-9]+/).filter(Boolean);
-}
-
-/**
- * Score a result by its own name (exact > starts-with > all-tokens > some-token)
- * plus a small bonus for hierarchy/context token matches. Local token search only.
- */
-function scoreEntity(name: string, context: string, query: string): number {
-  const n = name.trim().toLowerCase();
-  const q = query.trim().toLowerCase();
-  if (!q) return 0;
-  let score = 0;
-  if (n === q) score += 100;
-  else if (n.startsWith(q)) score += 60;
-  else if (n.includes(q)) score += 35;
-
-  const qTokens = tokenize(query);
-  const nameTokens = new Set(tokenize(name));
-  const ctxTokens = new Set(tokenize(context));
-  let inName = 0, inCtx = 0;
-  for (const t of qTokens) {
-    if ([...nameTokens].some((nt) => nt.startsWith(t))) inName++;
-    else if ([...ctxTokens].some((ct) => ct.startsWith(t))) inCtx++;
-  }
-  if (qTokens.length > 0 && inName === qTokens.length) score += 40;
-  else score += inName * 12;
-  score += inCtx * 4;
-  return score;
-}
-
-export interface RankedResults {
-  modules: (ModuleResult & { score: number })[];
-  pages: (PageResult & { score: number })[];
-  flows: (FlowResult & { score: number })[];
-  total: number;
-}
-
-export function searchNavigator(index: NavigatorIndex, query: string): RankedResults {
-  const rank = <T extends NavigatorResult>(items: T[], ctx: (i: T) => string) =>
-    items
-      .map((i) => ({ ...i, score: scoreEntity(i.name, ctx(i), query) }))
-      .filter((i) => i.score > 0)
-      .sort((a, b) => b.score - a.score);
-
-  const modules = rank(index.modules, () => "");
-  const pages = rank(index.pages, (p) => p.moduleName);
-  const flows = rank(index.flows, (f) => `${f.moduleName} ${f.pageName}`);
-
-  return { modules, pages, flows, total: modules.length + pages.length + flows.length };
 }

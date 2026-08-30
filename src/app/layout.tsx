@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
-      <body className="min-h-full bg-zinc-50 text-zinc-900">
+      <body className="min-h-full bg-brandbg text-primary">
         <AuthHeader />
         {children}
       </body>

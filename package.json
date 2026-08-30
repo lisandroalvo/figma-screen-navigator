@@ -15,7 +15,9 @@
     "db:rls-smoke": "npx tsx -r tsconfig-paths/register src/lib/db/rls-smoke.ts",
     "figma:smoke": "npx tsx -r tsconfig-paths/register src/lib/figma/smoke.ts",
     "figma:refresh-previews": "npx tsx -r tsconfig-paths/register src/lib/figma/refresh-previews.ts",
-    "figma:index": "npx tsx --env-file=.env.local -r tsconfig-paths/register scripts/index-figma-project.ts"
+    "figma:index": "npx tsx --env-file=.env.local -r tsconfig-paths/register scripts/index-figma-project.ts",
+    "figma:sections": "npx tsx --env-file=.env.local -r tsconfig-paths/register scripts/index-figma-sections.ts",
+    "figma:screens": "npx tsx --env-file=.env.local -r tsconfig-paths/register scripts/index-figma-screens.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.4",
