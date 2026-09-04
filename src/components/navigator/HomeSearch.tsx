@@ -42,8 +42,8 @@ function LinkRow({ type, href, name, context, figmaUrl, figmaLabel }: {
  * for Flows (Figma SECTION) and Screens while the interactive prototype is
  * hidden — there is no link into the FlowPlayer here.
  */
-function ExternalRow({ type, name, context, figmaUrl, label }: {
-  type: BadgeType; name: string; context: string; figmaUrl: string; label: string;
+function ExternalRow({ type, name, context, figmaUrl, label, matched }: {
+  type: BadgeType; name: string; context: string; figmaUrl: string; label: string; matched?: string | null;
 }) {
   return (
     <li className="group hover:bg-brandbg">
@@ -53,6 +53,9 @@ function ExternalRow({ type, name, context, figmaUrl, label }: {
         <span className="min-w-0 flex-1">
           <span className="block truncate text-sm font-medium text-primary">{name}</span>
           <span className="block truncate text-xs text-primary/60">{context}</span>
+          {matched && (
+            <span className="block truncate text-xs text-primary/45">Matched: {matched}</span>
+          )}
         </span>
         <span className="mt-0.5 shrink-0 text-xs text-primary/70 group-hover:text-primary group-hover:underline">Figma ↗</span>
       </a>
@@ -218,6 +221,7 @@ export default function HomeSearch({ index }: { index: NavigatorIndex }) {
               render={(s) => (
                 <ExternalRow key={s.id} type="screen" name={s.name}
                   context={`${s.moduleName} › ${s.pageName}${s.parentName ? ` › ${s.parentName}` : ""}`}
+                  matched={s.matched}
                   figmaUrl={s.figmaUrl} label={`Open screen ${s.name} in Figma`} />
               )} />
           )}

@@ -20,6 +20,7 @@ import { modulesTable, figmaPagesTable, flowsTable, flowScreensTable } from "../
 import { and, eq, notInArray } from "drizzle-orm";
 import { batchUpsertFlowScreens, type UpsertFlowScreenInput } from "../src/lib/repositories/flow-screens";
 import { withDbRetry, withFigmaRetry } from "../src/lib/db/retry";
+import { buildScreenAliases } from "../src/lib/search-normalize";
 
 const norm = (s: string) => s.trim().toLowerCase().replace(/\s+/g, " ");
 const isComponentPage = (name: string) => norm(name).includes("component");
@@ -74,6 +75,13 @@ async function main() {
           figmaFrameName: s.figmaNodeName,
           name: s.name,
           normalizedName: norm(s.name),
+          searchTitles: s.searchTitles,
+          searchAliases: buildScreenAliases({
+            name: s.name,
+            searchTitles: s.searchTitles,
+            parentSectionName: s.parentSectionName,
+            parentFlowName: s.parentFlowName,
+          }),
           figmaUrl: generateFigmaNodeUrl(mod.figmaFileKey, s.figmaNodeId),
           width: s.width || null,
           height: s.height || null,

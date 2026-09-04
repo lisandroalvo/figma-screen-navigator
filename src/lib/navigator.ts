@@ -180,6 +180,8 @@ export async function getNavigatorIndex(): Promise<NavigatorIndex> {
         pageId: s.figmaPageId,
         pageName: page.name,
         parentName: s.parentFlowName ?? s.parentSectionName ?? "",
+        searchTitles: s.searchTitles ?? [],
+        searchAliases: s.searchAliases ?? [],
         figmaUrl: s.figmaUrl,
       };
     })

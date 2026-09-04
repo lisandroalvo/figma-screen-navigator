@@ -149,9 +149,82 @@ export interface GlobalScreen {
   parentSectionName: string | null;
   parentFlowNodeId: string | null;
   parentFlowName: string | null;
+  // Authored layer-name titles found inside the accepted screen (search only).
+  searchTitles: string[];
   confidence: "high" | "medium";
   reason: string;
   verdict: "accept" | "needs_review";
+}
+
+// --- Search-title extraction (layer-name-first; TEXT extraction disabled) -----
+
+// Container layer names that indicate a meaningful UI title/window/modal.
+const TITLE_KEYWORD = /\b(modal|dialog|pop[\s-]?up|drawer|panel|sheet|overlay|window|wizard|flyout|banner|toast|tooltip)\b/i;
+// The type words we strip to also expose the bare title ("Rate Group Modal" -> "Rate Group").
+const TITLE_TYPE_WORD = /\s*[-–/|]?\s*\b(modal|dialog|pop[\s-]?up|popup|drawer|panel|sheet|overlay|window|wizard|flyout|banner|toast|tooltip)\b\s*$/i;
+// Confirmed chrome / technical wrappers — never titles.
+const CHROME_NAME = /^(frame|group|component|componentset|rectangle|instance|ellipse|vector|union|subtract|line|slice|image|img|mask|container|wrapper|content|layout|electron|status\s?bar|side-?bar|sidebar|bottom navigation|top navigation|navbar|nav|menu items?|participant menu items|scroll\s?bar|divider|spacer|placeholder|bg|background|overlay bg|autolayout|auto layout|shadow|blur|gradient)\b/i;
+
+function isGenericOrChrome(name: string): boolean {
+  const n = name.trim();
+  if (n.length < 2) return true;
+  if (!/[a-z]/i.test(n)) return true; // no letters (numbers/symbols only)
+  if (isGenericName(n)) return true; // "Frame 123" etc.
+  if (CHROME_NAME.test(n)) return true;
+  return false;
+}
+
+/**
+ * Extract authored search titles INSIDE an already-accepted screen node. Uses
+ * layer names only (TEXT-node extraction intentionally disabled — proven noisy).
+ * Bounded depth + visit cap. Precision-first: keyword containers at any depth,
+ * plus significant non-generic direct-child containers. Returns exact authored
+ * strings (dedup by normalized form), capped.
+ */
+export function extractScreenSearchTitles(screen: FigmaNode): string[] {
+  const found: string[] = [];
+  const seenNorm = new Set<string>();
+  const norm = (s: string) => s.trim().toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const push = (raw: string) => {
+    const r = raw.trim();
+    if (!r || isGenericOrChrome(r)) return;
+    const k = norm(r);
+    if (!k || seenNorm.has(k)) return;
+    seenNorm.add(k);
+    found.push(r);
+  };
+
+  const MAX_DEPTH = 6;
+  let visited = 0;
+  const MAX_VISIT = 4000;
+
+  const screenBox = (screen as BoxNode).absoluteBoundingBox;
+  const screenArea = screenBox ? screenBox.width * screenBox.height : 0;
+
+  function walk(node: FigmaNode, depth: number) {
+    if (visited++ > MAX_VISIT || depth > MAX_DEPTH) return;
+    for (const c of node.children ?? []) {
+      if (c.type === "FRAME" || c.type === "INSTANCE" || c.type === "COMPONENT") {
+        const box = (c as BoxNode).absoluteBoundingBox;
+        const a = box ? box.width * box.height : 0;
+        const keyword = TITLE_KEYWORD.test(c.name);
+        // Tier 1: keyword container at any (bounded) depth.
+        if (keyword && !isGenericName(c.name)) {
+          push(c.name);
+          const bare = c.name.replace(TITLE_TYPE_WORD, "").trim();
+          if (bare && norm(bare) !== norm(c.name)) push(bare);
+        }
+        // Tier 2 (precision-first): significant NON-generic container that is a
+        // direct child of the screen (depth 0 -> its children are depth 1).
+        else if (depth === 0 && !isGenericOrChrome(c.name) && screenArea > 0 && a >= 0.15 * screenArea) {
+          push(c.name);
+        }
+      }
+      walk(c, depth + 1);
+    }
+  }
+  walk(screen, 0);
+  return found.slice(0, 8);
 }
 
 interface WalkCtx {
@@ -238,6 +311,7 @@ function classifyScreen(
     parentSectionName: section.name,
     parentFlowNodeId: flow?.id ?? null,
     parentFlowName: flow?.name ?? null,
+    searchTitles: extractScreenSearchTitles(node),
   };
 
   // High confidence: part of a sibling-state group, OR clearly a primary screen.

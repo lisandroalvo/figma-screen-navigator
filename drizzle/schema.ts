@@ -534,6 +534,11 @@ export const flowScreensTable = pgTable(
     // Authored screen name (the frame's title TEXT child); the searchable name.
     name: text("name").notNull(),
     normalizedName: text("normalized_name").notNull(),
+    // Additive search enrichment (2026-09): authored layer-name titles found
+    // inside the accepted screen (e.g. "Rate Group Modal") + deterministic
+    // normalized aliases. Do NOT affect detection/identity; discoverability only.
+    searchTitles: text("search_titles").array(),
+    searchAliases: text("search_aliases").array(),
     figmaUrl: text("figma_url").notNull(),
     width: integer("width"),
     height: integer("height"),

@@ -20,6 +20,8 @@ export interface UpsertFlowScreenInput {
   figmaFrameName: string;
   name: string;
   normalizedName: string;
+  searchTitles: string[];
+  searchAliases: string[];
   figmaUrl: string;
   width: number | null;
   height: number | null;
@@ -52,6 +54,8 @@ export async function upsertFlowScreen(input: UpsertFlowScreenInput): Promise<Fl
         figmaFrameName: input.figmaFrameName,
         name: input.name,
         normalizedName: input.normalizedName,
+        searchTitles: input.searchTitles,
+        searchAliases: input.searchAliases,
         figmaUrl: input.figmaUrl,
         width: input.width,
         height: input.height,
@@ -96,6 +100,8 @@ export async function batchUpsertFlowScreens(inputs: UpsertFlowScreenInput[]): P
         figmaFrameName: sql`excluded.figma_frame_name`,
         name: sql`excluded.name`,
         normalizedName: sql`excluded.normalized_name`,
+        searchTitles: sql`excluded.search_titles`,
+        searchAliases: sql`excluded.search_aliases`,
         figmaUrl: sql`excluded.figma_url`,
         width: sql`excluded.width`,
         height: sql`excluded.height`,
