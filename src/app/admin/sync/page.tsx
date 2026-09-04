@@ -2,23 +2,29 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { scanPilotModule } from "@/lib/figma/sync";
 import { listSyncJobs } from "@/lib/repositories/sync-jobs";
+import { requireAdmin } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
 
 async function startScan() {
   "use server";
+  // Independent server-side authorization: the scan is a write/side-effect
+  // entry point (creates sync_jobs + proposed_changes), so it must be guarded
+  // even if a caller bypasses the page UI.
+  await requireAdmin();
   const result = await scanPilotModule();
   redirect(`/admin/sync/${result.syncJobId}`);
 }
 
 export default async function AdminSyncPage() {
+  await requireAdmin();
   const jobs = await listSyncJobs();
 
   return (
     <main className="min-h-screen bg-zinc-50 p-6">
       <div className="mx-auto max-w-5xl space-y-6">
         <div className="rounded border border-amber-300 bg-amber-50 p-4 text-amber-900">
-          Internal prototype — authentication not yet enabled
+          Internal admin tool
         </div>
 
         <header>

@@ -92,7 +92,7 @@ export default async function SyncJobPage({
     <main className="min-h-screen bg-zinc-50 p-6">
       <div className="mx-auto max-w-5xl space-y-6">
         <div className="rounded border border-amber-300 bg-amber-50 p-4 text-amber-900">
-          Internal prototype — authentication not yet enabled
+          Internal admin tool
         </div>
 
         <div className="mb-4">
