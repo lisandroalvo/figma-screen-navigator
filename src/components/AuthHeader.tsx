@@ -1,28 +1,24 @@
 import Link from "next/link";
-import { getUserProfile, requireAuth } from "@/lib/auth/session";
-import { SignOutButton } from "./SignOutButton";
 
-export async function AuthHeader({ adminOnly }: { adminOnly?: boolean } = {}) {
-  const profile = adminOnly ? await requireAuth() : await getUserProfile();
-  if (!profile) return null;
-
+/**
+ * Public Navigator header. Shows only the product identity — no account,
+ * role, Admin link, or Sign out. The Navigator is intentionally public, so
+ * the same clean header is shown to anonymous and logged-in users alike.
+ *
+ * Authentication infrastructure is untouched: `/admin/*` still enforces
+ * `requireAdmin`, and `/login` + sign-out still work; they are simply not
+ * surfaced in the public navigation.
+ */
+export function AuthHeader() {
   return (
-    <header className="border-b border-zinc-200 bg-white p-4">
-      <div className="mx-auto flex max-w-5xl items-center justify-between">
-        <Link href="/" className="font-semibold text-zinc-900">
+    <header className="border-b border-primary/10 bg-surface">
+      <div className="mx-auto flex max-w-5xl items-center px-4 py-4">
+        <Link
+          href="/"
+          className="text-lg font-semibold tracking-tight text-primary"
+        >
           Figma Screen Navigator
         </Link>
-        <div className="flex items-center gap-3 text-sm text-zinc-600">
-          <span>
-            {profile.email} · {profile.role.replace("_", " ")}
-          </span>
-          {profile.role === "design_administrator" && (
-            <Link href="/admin/sync" className="text-blue-600 hover:underline">
-              Admin
-            </Link>
-          )}
-          <SignOutButton />
-        </div>
       </div>
     </header>
   );
