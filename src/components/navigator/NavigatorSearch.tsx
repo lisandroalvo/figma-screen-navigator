@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { searchNavigator, type NavigatorIndex } from "@/lib/navigator-search";
 
@@ -110,6 +110,16 @@ export default function NavigatorSearch({
   const [failed, setFailed] = useState(false);
   const inflight = useRef<Promise<NavigatorIndex> | null>(null);
   const trimmed = query.trim();
+
+  // Prefetch the global index as soon as the page mounts (idle browser time),
+  // so the first keystroke already searches in-memory instead of waiting ~5s
+  // for the ~1.5MB index fetch. Only applies when indexUrl is used (root).
+  useEffect(() => {
+    if (!indexUrl || lazyIndex) return;
+    const t = setTimeout(ensureIndex, 0);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [indexUrl]);
 
   function ensureIndex() {
     if (lazyIndex || inflight.current || !indexUrl) return;
