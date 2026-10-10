@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { getPageScope } from "@/lib/navigator-scoped";
 import NavigatorSearch from "@/components/navigator/NavigatorSearch";
 
-export const dynamic = "force-dynamic";
+// ISR: rendered HTML is cached and served near-instantly; busted every 300s
+// or on-demand via POST /api/revalidate after a Figma re-index.
+export const revalidate = 300;
 // Run near the Supabase project (ap-southeast-1) — DB RTT dominates latency.
 export const preferredRegion = "sin1";
 

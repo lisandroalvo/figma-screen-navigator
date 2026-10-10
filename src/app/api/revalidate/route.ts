@@ -1,4 +1,4 @@
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
@@ -17,5 +17,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   revalidateTag("navigator", "max");
+  revalidatePath("/", "layout"); // bust all ISR pages under the root layout
   return NextResponse.json({ revalidated: true, tag: "navigator" });
 }

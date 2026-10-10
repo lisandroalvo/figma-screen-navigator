@@ -2,7 +2,9 @@ import Link from "next/link";
 import { getGlobalModuleList } from "@/lib/navigator-scoped";
 import NavigatorSearch from "@/components/navigator/NavigatorSearch";
 
-export const dynamic = "force-dynamic";
+// ISR: rendered HTML is cached and served near-instantly; busted every 300s
+// or on-demand via POST /api/revalidate after a Figma re-index.
+export const revalidate = 300;
 // Run near the Supabase project (ap-southeast-1) — DB RTT dominates latency.
 export const preferredRegion = "sin1";
 
@@ -37,6 +39,7 @@ export default async function HomePage() {
                 <li key={m.id} className="group flex items-center gap-2 pl-3 pr-2 hover:bg-brandbg">
                   <Link
                     href={`/modules/${m.slug}`}
+                    prefetch
                     className="flex flex-1 items-center gap-3 rounded py-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                   >
                     <span className="flex-1 truncate text-sm font-medium text-primary">

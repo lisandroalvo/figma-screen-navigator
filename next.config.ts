@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: process.cwd(),
   },
+  // Keep dynamic RSC payloads in the client router cache for 5min — back/forward
+  // and repeat navigations are instant without re-hitting the server.
+  experimental: {
+    staleTimes: { dynamic: 300, static: 300 },
+  },
   images: {
     remotePatterns: [
       {
