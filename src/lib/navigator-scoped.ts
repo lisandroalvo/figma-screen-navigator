@@ -1,6 +1,6 @@
 import "server-only";
 import { unstable_cache } from "next/cache";
-import { and, eq, gte, sql } from "drizzle-orm";
+import { and, eq, gte, ne, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import {
   modulesTable,
@@ -84,7 +84,7 @@ async function _getGlobalModuleList() {
 export const getGlobalModuleList = unstable_cache(
   _getGlobalModuleList,
   ["navigator-global-modules"],
-  { revalidate: 60, tags: ["navigator"] },
+  { revalidate: 300, tags: ["navigator"] },
 );
 
 async function getModuleBySlug(moduleSlug: string) {
@@ -167,7 +167,7 @@ async function _getModuleScope(
 export const getModuleScope = unstable_cache(
   _getModuleScope,
   ["navigator-module-scope"],
-  { revalidate: 60, tags: ["navigator"] },
+  { revalidate: 300, tags: ["navigator"] },
 );
 
 /**
@@ -183,21 +183,23 @@ async function _getPageScope(
   index: NavigatorIndex;
 } | null> {
   const db = getDb();
-  const mod = await getModuleBySlug(moduleSlug);
-  if (!mod || !mod.lastSyncedAt || mod.status === "archived") return null;
-
-  const [page] = await db
-    .select()
+  // Single JOIN: page + owning module in one roundtrip (page must be current).
+  const [row] = await db
+    .select({ mod: modulesTable, page: figmaPagesTable })
     .from(figmaPagesTable)
+    .innerJoin(modulesTable, eq(modulesTable.id, figmaPagesTable.moduleId))
     .where(
       and(
+        eq(modulesTable.slug, moduleSlug),
+        ne(modulesTable.status, "archived"),
         eq(figmaPagesTable.id, pageId),
-        eq(figmaPagesTable.moduleId, mod.id),
-        gte(figmaPagesTable.updatedAt, mod.lastSyncedAt),
+        sql`${figmaPagesTable.updatedAt} >= ${modulesTable.lastSyncedAt}`,
       ),
     )
     .limit(1);
-  if (!page) return null;
+  if (!row || !row.mod.lastSyncedAt) return null;
+  const { mod, page } = row;
+  const syncedAt = mod.lastSyncedAt;
 
   const [flows, sections, screens] = await Promise.all([
     db
@@ -206,7 +208,7 @@ async function _getPageScope(
       .where(
         and(
           eq(flowsTable.figmaPageId, page.id),
-          gte(flowsTable.updatedAt, mod.lastSyncedAt),
+          sql`${flowsTable.updatedAt} >= ${syncedAt}`,
         ),
       ),
     db
@@ -248,7 +250,7 @@ async function _getPageScope(
 export const getPageScope = unstable_cache(
   _getPageScope,
   ["navigator-page-scope"],
-  { revalidate: 60, tags: ["navigator"] },
+  { revalidate: 300, tags: ["navigator"] },
 );
 
 /** Build a NavigatorIndex from already-scoped rows. Same result shape as

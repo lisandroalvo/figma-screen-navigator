@@ -201,10 +201,11 @@ async function _getNavigatorIndex(): Promise<NavigatorIndex> {
   };
 }
 
-/** Cached 60s — navigator data only changes on re-index, so repeat fetches
- *  should not pay the full 5-query (~2,700-row) DB cost. */
+/** Cached 5min — navigator data only changes on re-index, so repeat fetches
+ *  should not pay the full 5-query (~2,700-row) DB cost. Re-indexes bust the
+ *  cache via POST /api/revalidate. */
 export const getNavigatorIndex = unstable_cache(
   _getNavigatorIndex,
   ["navigator-full-index"],
-  { revalidate: 60, tags: ["navigator"] },
+  { revalidate: 300, tags: ["navigator"] },
 );

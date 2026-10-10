@@ -112,6 +112,21 @@ async function main() {
 
   console.log(`\nDONE — files: ${files.length}, pages upserted: ${pages}, flows upserted: ${flows}, failed: ${failed.length}`);
   for (const f of failed) console.log(`  ! ${f}`);
+
+  // Bust the deployed navigator cache so fresh data shows immediately.
+  const base = process.env.NAVIGATOR_BASE_URL || "https://figma-screen-navigator.vercel.app";
+  const secret = process.env.REVALIDATE_SECRET;
+  if (secret) {
+    try {
+      const r = await fetch(`${base}/api/revalidate`, {
+        method: "POST",
+        headers: { authorization: `Bearer ${secret}` },
+      });
+      console.log(`Cache revalidate → ${r.status}`);
+    } catch {
+      console.log("Cache revalidate skipped (request failed)");
+    }
+  }
   process.exit(0);
 }
 
