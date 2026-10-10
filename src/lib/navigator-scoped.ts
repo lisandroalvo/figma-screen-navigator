@@ -87,6 +87,25 @@ export const getGlobalModuleList = unstable_cache(
   { revalidate: 300, tags: ["navigator"] },
 );
 
+/**
+ * All current page {moduleSlug, pageId} pairs — used by generateStaticParams
+ * so every navigator page is prerendered + CDN-cached at build.
+ */
+export async function listAllCurrentPageParams() {
+  const db = getDb();
+  const rows = await db
+    .select({ moduleSlug: modulesTable.slug, pageId: figmaPagesTable.id })
+    .from(figmaPagesTable)
+    .innerJoin(modulesTable, eq(modulesTable.id, figmaPagesTable.moduleId))
+    .where(
+      and(
+        ne(modulesTable.status, "archived"),
+        sql`${figmaPagesTable.updatedAt} >= ${modulesTable.lastSyncedAt}`,
+      ),
+    );
+  return rows;
+}
+
 async function getModuleBySlug(moduleSlug: string) {
   const db = getDb();
   const rows = await db
@@ -199,7 +218,7 @@ async function _getPageScope(
     .limit(1);
   if (!row || !row.mod.lastSyncedAt) return null;
   const { mod, page } = row;
-  const syncedAt = mod.lastSyncedAt;
+  const syncedAt = mod.lastSyncedAt as Date;
 
   const [flows, sections, screens] = await Promise.all([
     db
@@ -208,7 +227,7 @@ async function _getPageScope(
       .where(
         and(
           eq(flowsTable.figmaPageId, page.id),
-          sql`${flowsTable.updatedAt} >= ${syncedAt}`,
+          sql`${flowsTable.updatedAt} >= ${syncedAt.toISOString()}::timestamptz`,
         ),
       ),
     db

@@ -1,7 +1,18 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getModuleScope } from "@/lib/navigator-scoped";
+import { getModuleScope, getGlobalModuleList } from "@/lib/navigator-scoped";
 import NavigatorSearch from "@/components/navigator/NavigatorSearch";
+
+// Prerender every module page at build → CDN-cached HTML (~100ms TTFB).
+// New/uncached paths still render on demand (dynamicParams default).
+export async function generateStaticParams() {
+  try {
+    const { modules } = await getGlobalModuleList();
+    return modules.map((m) => ({ moduleSlug: m.slug }));
+  } catch {
+    return [];
+  }
+}
 
 // ISR: rendered HTML is cached and served near-instantly; busted every 300s
 // or on-demand via POST /api/revalidate after a Figma re-index.

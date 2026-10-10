@@ -1,7 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getPageScope } from "@/lib/navigator-scoped";
+import { getPageScope, listAllCurrentPageParams } from "@/lib/navigator-scoped";
 import NavigatorSearch from "@/components/navigator/NavigatorSearch";
+
+// Prerender every page detail at build → CDN-cached HTML (~100ms TTFB).
+// New/uncached paths still render on demand (dynamicParams default).
+export async function generateStaticParams() {
+  try {
+    return await listAllCurrentPageParams();
+  } catch {
+    return [];
+  }
+}
 
 // ISR: rendered HTML is cached and served near-instantly; busted every 300s
 // or on-demand via POST /api/revalidate after a Figma re-index.
