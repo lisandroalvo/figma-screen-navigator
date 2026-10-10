@@ -1,4 +1,5 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { and, eq, gte, sql } from "drizzle-orm";
 import { getDb } from "@/lib/db";
 import {
@@ -20,8 +21,11 @@ const pageUrl = (key: string, node: string) =>
  * iff it is not archived, has a lastSyncedAt, and at least one current page
  * (page.updatedAt >= module.lastSyncedAt) — identical semantics to
  * getNavigatorIndex(), minus the ~2,700-row fetch on every page render.
+ *
+ * Cached 60s: navigator data only changes on re-index, so repeat navigations
+ * should not pay cross-region DB roundtrips.
  */
-export async function getGlobalModuleList() {
+async function _getGlobalModuleList() {
   const db = getDb();
 
   const pageCounts = await db.execute(sql`
@@ -77,6 +81,12 @@ export async function getGlobalModuleList() {
   };
 }
 
+export const getGlobalModuleList = unstable_cache(
+  _getGlobalModuleList,
+  ["navigator-global-modules"],
+  { revalidate: 60, tags: ["navigator"] },
+);
+
 async function getModuleBySlug(moduleSlug: string) {
   const db = getDb();
   const rows = await db
@@ -90,9 +100,9 @@ async function getModuleBySlug(moduleSlug: string) {
 /**
  * NavigatorIndex containing ONLY one module's subtree (pages, flows, sections,
  * screens). ~600 rows max — vs the full global index (~2,700 rows) that every
- * navigator page used to fetch.
+ * navigator page used to fetch. Cached 60s per module.
  */
-export async function getModuleScope(
+async function _getModuleScope(
   moduleSlug: string,
 ): Promise<{ module: { id: string; slug: string; name: string; figmaFileKey: string; fileUrl: string }; index: NavigatorIndex } | null> {
   const db = getDb();
@@ -101,42 +111,46 @@ export async function getModuleScope(
 
   const syncedAt = mod.lastSyncedAt;
 
-  const pages = await db
-    .select()
-    .from(figmaPagesTable)
-    .where(
-      and(
-        eq(figmaPagesTable.moduleId, mod.id),
-        gte(figmaPagesTable.updatedAt, syncedAt),
+  // Parallel: one DB roundtrip each, ~4x faster than sequential when the DB is
+  // cross-region (Supabase ap-southeast-1 vs Vercel functions).
+  const [pages, flows, sections, screens] = await Promise.all([
+    db
+      .select()
+      .from(figmaPagesTable)
+      .where(
+        and(
+          eq(figmaPagesTable.moduleId, mod.id),
+          gte(figmaPagesTable.updatedAt, syncedAt),
+        ),
       ),
-    );
-
-  const flows = await db
-    .select()
-    .from(flowsTable)
-    .where(
-      and(eq(flowsTable.moduleId, mod.id), gte(flowsTable.updatedAt, syncedAt)),
-    );
-
-  const sections = await db
-    .select()
-    .from(flowSectionsTable)
-    .where(
-      and(
-        eq(flowSectionsTable.moduleId, mod.id),
-        eq(flowSectionsTable.status, "detected"),
+    db
+      .select()
+      .from(flowsTable)
+      .where(
+        and(
+          eq(flowsTable.moduleId, mod.id),
+          gte(flowsTable.updatedAt, syncedAt),
+        ),
       ),
-    );
-
-  const screens = await db
-    .select()
-    .from(flowScreensTable)
-    .where(
-      and(
-        eq(flowScreensTable.moduleId, mod.id),
-        eq(flowScreensTable.status, "detected"),
+    db
+      .select()
+      .from(flowSectionsTable)
+      .where(
+        and(
+          eq(flowSectionsTable.moduleId, mod.id),
+          eq(flowSectionsTable.status, "detected"),
+        ),
       ),
-    );
+    db
+      .select()
+      .from(flowScreensTable)
+      .where(
+        and(
+          eq(flowScreensTable.moduleId, mod.id),
+          eq(flowScreensTable.status, "detected"),
+        ),
+      ),
+  ]);
 
   return {
     module: {
@@ -150,10 +164,17 @@ export async function getModuleScope(
   };
 }
 
+export const getModuleScope = unstable_cache(
+  _getModuleScope,
+  ["navigator-module-scope"],
+  { revalidate: 60, tags: ["navigator"] },
+);
+
 /**
  * NavigatorIndex containing ONLY one page's subtree (flows, sections, screens).
+ * Cached 60s per page.
  */
-export async function getPageScope(
+async function _getPageScope(
   moduleSlug: string,
   pageId: string,
 ): Promise<{
@@ -223,6 +244,12 @@ export async function getPageScope(
     index: buildIndex({ mod, pages: [page], flows, sections, screens }),
   };
 }
+
+export const getPageScope = unstable_cache(
+  _getPageScope,
+  ["navigator-page-scope"],
+  { revalidate: 60, tags: ["navigator"] },
+);
 
 /** Build a NavigatorIndex from already-scoped rows. Same result shape as
  *  getNavigatorIndex() so searchNavigator() works unchanged. */

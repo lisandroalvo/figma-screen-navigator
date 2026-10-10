@@ -1,4 +1,5 @@
 import "server-only";
+import { unstable_cache } from "next/cache";
 import { listModules } from "@/lib/repositories/modules";
 import { listPages } from "@/lib/repositories/figma-pages";
 import { listFlows } from "@/lib/repositories/flows";
@@ -40,7 +41,7 @@ const pageUrl = (key: string, node: string) =>
   `https://www.figma.com/file/${key}?node-id=${node.replace(/:/g, "-")}`;
 
 /** Load the full Module -> Page -> Flow index (small dataset; joined in JS). */
-export async function getNavigatorIndex(): Promise<NavigatorIndex> {
+async function _getNavigatorIndex(): Promise<NavigatorIndex> {
   const [allModules, allPages, allFlows, allScreens, allSections] = await Promise.all([
     listModules(),
     listPages(),
@@ -199,3 +200,11 @@ export async function getNavigatorIndex(): Promise<NavigatorIndex> {
     counts: { modules: modules.length, pages: pages.length, flows: flows.length, screens: screenResults.length },
   };
 }
+
+/** Cached 60s — navigator data only changes on re-index, so repeat fetches
+ *  should not pay the full 5-query (~2,700-row) DB cost. */
+export const getNavigatorIndex = unstable_cache(
+  _getNavigatorIndex,
+  ["navigator-full-index"],
+  { revalidate: 60, tags: ["navigator"] },
+);

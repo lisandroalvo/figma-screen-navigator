@@ -10,6 +10,8 @@ import { requireAuth } from "@/lib/auth/session";
 import { ScreenDetail } from "@/components/ScreenDetail";
 
 export const dynamic = "force-dynamic";
+// Run near the Supabase project (ap-southeast-1) — DB RTT dominates latency.
+export const preferredRegion = "sin1";
 
 export default async function ScreenPage({
   params,

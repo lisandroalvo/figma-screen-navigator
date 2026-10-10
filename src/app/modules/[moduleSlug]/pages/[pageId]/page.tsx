@@ -4,6 +4,8 @@ import { getPageScope } from "@/lib/navigator-scoped";
 import NavigatorSearch from "@/components/navigator/NavigatorSearch";
 
 export const dynamic = "force-dynamic";
+// Run near the Supabase project (ap-southeast-1) — DB RTT dominates latency.
+export const preferredRegion = "sin1";
 
 export default async function PageDetailPage({
   params,

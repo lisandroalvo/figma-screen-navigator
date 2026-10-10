@@ -4,6 +4,9 @@ import FlowPlayer from "@/components/FlowPlayer";
 import Image from "next/image";
 import Link from "next/link";
 
+// Run near the Supabase project (ap-southeast-1) — DB RTT dominates latency.
+export const preferredRegion = "sin1";
+
 export default async function FlowDetailPage({
   params,
 }: {
