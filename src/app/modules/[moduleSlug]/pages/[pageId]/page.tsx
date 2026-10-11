@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPageScope, listAllCurrentPageParams } from "@/lib/navigator-scoped";
 import NavigatorSearch from "@/components/navigator/NavigatorSearch";
+import BackNav from "@/components/navigator/BackNav";
 
 // Prerender every page detail at build → CDN-cached HTML (~100ms TTFB).
 // New/uncached paths still render on demand (dynamicParams default).
@@ -35,17 +36,20 @@ export default async function PageDetailPage({
   return (
     <main className="min-h-screen bg-brandbg p-4 sm:p-6">
       <div className="mx-auto max-w-3xl space-y-4">
-        <nav className="text-sm text-primary/60">
-          <Link href="/" className="text-primary/70 hover:text-primary hover:underline">
-            Navigator
-          </Link>
-          <span className="mx-1 text-primary/40">›</span>
-          <Link href={`/modules/${mod.slug}`} className="text-primary/70 hover:text-primary hover:underline">
-            {mod.name}
-          </Link>
-          <span className="mx-1 text-primary/40">›</span>
-          <span className="font-semibold text-primary">{page.name}</span>
-        </nav>
+        <div className="flex flex-wrap items-center gap-3">
+          <BackNav fallback={`/modules/${mod.slug}`} label={mod.name} />
+          <nav className="text-sm text-primary/60">
+            <Link href="/" className="text-primary/70 hover:text-primary hover:underline">
+              Navigator
+            </Link>
+            <span className="mx-1 text-primary/40">›</span>
+            <Link href={`/modules/${mod.slug}`} className="text-primary/70 hover:text-primary hover:underline">
+              {mod.name}
+            </Link>
+            <span className="mx-1 text-primary/40">›</span>
+            <span className="font-semibold text-primary">{page.name}</span>
+          </nav>
+        </div>
 
         <header className="flex flex-wrap items-start justify-between gap-2">
           <div>
